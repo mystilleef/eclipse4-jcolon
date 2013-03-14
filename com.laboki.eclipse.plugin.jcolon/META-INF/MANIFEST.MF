@@ -8,12 +8,20 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  org.eclipse.core.resources,
  org.eclipse.ui;bundle-version="3.104.0",
- org.eclipse.ui.workbench,
  org.eclipse.jface.text;bundle-version="3.8.2",
  org.eclipse.jdt.core;bundle-version="3.8.3"
 Bundle-ClassPath: lombok.jar,
  .
 Export-Package: com.laboki.eclipse.plugin.jcolon;uses:="org.eclipse.ui",
+ com.laboki.eclipse.plugin.jcolon.inserter;
+  uses:="org.eclipse.jface.text.source,
+   com.laboki.eclipse.plugin.jcolon.inserter.listeners,
+   org.eclipse.ui,
+   org.eclipse.core.resources,
+   org.eclipse.swt.custom,
+   org.eclipse.jdt.core.compiler,
+   org.eclipse.swt.widgets",
+ com.laboki.eclipse.plugin.jcolon.inserter.listeners;uses:="org.eclipse.jface.text.source",
  com.sun.jna;uses:="new com.sun.jna",
  com.sun.jna.darwin,
  com.sun.jna.ptr;uses:="com.sun.jna",
