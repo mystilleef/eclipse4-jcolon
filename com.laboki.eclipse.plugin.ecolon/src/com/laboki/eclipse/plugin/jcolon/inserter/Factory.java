@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.ecolon.inserter;
+package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import java.util.ArrayList;
 import java.util.List;

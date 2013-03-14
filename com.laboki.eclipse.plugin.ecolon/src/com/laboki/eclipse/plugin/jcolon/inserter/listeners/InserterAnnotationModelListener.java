@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.ecolon.inserter.listeners;
+package com.laboki.eclipse.plugin.jcolon.inserter.listeners;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -6,7 +6,7 @@ import lombok.ToString;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelListener;
 
-import com.laboki.eclipse.plugin.ecolon.inserter.EditorContext;
+import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 
 @ToString
 public final class InserterAnnotationModelListener implements IAnnotationModelListener {

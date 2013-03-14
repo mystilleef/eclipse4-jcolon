@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.ecolon.inserter.listeners;
+package com.laboki.eclipse.plugin.jcolon.inserter.listeners;
 
 public interface IInserterAnnotationModelListenerHandler {
 

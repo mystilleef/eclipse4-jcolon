@@ -1,5 +1,5 @@
 // $codepro.audit.disable methodChainLength
-package com.laboki.eclipse.plugin.ecolon.inserter;
+package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import java.util.Iterator;
 import java.util.logging.Level;

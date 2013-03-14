@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.ecolon.inserter;
+package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import lombok.Getter;
 import lombok.ToString;
@@ -11,8 +11,8 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.ui.IEditorPart;
 
-import com.laboki.eclipse.plugin.ecolon.inserter.listeners.IInserterAnnotationModelListenerHandler;
-import com.laboki.eclipse.plugin.ecolon.inserter.listeners.InserterAnnotationModelListener;
+import com.laboki.eclipse.plugin.jcolon.inserter.listeners.IInserterAnnotationModelListenerHandler;
+import com.laboki.eclipse.plugin.jcolon.inserter.listeners.InserterAnnotationModelListener;
 
 @ToString
 final class AutomaticInserter implements Runnable, IInserterAnnotationModelListenerHandler {

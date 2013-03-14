@@ -13,7 +13,7 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  org.eclipse.jdt.core;bundle-version="3.8.3"
 Bundle-ClassPath: lombok.jar,
  .
-Export-Package: com.laboki.eclipse.plugin.ecolon;uses:="org.eclipse.ui",
+Export-Package: com.laboki.eclipse.plugin.jcolon;uses:="org.eclipse.ui",
  com.sun.jna;uses:="new com.sun.jna",
  com.sun.jna.darwin,
  com.sun.jna.ptr;uses:="com.sun.jna",
