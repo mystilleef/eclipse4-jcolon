@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.laboki.eclipse.plugin.jcolon;singleton:=true
-Bundle-Version: 20130313
+Bundle-Version: 20130314
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
@@ -128,3 +128,5 @@ Export-Package: com.laboki.eclipse.plugin.jcolon;uses:="org.eclipse.ui",
  lombok.patcher.inject;uses:="com.sun.jna.ptr,com.sun.jna",
  lombok.patcher.scripts;uses:="lombok.patcher,lombok.libs.org.objectweb.asm"
 Import-Package: org.eclipse.ui.part
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: com.laboki.eclipse.plugin.jcolon.Startup
