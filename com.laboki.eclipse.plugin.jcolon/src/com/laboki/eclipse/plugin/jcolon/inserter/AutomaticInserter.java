@@ -1,5 +1,8 @@
 package com.laboki.eclipse.plugin.jcolon.inserter;
 
+import java.util.Arrays;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.ToString;
 
@@ -9,6 +12,8 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.listeners.IInserterAnnotationModelListenerHandler;
@@ -18,10 +23,12 @@ import com.laboki.eclipse.plugin.jcolon.inserter.listeners.InserterAnnotationMod
 final class AutomaticInserter implements Runnable, IInserterAnnotationModelListenerHandler {
 
 	private static final String SEMICOLON = ";";
-	@Getter private final static IEditorPart editor = EditorContext.getEditor();
-	private final static ICompilationUnit compilationUnit = JavaCore.getJavaCore().createCompilationUnitFrom(EditorContext.getFile(EditorContext.getEditor()));
+	@Getter private final IEditorPart editor = EditorContext.getEditor();
+	private final IDocument document = EditorContext.getDocument(this.editor);
+	private final ICompilationUnit compilationUnit = JavaCore.getJavaCore().createCompilationUnitFrom(EditorContext.getFile(this.editor));
 	private final InserterAnnotationModelListener listener = new InserterAnnotationModelListener(this);
 	private final InserterRunnable inserterRunnable = new InserterRunnable();
+	@SuppressWarnings("boxing") private final static List<Integer> PROBLEM_IDS = Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertToCompletePhrase, IProblem.ParsingErrorInsertToCompleteScope, IProblem.ParsingErrorInsertTokenAfter, IProblem.ParsingErrorInsertTokenBefore);
 
 	public AutomaticInserter() {}
 
@@ -35,26 +42,45 @@ final class AutomaticInserter implements Runnable, IInserterAnnotationModelListe
 		EditorContext.asyncExec(this.inserterRunnable);
 	}
 
-	protected static void insertSemiColon(final IProblem problem) {
+	protected void insertSemiColon(final IProblem problem) {
 		if (problem == null) return;
-		EditorContext.getBuffer(AutomaticInserter.editor).getContent().replaceTextRange(problem.getSourceEnd() + 1, 0, AutomaticInserter.SEMICOLON);
-		EditorContext.syncFile(AutomaticInserter.editor);
+		this.tryToInsertSemiColon(problem);
 	}
 
-	protected static IProblem getSemiColonProblem() {
-		for (final IProblem problem : AutomaticInserter.createCompilationUnitNode().getProblems())
-			if (problem.getID() == IProblem.ParsingErrorInsertToComplete) return AutomaticInserter._getSemicolonProblem(problem);
+	private void tryToInsertSemiColon(final IProblem problem) {
+		try {
+			this.document.replace(problem.getSourceEnd() + 1, 0, AutomaticInserter.SEMICOLON);
+		} catch (final BadLocationException e) {
+			e.printStackTrace();
+		} finally {
+			EditorContext.syncFile(this.editor);
+		}
+	}
+
+	protected IProblem getSemiColonProblem() {
+		for (final IProblem problem : this.createCompilationUnitNode().getProblems())
+			if (AutomaticInserter.isSemiColonProblem(problem)) return problem;
 		return null;
 	}
 
-	private static IProblem _getSemicolonProblem(final IProblem problem) {
-		if (!problem.getArguments()[0].equals(AutomaticInserter.SEMICOLON)) return null;
-		return problem;
+	private static boolean isSemiColonProblem(final IProblem problem) {
+		return AutomaticInserter.isInsertionErrorID(problem) && AutomaticInserter.containsSemiColon(problem);
 	}
 
-	private static CompilationUnit createCompilationUnitNode() {
+	@SuppressWarnings("boxing")
+	private static boolean isInsertionErrorID(final IProblem problem) {
+		return AutomaticInserter.PROBLEM_IDS.contains(problem.getID());
+	}
+
+	private static boolean containsSemiColon(final IProblem problem) {
+		for (final String string : problem.getArguments())
+			if (string.trim().equals(AutomaticInserter.SEMICOLON)) return true;
+		return false;
+	}
+
+	private CompilationUnit createCompilationUnitNode() {
 		final ASTParser parser = ASTParser.newParser(AST.JLS4);
-		parser.setSource(AutomaticInserter.compilationUnit);
+		parser.setSource(this.compilationUnit);
 		return (CompilationUnit) parser.createAST(null);
 	}
 
@@ -64,8 +90,8 @@ final class AutomaticInserter implements Runnable, IInserterAnnotationModelListe
 
 		@Override
 		public void run() {
-			if (!EditorContext.hasErrors(AutomaticInserter.getEditor())) return;
-			AutomaticInserter.insertSemiColon(AutomaticInserter.getSemiColonProblem());
+			if (!EditorContext.hasErrors(AutomaticInserter.this.getEditor())) return;
+			AutomaticInserter.this.insertSemiColon(AutomaticInserter.this.getSemiColonProblem());
 		}
 	}
 }

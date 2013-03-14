@@ -11,6 +11,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -21,12 +22,13 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.ITextEditor;
 
 @Log
 public final class EditorContext {
 
 	private static EditorContext instance;
-	private static final String ANNOTATION_SEVERITY_ERROR = "org.eclipse.jdt.ui.error";
+	private static final String ANNOTATION_ERROR = "error";
 	private static final Display DISPLAY = EditorContext.getDisplay();
 
 	private EditorContext() {}
@@ -101,10 +103,15 @@ public final class EditorContext {
 	}
 
 	private static boolean hasProblems(final Iterator<Annotation> iterator) {
-		return iterator.next().getType().equals(EditorContext.ANNOTATION_SEVERITY_ERROR);
+		return iterator.next().getType().endsWith(EditorContext.ANNOTATION_ERROR);
 	}
 
 	public static boolean isAJavaEditor(final IWorkbenchPart part) {
 		return JavaCore.isJavaLikeFileName(EditorContext.getFile((IEditorPart) part).getName());
+	}
+
+	public static IDocument getDocument(final IEditorPart editor) {
+		final ITextEditor textEditor = (ITextEditor) editor;
+		return textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
 	}
 }
