@@ -1,10 +1,7 @@
 // $codepro.audit.disable methodChainLength
 package com.laboki.eclipse.plugin.ecolon.inserter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 
 import lombok.Synchronized;
@@ -29,9 +26,7 @@ import org.eclipse.ui.part.FileEditorInput;
 public final class EditorContext {
 
 	private static EditorContext instance;
-	private static final String ANNOTATION_SEVERITY_WARNING = "warning";
-	private static final String ANNOTATION_SEVERITY_ERROR = "error";
-	private static final List<String> LINK_ANNOTATIONS = new ArrayList<>(Arrays.asList("org.eclipse.ui.internal.workbench.texteditor.link.exit", "org.eclipse.ui.internal.workbench.texteditor.link.target", "org.eclipse.ui.internal.workbench.texteditor.link.master", "org.eclipse.ui.internal.workbench.texteditor.link.slave"));
+	private static final String ANNOTATION_SEVERITY_ERROR = "org.eclipse.jdt.ui.error";
 	private static final Display DISPLAY = EditorContext.getDisplay();
 
 	private EditorContext() {}
@@ -62,20 +57,8 @@ public final class EditorContext {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 	}
 
-	public static StyledText getBuffer() {
-		return (StyledText) EditorContext.getEditor().getAdapter(Control.class);
-	}
-
 	public static StyledText getBuffer(final IEditorPart editor) {
 		return (StyledText) editor.getAdapter(Control.class);
-	}
-
-	public static boolean hasSelection(final IEditorPart editor) {
-		return EditorContext.getBuffer(editor).getSelectionCount() > 0;
-	}
-
-	public static boolean hasBlockSelection(final IEditorPart editor) {
-		return EditorContext.getBuffer(editor).getBlockSelection();
 	}
 
 	public static SourceViewer getView() {
@@ -86,59 +69,9 @@ public final class EditorContext {
 		return (SourceViewer) editor.getAdapter(ITextOperationTarget.class);
 	}
 
-	public static void save() {
-		EditorContext.flushEvents();
-		EditorContext.getEditor().getSite().getPage().saveEditor(EditorContext.getEditor(), false);
-		EditorContext.flushEvents();
-	}
-
-	public static void save(final IEditorPart editor) {
-		EditorContext.flushEvents();
-		editor.getSite().getPage().saveEditor(editor, false);
-		EditorContext.flushEvents();
-	}
-
-	public static boolean isModified() {
-		return EditorContext.getEditor().isDirty();
-	}
-
-	public static boolean isModified(final IEditorPart editor) {
-		return editor.isDirty();
-	}
-
-	public static boolean isInLinkMode(final IEditorPart editor) {
-		EditorContext.syncFile(editor);
-		return EditorContext.hasLinkAnnotations(editor);
-	}
-
-	private static boolean hasLinkAnnotations(final IEditorPart editor) {
-		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
-		while (iterator.hasNext())
-			if (EditorContext.isLinkModeAnnotation(iterator)) return true;
-		return false;
-	}
-
-	private static boolean isLinkModeAnnotation(final Iterator<Annotation> iterator) {
-		if (EditorContext.LINK_ANNOTATIONS.contains(iterator.next().getType())) return true;
-		return false;
-	}
-
-	public static boolean hasWarnings() {
-		return EditorContext.getAnnotationSeverity(EditorContext.ANNOTATION_SEVERITY_WARNING);
-	}
-
-	public static boolean hasWarnings(final IEditorPart editor) {
-		EditorContext.syncFile(editor);
-		return EditorContext.getAnnotationSeverity(EditorContext.ANNOTATION_SEVERITY_WARNING, editor);
-	}
-
-	public static boolean hasErrors() {
-		return EditorContext.getAnnotationSeverity(EditorContext.ANNOTATION_SEVERITY_ERROR);
-	}
-
 	public static boolean hasErrors(final IEditorPart editor) {
 		EditorContext.syncFile(editor);
-		return EditorContext.getAnnotationSeverity(EditorContext.ANNOTATION_SEVERITY_ERROR, editor);
+		return EditorContext.getAnnotationSeverity(editor);
 	}
 
 	static void syncFile(final IEditorPart editor) {
@@ -156,40 +89,22 @@ public final class EditorContext {
 		}
 	}
 
-	private static IFile getFile(final IEditorPart editor) {
+	public static IFile getFile(final IEditorPart editor) {
 		return ((FileEditorInput) editor.getEditorInput()).getFile();
 	}
 
-	private static boolean getAnnotationSeverity(final String problemSeverity) {
-		final Iterator<Annotation> iterator = EditorContext.getView().getAnnotationModel().getAnnotationIterator();
-		while (iterator.hasNext())
-			if (EditorContext.hasProblems(problemSeverity, iterator)) return true;
-		return false;
-	}
-
-	private static boolean getAnnotationSeverity(final String problemSeverity, final IEditorPart editor) {
+	private static boolean getAnnotationSeverity(final IEditorPart editor) {
 		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
 		while (iterator.hasNext())
-			if (EditorContext.hasProblems(problemSeverity, iterator)) return true;
+			if (EditorContext.hasProblems(iterator)) return true;
 		return false;
 	}
 
-	private static boolean hasProblems(final String problemSeverity, final Iterator<Annotation> iterator) {
-		return iterator.next().getType().endsWith(problemSeverity);
-	}
-
-	public static boolean hoversHaveFocus(final IEditorPart editor) {
-		if (EditorContext.getView(editor).getCurrentTextHover() != null) return true;
-		if (EditorContext.getView(editor).getCurrentAnnotationHover() != null) return true;
-		return false;
+	private static boolean hasProblems(final Iterator<Annotation> iterator) {
+		return iterator.next().getType().equals(EditorContext.ANNOTATION_SEVERITY_ERROR);
 	}
 
 	public static boolean isAJavaEditor(final IWorkbenchPart part) {
 		return JavaCore.isJavaLikeFileName(EditorContext.getFile((IEditorPart) part).getName());
-	}
-
-	@Override
-	public String toString() {
-		return String.format("EditorContext [getClass()=%s, toString()=%s]", this.getClass(), super.toString());
 	}
 }
