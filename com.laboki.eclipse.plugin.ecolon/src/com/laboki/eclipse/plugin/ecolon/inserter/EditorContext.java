@@ -13,6 +13,7 @@ import lombok.extern.java.Log;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -20,6 +21,7 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -180,6 +182,10 @@ public final class EditorContext {
 		if (EditorContext.getView(editor).getCurrentTextHover() != null) return true;
 		if (EditorContext.getView(editor).getCurrentAnnotationHover() != null) return true;
 		return false;
+	}
+
+	public static boolean isAJavaEditor(final IWorkbenchPart part) {
+		return JavaCore.isJavaLikeFileName(EditorContext.getFile((IEditorPart) part).getName());
 	}
 
 	@Override

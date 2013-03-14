@@ -25,6 +25,7 @@ public final class Factory implements Runnable {
 
 	public void enableAutomaticInserterFor(final IWorkbenchPart part) {
 		if (this.isInvalidPart(part)) return;
+		if (!EditorContext.isAJavaEditor(part)) return;
 		this.editorParts.add((IEditorPart) part);
 		EditorContext.asyncExec(new AutomaticInserter());
 	}
