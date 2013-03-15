@@ -28,7 +28,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 public final class EditorContext {
 
 	private static EditorContext instance;
-	private static final String ANNOTATION_ERROR = "error";
+	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	private static final Display DISPLAY = EditorContext.getDisplay();
 
 	private EditorContext() {}
@@ -98,12 +98,12 @@ public final class EditorContext {
 	private static boolean getAnnotationSeverity(final IEditorPart editor) {
 		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
 		while (iterator.hasNext())
-			if (EditorContext.hasProblems(iterator)) return true;
+			if (EditorContext.isJdtError(iterator)) return true;
 		return false;
 	}
 
-	private static boolean hasProblems(final Iterator<Annotation> iterator) {
-		return iterator.next().getType().endsWith(EditorContext.ANNOTATION_ERROR);
+	private static boolean isJdtError(final Iterator<Annotation> iterator) {
+		return iterator.next().getType().equals(EditorContext.JDT_ANNOTATION_ERROR);
 	}
 
 	public static boolean isAJavaEditor(final IWorkbenchPart part) {
