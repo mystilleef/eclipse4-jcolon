@@ -43,7 +43,7 @@ public final class InserterAnnotationModelListener implements IAnnotationModelLi
 
 		@Override
 		public void run() {
-			InserterAnnotationModelListener.this.getHandler().modelChanged();
+			InserterAnnotationModelListener.this.getHandler().annotationModelChanged();
 		}
 	}
 }
