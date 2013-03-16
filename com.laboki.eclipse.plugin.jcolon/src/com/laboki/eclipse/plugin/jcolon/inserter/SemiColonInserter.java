@@ -17,6 +17,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.listeners.IInserterAnnotationModelListenerHandler;
+import com.laboki.eclipse.plugin.jcolon.inserter.listeners.IInserterListener;
 import com.laboki.eclipse.plugin.jcolon.inserter.listeners.InserterAnnotationModelListener;
 
 @ToString
@@ -29,7 +30,7 @@ final class SemiColonInserter implements Runnable, IInserterAnnotationModelListe
 	@Getter private final IEditorPart editor = EditorContext.getEditor();
 	private final IDocument document = EditorContext.getDocument(this.editor);
 	private final ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
-	private final InserterAnnotationModelListener listener = new InserterAnnotationModelListener(this);
+	private final IInserterListener listener = new InserterAnnotationModelListener(this);
 
 	@Override
 	public void run() {
