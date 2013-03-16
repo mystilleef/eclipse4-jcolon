@@ -19,7 +19,6 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -90,7 +89,11 @@ public final class EditorContext {
 	}
 
 	public static IFile getFile(final IEditorPart editor) {
-		return ((FileEditorInput) editor.getEditorInput()).getFile();
+		try {
+			return ((FileEditorInput) editor.getEditorInput()).getFile();
+		} catch (final Exception e) {
+			return null;
+		}
 	}
 
 	private static boolean hasJDTAnnotationError(final IEditorPart editor) {
@@ -104,8 +107,10 @@ public final class EditorContext {
 		return iterator.next().getType().equals(EditorContext.JDT_ANNOTATION_ERROR);
 	}
 
-	public static boolean isAJavaEditor(final IWorkbenchPart part) {
-		return JavaCore.isJavaLikeFileName(EditorContext.getFile((IEditorPart) part).getName());
+	public static boolean isAJavaEditor(final IEditorPart part) {
+		final IFile file = EditorContext.getFile(part);
+		if (file == null) return false;
+		return JavaCore.isJavaLikeFileName(file.getName());
 	}
 
 	public static IDocument getDocument(final IEditorPart editor) {

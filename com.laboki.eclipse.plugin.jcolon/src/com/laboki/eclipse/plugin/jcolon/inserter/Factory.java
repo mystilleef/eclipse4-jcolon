@@ -23,21 +23,28 @@ public final class Factory implements Runnable {
 		this.partService.addPartListener(this.partListener);
 	}
 
+	@Override
+	public void run() {
+		EditorContext.instance();
+		this.enableAutomaticInserterFor(this.partService.getActivePart());
+	}
+
 	public void enableAutomaticInserterFor(final IWorkbenchPart part) {
 		if (this.isInvalidPart(part)) return;
-		if (!EditorContext.isAJavaEditor(part)) return;
+		if (!EditorContext.isAJavaEditor((IEditorPart) part)) return;
 		this.editorParts.add((IEditorPart) part);
 		EditorContext.asyncExec(new SemiColonInserter());
 	}
 
 	private boolean isInvalidPart(final IWorkbenchPart part) {
-		return (part == null) || this.getEditorParts().contains(part) || !(part instanceof IEditorPart);
+		return !this.isValidPart(part);
 	}
 
-	@Override
-	public void run() {
-		EditorContext.instance();
-		this.enableAutomaticInserterFor(this.partService.getActivePart());
+	private boolean isValidPart(final IWorkbenchPart part) {
+		if (part == null) return false;
+		if (this.getEditorParts().contains(part)) return false;
+		if (part instanceof IEditorPart) return true;
+		return false;
 	}
 
 	private final class PartListener implements IPartListener {

@@ -28,7 +28,7 @@ final class SemiColonInserter implements Runnable, IInserterAnnotationModelListe
 	private final Runnable syncFileRunnable = new SyncFileRunnable();
 	@Getter private final IEditorPart editor = EditorContext.getEditor();
 	private final IDocument document = EditorContext.getDocument(this.editor);
-	private final ICompilationUnit compilationUnit = JavaCore.getJavaCore().createCompilationUnitFrom(EditorContext.getFile(this.editor));
+	private final ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
 	private final InserterAnnotationModelListener listener = new InserterAnnotationModelListener(this);
 
 	@Override
