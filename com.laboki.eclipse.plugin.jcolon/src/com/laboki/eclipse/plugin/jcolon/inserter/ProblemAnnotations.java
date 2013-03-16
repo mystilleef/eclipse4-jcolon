@@ -14,6 +14,7 @@ final class ProblemAnnotations implements Runnable, IInserterAnnotationModelList
 	@Getter private final IEditorPart editor = EditorContext.getEditor();
 	private final Runnable inserterRunnable = new InserterRunnable();
 	private final IInserterListener listener = new InserterAnnotationModelListener(this);
+	private final FileSyncer syncer = new FileSyncer();
 
 	public ProblemAnnotations(final SemiColonInserter inserter) {
 		this.inserter = inserter;
@@ -41,7 +42,7 @@ final class ProblemAnnotations implements Runnable, IInserterAnnotationModelList
 	}
 
 	protected boolean hasJDTErrors() {
-		this.inserter.syncFile();
+		EditorContext.asyncExec(this.syncer);
 		return EditorContext.hasJDTErrors(this.editor);
 	}
 }
