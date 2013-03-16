@@ -7,29 +7,18 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
-import com.laboki.eclipse.plugin.jcolon.inserter.listeners.IInserterAnnotationModelListenerHandler;
-import com.laboki.eclipse.plugin.jcolon.inserter.listeners.IInserterListener;
-import com.laboki.eclipse.plugin.jcolon.inserter.listeners.InserterAnnotationModelListener;
-
 @ToString
-final class SemiColonInserter implements Runnable, IInserterAnnotationModelListenerHandler {
+final class SemiColonInserter implements Runnable {
 
 	private static final String SEMICOLON = ";";
-	private final Runnable inserterRunnable = new InserterRunnable();
 	private final Runnable syncFileRunnable = new SyncFileRunnable();
 	@Getter private final IEditorPart editor = EditorContext.getEditor();
 	private final IDocument document = EditorContext.getDocument(this.editor);
-	private final IInserterListener listener = new InserterAnnotationModelListener(this);
 	private final Problem problem = new Problem();
 
 	@Override
 	public void run() {
-		this.listener.start();
-	}
-
-	@Override
-	public void annotationModelChanged() {
-		EditorContext.asyncExec(this.inserterRunnable);
+		EditorContext.asyncExec(new ProblemAnnotations(this));
 	}
 
 	protected void insertSemiColon() {
@@ -38,30 +27,14 @@ final class SemiColonInserter implements Runnable, IInserterAnnotationModelListe
 
 	private void tryToInsertSemiColon() {
 		try {
-			this.document.replace(this.problem.location() + 1, 0, SemiColonInserter.SEMICOLON);
+			this.document.replace(this.problem.location(), 0, SemiColonInserter.SEMICOLON);
 		} catch (final BadLocationException e) {} finally {
 			this.syncFile();
 		}
 	}
 
-	protected boolean hasJDTErrors() {
-		this.syncFile();
-		return EditorContext.hasJDTErrors(this.editor);
-	}
-
-	private void syncFile() {
+	void syncFile() {
 		EditorContext.asyncExec(this.syncFileRunnable);
-	}
-
-	private final class InserterRunnable implements Runnable {
-
-		public InserterRunnable() {}
-
-		@Override
-		public void run() {
-			if (!SemiColonInserter.this.hasJDTErrors()) return;
-			SemiColonInserter.this.insertSemiColon();
-		}
 	}
 
 	private final class SyncFileRunnable implements Runnable {
