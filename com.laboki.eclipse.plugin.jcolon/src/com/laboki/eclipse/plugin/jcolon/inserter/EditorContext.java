@@ -26,9 +26,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 @Log
 public final class EditorContext {
 
+	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static EditorContext instance;
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
-	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 
 	private EditorContext() {}
