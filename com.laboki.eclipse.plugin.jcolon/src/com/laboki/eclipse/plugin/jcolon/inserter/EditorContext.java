@@ -98,12 +98,15 @@ public final class EditorContext {
 
 	private static boolean hasJDTAnnotationError(final IEditorPart editor) {
 		try {
-			final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
-			while (iterator.hasNext())
-				if (EditorContext.isJdtError(iterator)) return true;
-		} catch (final Exception e) {
-			return false;
-		}
+			return EditorContext._hasJDTAnnotationError(editor);
+		} catch (final Exception e) {}
+		return false;
+	}
+
+	private static boolean _hasJDTAnnotationError(final IEditorPart editor) {
+		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
+		while (iterator.hasNext())
+			if (EditorContext.isJdtError(iterator)) return true;
 		return false;
 	}
 
