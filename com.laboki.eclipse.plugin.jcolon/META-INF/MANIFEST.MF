@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.laboki.eclipse.plugin.jcolon;singleton:=true
-Bundle-Version: 20130314.16
+Bundle-Version: 20130315.1
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Plugin-Class: com.laboki.eclipse.plugin.jcolon.Startup

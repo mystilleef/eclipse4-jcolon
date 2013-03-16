@@ -27,7 +27,7 @@ public final class Factory implements Runnable {
 		if (this.isInvalidPart(part)) return;
 		if (!EditorContext.isAJavaEditor(part)) return;
 		this.editorParts.add((IEditorPart) part);
-		EditorContext.asyncExec(new AutomaticInserter());
+		EditorContext.asyncExec(new SemiColonInserter());
 	}
 
 	private boolean isInvalidPart(final IWorkbenchPart part) {
