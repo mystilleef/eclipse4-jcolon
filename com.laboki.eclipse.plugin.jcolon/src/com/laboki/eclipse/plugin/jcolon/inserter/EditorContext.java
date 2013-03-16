@@ -97,9 +97,13 @@ public final class EditorContext {
 	}
 
 	private static boolean hasJDTAnnotationError(final IEditorPart editor) {
-		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
-		while (iterator.hasNext())
-			if (EditorContext.isJdtError(iterator)) return true;
+		try {
+			final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
+			while (iterator.hasNext())
+				if (EditorContext.isJdtError(iterator)) return true;
+		} catch (final Exception e) {
+			return false;
+		}
 		return false;
 	}
 
