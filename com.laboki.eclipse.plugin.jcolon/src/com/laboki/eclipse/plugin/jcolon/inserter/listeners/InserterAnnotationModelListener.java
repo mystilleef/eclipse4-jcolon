@@ -9,9 +9,8 @@ import org.eclipse.jface.text.source.IAnnotationModelListener;
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 
 @ToString
-public final class InserterAnnotationModelListener implements IAnnotationModelListener {
+public final class InserterAnnotationModelListener extends AbstractInserterListener implements IAnnotationModelListener {
 
-	private boolean isListening;
 	@Getter private final IInserterAnnotationModelListenerHandler handler;
 	private final ModelChangedRunnable modelChangedRunnable = new ModelChangedRunnable();
 	private final IAnnotationModel annotationModel = EditorContext.getView().getAnnotationModel();
@@ -20,16 +19,14 @@ public final class InserterAnnotationModelListener implements IAnnotationModelLi
 		this.handler = handler;
 	}
 
-	public void start() {
-		if (this.isListening) return;
+	@Override
+	public void add() {
 		this.annotationModel.addAnnotationModelListener(this);
-		this.isListening = true;
 	}
 
-	public void stop() {
-		if (!this.isListening) return;
+	@Override
+	public void remove() {
 		this.annotationModel.removeAnnotationModelListener(this);
-		this.isListening = false;
 	}
 
 	@Override
