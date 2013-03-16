@@ -22,12 +22,13 @@ import com.laboki.eclipse.plugin.jcolon.inserter.listeners.InserterAnnotationMod
 @ToString
 final class AutomaticInserter implements Runnable, IInserterAnnotationModelListenerHandler {
 
-	@Getter private final IEditorPart editor = EditorContext.getEditor();
 	private static final String SEMICOLON = ";";
+	private final Runnable inserterRunnable = new InserterRunnable();
+	private final Runnable syncFileRunnable = new SyncFileRunnable();
+	@Getter private final IEditorPart editor = EditorContext.getEditor();
 	private final IDocument document = EditorContext.getDocument(this.editor);
 	private final ICompilationUnit compilationUnit = JavaCore.getJavaCore().createCompilationUnitFrom(EditorContext.getFile(this.editor));
 	private final InserterAnnotationModelListener listener = new InserterAnnotationModelListener(this);
-	private final InserterRunnable inserterRunnable = new InserterRunnable();
 	@SuppressWarnings("boxing") private final static List<Integer> PROBLEM_IDS = Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertToCompletePhrase, IProblem.ParsingErrorInsertToCompleteScope, IProblem.ParsingErrorInsertTokenAfter, IProblem.ParsingErrorInsertTokenBefore);
 
 	@Override
@@ -61,8 +62,17 @@ final class AutomaticInserter implements Runnable, IInserterAnnotationModelListe
 		} catch (final BadLocationException e) {
 			e.printStackTrace();
 		} finally {
-			EditorContext.syncFile(this.editor);
+			this.syncFile();
 		}
+	}
+
+	protected boolean hasJDTErrors() {
+		this.syncFile();
+		return EditorContext.hasJDTErrors(this.editor);
+	}
+
+	private void syncFile() {
+		EditorContext.asyncExec(this.syncFileRunnable);
 	}
 
 	private boolean lineEndsWithSemiColon(final IProblem problem) {
@@ -120,8 +130,18 @@ final class AutomaticInserter implements Runnable, IInserterAnnotationModelListe
 
 		@Override
 		public void run() {
-			if (!EditorContext.hasErrors(AutomaticInserter.this.getEditor())) return;
+			if (!AutomaticInserter.this.hasJDTErrors()) return;
 			AutomaticInserter.this.insertSemiColon(AutomaticInserter.this.getSemiColonProblem());
+		}
+	}
+
+	private final class SyncFileRunnable implements Runnable {
+
+		public SyncFileRunnable() {}
+
+		@Override
+		public void run() {
+			EditorContext.syncFile(AutomaticInserter.this.getEditor());
 		}
 	}
 }

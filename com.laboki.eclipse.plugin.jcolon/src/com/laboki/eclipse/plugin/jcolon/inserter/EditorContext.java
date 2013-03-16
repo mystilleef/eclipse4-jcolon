@@ -29,7 +29,8 @@ public final class EditorContext {
 
 	private static EditorContext instance;
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
-	private static final Display DISPLAY = EditorContext.getDisplay();
+	public static final Display DISPLAY = EditorContext.getDisplay();
+	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 
 	private EditorContext() {}
 
@@ -50,9 +51,7 @@ public final class EditorContext {
 	}
 
 	public static void flushEvents() {
-		while (EditorContext.DISPLAY.readAndDispatch())
-			EditorContext.DISPLAY.update();
-		EditorContext.DISPLAY.update();
+		EditorContext.asyncExec(EditorContext.FLUSH_EVENTS_RUNNABLE);
 	}
 
 	public static IEditorPart getEditor() {
@@ -71,9 +70,8 @@ public final class EditorContext {
 		return (SourceViewer) editor.getAdapter(ITextOperationTarget.class);
 	}
 
-	public static boolean hasErrors(final IEditorPart editor) {
-		EditorContext.syncFile(editor);
-		return EditorContext.getAnnotationSeverity(editor);
+	public static boolean hasJDTErrors(final IEditorPart editor) {
+		return EditorContext.hasJDTAnnotationError(editor);
 	}
 
 	static void syncFile(final IEditorPart editor) {
@@ -95,7 +93,7 @@ public final class EditorContext {
 		return ((FileEditorInput) editor.getEditorInput()).getFile();
 	}
 
-	private static boolean getAnnotationSeverity(final IEditorPart editor) {
+	private static boolean hasJDTAnnotationError(final IEditorPart editor) {
 		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
 		while (iterator.hasNext())
 			if (EditorContext.isJdtError(iterator)) return true;
@@ -113,5 +111,17 @@ public final class EditorContext {
 	public static IDocument getDocument(final IEditorPart editor) {
 		final ITextEditor textEditor = (ITextEditor) editor;
 		return textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+	}
+
+	private static final class FlushEventsRunnable implements Runnable {
+
+		public FlushEventsRunnable() {}
+
+		@Override
+		public void run() {
+			while (EditorContext.DISPLAY.readAndDispatch())
+				EditorContext.DISPLAY.update();
+			EditorContext.DISPLAY.update();
+		}
 	}
 }
