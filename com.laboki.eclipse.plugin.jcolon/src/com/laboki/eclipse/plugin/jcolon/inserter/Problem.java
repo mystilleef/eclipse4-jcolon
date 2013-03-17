@@ -43,8 +43,8 @@ final class Problem {
 	}
 
 	private boolean isValidSemiColonProblem(final IProblem problem) {
-		if (Problem.isConstructorDeclaration(problem)) return false;
 		if (this.lineEndsWithSemiColon(problem)) return false;
+		if (Problem.isConstructorDeclaration(problem)) return false;
 		if (Problem.isSemiColonProblem(problem)) return true;
 		return false;
 	}
