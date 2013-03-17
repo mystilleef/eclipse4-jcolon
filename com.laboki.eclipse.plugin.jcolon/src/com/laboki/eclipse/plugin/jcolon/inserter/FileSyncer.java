@@ -6,18 +6,18 @@ import org.eclipse.ui.IEditorPart;
 
 final class FileSyncer implements Runnable {
 
-	private final Runnable syncFileRunnable = new SyncFileRunnable();
+	private final Runnable syncRunnable = new SyncFileRunnable();
 	@Getter private final IEditorPart editor = EditorContext.getEditor();
 
 	public FileSyncer() {}
 
 	@Override
 	public void run() {
-		this.syncFile();
+		this.sync();
 	}
 
-	void syncFile() {
-		EditorContext.asyncExec(this.syncFileRunnable);
+	private void sync() {
+		EditorContext.asyncExec(this.syncRunnable);
 	}
 
 	private final class SyncFileRunnable implements Runnable {
