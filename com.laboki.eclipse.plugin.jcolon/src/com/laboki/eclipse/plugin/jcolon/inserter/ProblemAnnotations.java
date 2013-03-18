@@ -37,6 +37,10 @@ final class ProblemAnnotations implements Runnable, IInserterAnnotationModelList
 		@Override
 		public void run() {
 			if (!ProblemAnnotations.this.hasJDTErrors()) return;
+			this.insertSemiColon();
+		}
+
+		private void insertSemiColon() {
 			ProblemAnnotations.this.getInserter().insertSemiColon();
 		}
 	}
