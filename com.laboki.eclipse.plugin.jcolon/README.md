@@ -13,7 +13,7 @@ Jcolon automatically inserts semicolons in java source code in Eclipse 4.
 
 ### Eclipse Market Place
 
-* [Eclipse Market Place](http://marketplace.eclipse.org/content/jcolon-automatic-semicolon-insertion-eclipse-4#.UUek0-ZDv5I)
+* __[Eclipse Market Place](http://marketplace.eclipse.org/content/jcolon-automatic-semicolon-insertion-eclipse-4#.UUek0-ZDv5I)__
 
 ### Update Site
 
