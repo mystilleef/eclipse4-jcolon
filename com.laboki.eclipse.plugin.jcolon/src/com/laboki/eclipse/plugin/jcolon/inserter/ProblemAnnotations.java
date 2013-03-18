@@ -11,10 +11,8 @@ import com.laboki.eclipse.plugin.jcolon.inserter.listeners.InserterAnnotationMod
 final class ProblemAnnotations implements Runnable, IInserterAnnotationModelListenerHandler {
 
 	@Getter private final SemiColonInserter inserter;
-	@Getter private final IEditorPart editor = EditorContext.getEditor();
 	private final Runnable inserterRunnable = new InserterRunnable();
 	private final IInserterListener listener = new InserterAnnotationModelListener(this);
-	private final FileSyncer syncer = new FileSyncer();
 
 	public ProblemAnnotations(final SemiColonInserter inserter) {
 		this.inserter = inserter;
@@ -32,21 +30,28 @@ final class ProblemAnnotations implements Runnable, IInserterAnnotationModelList
 
 	private final class InserterRunnable implements Runnable {
 
+		private final Problem problem = new Problem();
+		private final FileSyncer syncer = new FileSyncer();
+		private final IEditorPart editor = EditorContext.getEditor();
+
 		public InserterRunnable() {}
 
 		@Override
 		public void run() {
-			if (!ProblemAnnotations.this.hasJDTErrors()) return;
-			this.insertSemiColon();
+			if (this.hasMissingSemiColonError()) this.insertSemiColon();
+		}
+
+		private boolean hasMissingSemiColonError() {
+			return this.hasJDTErrors() && this.problem.isMissingSemiColonError();
+		}
+
+		private boolean hasJDTErrors() {
+			EditorContext.asyncExec(this.syncer);
+			return EditorContext.hasJDTErrors(this.editor);
 		}
 
 		private void insertSemiColon() {
 			ProblemAnnotations.this.getInserter().insertSemiColon();
 		}
-	}
-
-	protected boolean hasJDTErrors() {
-		EditorContext.asyncExec(this.syncer);
-		return EditorContext.hasJDTErrors(this.editor);
 	}
 }

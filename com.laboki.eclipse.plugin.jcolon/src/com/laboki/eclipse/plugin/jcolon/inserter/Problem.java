@@ -25,7 +25,7 @@ final class Problem {
 		return this.getSemiColonProblem().getSourceEnd() + 1;
 	}
 
-	public boolean isMissingSemiColon() {
+	public boolean isMissingSemiColonError() {
 		if (this.getSemiColonProblem() == null) return false;
 		return true;
 	}
