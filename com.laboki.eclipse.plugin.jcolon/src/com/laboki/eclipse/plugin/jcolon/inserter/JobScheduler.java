@@ -13,7 +13,7 @@ import org.eclipse.ui.IEditorPart;
 final class JobScheduler extends Job implements Runnable {
 
 	@Getter private final SemiColonInserter inserter;
-	private final Runnable inserterJobRunnable = this.new InserterRunnable();
+	private final Runnable inserterRunnable = this.new InserterRunnable();
 
 	public JobScheduler(final String name, final SemiColonInserter inserter) {
 		super(name);
@@ -28,7 +28,7 @@ final class JobScheduler extends Job implements Runnable {
 
 	@Override
 	protected IStatus run(final IProgressMonitor monitor) {
-		EditorContext.asyncExec(this.inserterJobRunnable);
+		EditorContext.asyncExec(this.inserterRunnable);
 		return Status.OK_STATUS;
 	}
 
