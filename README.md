@@ -2,6 +2,10 @@
 
 Jcolon automatically inserts semicolons in java source code in Eclipse 4.
 
+### Website
+
+* __[Official Website](http://mystilleef.github.com/eclipse4-jcolon/)__
+
 ### Donate
 
 * __[Paypal](https://googledrive.com/host/0Bw1KseIE5s6cTXRJcWZzbTU0Q3c/jcolon.html)__
