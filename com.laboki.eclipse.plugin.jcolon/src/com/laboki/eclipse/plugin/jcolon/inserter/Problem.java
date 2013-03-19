@@ -16,6 +16,7 @@ import org.eclipse.ui.IEditorPart;
 final class Problem {
 
 	private static final String SEMICOLON = ";";
+	private static final String PERIOD = ".";
 	private static final List<Integer> PROBLEM_IDS = Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertToCompletePhrase, IProblem.ParsingErrorInsertToCompleteScope, IProblem.ParsingErrorInsertTokenAfter, IProblem.ParsingErrorInsertTokenBefore);
 	private final IEditorPart editor = EditorContext.getEditor();
 	private final IDocument document = EditorContext.getDocument(this.editor);
@@ -43,7 +44,7 @@ final class Problem {
 	}
 
 	private boolean isValidSemiColonProblem(final IProblem problem) {
-		if (this.lineEndsWithSemiColon(problem)) return false;
+		if (this.lineEndsWithSemiColon(problem) || this.lineEndsWithPeriod(problem)) return false;
 		if (Problem.isConstructorDeclaration(problem)) return false;
 		if (Problem.isSemiColonProblem(problem)) return true;
 		return false;
@@ -56,8 +57,16 @@ final class Problem {
 	}
 
 	private boolean lineEndsWithSemiColon(final IProblem problem) {
+		return this.lineEndsWith(problem, Problem.SEMICOLON);
+	}
+
+	private boolean lineEndsWithPeriod(final IProblem problem) {
+		return this.lineEndsWith(problem, Problem.PERIOD);
+	}
+
+	private boolean lineEndsWith(final IProblem problem, final String string) {
 		try {
-			return this.getLineString(problem).endsWith(Problem.SEMICOLON);
+			return this.getLineString(problem).endsWith(string);
 		} catch (final BadLocationException e) {
 			return false;
 		}
