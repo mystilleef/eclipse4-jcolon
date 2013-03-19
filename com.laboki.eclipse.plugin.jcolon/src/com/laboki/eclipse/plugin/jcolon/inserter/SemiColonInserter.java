@@ -36,7 +36,7 @@ final class SemiColonInserter implements Runnable {
 		private void tryToInsertSemiColon() {
 			try {
 				this.insertSemiColonInDocument();
-			} catch (final BadLocationException e) {} finally {
+			} catch (final Exception e) {} finally {
 				EditorContext.asyncExec(this.syncer);
 			}
 		}

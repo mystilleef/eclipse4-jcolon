@@ -2,8 +2,6 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import lombok.Getter;
 
-import org.eclipse.ui.IEditorPart;
-
 import com.laboki.eclipse.plugin.jcolon.inserter.listeners.IInserterAnnotationModelListenerHandler;
 import com.laboki.eclipse.plugin.jcolon.inserter.listeners.IInserterListener;
 import com.laboki.eclipse.plugin.jcolon.inserter.listeners.InserterAnnotationModelListener;
@@ -11,11 +9,13 @@ import com.laboki.eclipse.plugin.jcolon.inserter.listeners.InserterAnnotationMod
 final class ProblemAnnotations implements Runnable, IInserterAnnotationModelListenerHandler {
 
 	@Getter private final SemiColonInserter inserter;
-	private final Runnable inserterRunnable = new InserterRunnable();
+	@Getter private final JobScheduler inserterScheduler;
+	private final Runnable inserterSchedulerRunnable = new InserterSchedulerRunnable();
 	private final IInserterListener listener = new InserterAnnotationModelListener(this);
 
 	public ProblemAnnotations(final SemiColonInserter inserter) {
 		this.inserter = inserter;
+		this.inserterScheduler = new JobScheduler("SemiColonInserterScheduler", ProblemAnnotations.this.getInserter());
 	}
 
 	@Override
@@ -25,33 +25,20 @@ final class ProblemAnnotations implements Runnable, IInserterAnnotationModelList
 
 	@Override
 	public void annotationModelChanged() {
-		EditorContext.asyncExec(this.inserterRunnable);
+		EditorContext.asyncExec(this.inserterSchedulerRunnable);
 	}
 
-	private final class InserterRunnable implements Runnable {
+	private final class InserterSchedulerRunnable implements Runnable {
 
-		private final Problem problem = new Problem();
-		private final FileSyncer syncer = new FileSyncer();
-		private final IEditorPart editor = EditorContext.getEditor();
-
-		public InserterRunnable() {}
+		public InserterSchedulerRunnable() {}
 
 		@Override
 		public void run() {
-			if (this.hasMissingSemiColonError()) this.insertSemiColon();
+			EditorContext.asyncExec(this.scheduleSemiColonInsertion());
 		}
 
-		private boolean hasMissingSemiColonError() {
-			return this.hasJDTErrors() && this.problem.isMissingSemiColonError();
-		}
-
-		private boolean hasJDTErrors() {
-			EditorContext.asyncExec(this.syncer);
-			return EditorContext.hasJDTErrors(this.editor);
-		}
-
-		private void insertSemiColon() {
-			ProblemAnnotations.this.getInserter().insertSemiColon();
+		private JobScheduler scheduleSemiColonInsertion() {
+			return ProblemAnnotations.this.getInserterScheduler();
 		}
 	}
 }
