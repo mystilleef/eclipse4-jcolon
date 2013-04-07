@@ -1,9 +1,7 @@
 package com.laboki.eclipse.plugin.jcolon.inserter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
 import lombok.ToString;
 
 import org.eclipse.ui.IEditorPart;
@@ -11,29 +9,30 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.google.common.collect.Lists;
+
 @ToString
 public final class Factory implements Runnable {
 
-	private final IPartService partService;
+	private final List<IEditorPart> editorParts = Lists.newArrayList();
+	private static final IPartService PART_SERVICE = EditorContext.getPartService();
 	private final PartListener partListener = new PartListener();
-	@Getter private final List<IEditorPart> editorParts = new ArrayList<>();
 
-	public Factory(final IPartService partService) {
-		this.partService = partService;
-		this.partService.addPartListener(this.partListener);
+	public Factory() {
+		EditorContext.instance();
+		Factory.PART_SERVICE.addPartListener(this.partListener);
 	}
 
 	@Override
 	public void run() {
-		EditorContext.instance();
-		this.enableAutomaticInserterFor(this.partService.getActivePart());
+		this.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
 	}
 
 	public void enableAutomaticInserterFor(final IWorkbenchPart part) {
 		if (this.isInvalidPart(part)) return;
 		if (!EditorContext.isAJavaEditor((IEditorPart) part)) return;
 		this.editorParts.add((IEditorPart) part);
-		EditorContext.asyncExec(new SemiColonInserter());
+		EditorContext.asyncExec(new SemiColonInserterServices());
 	}
 
 	private boolean isInvalidPart(final IWorkbenchPart part) {
@@ -42,7 +41,7 @@ public final class Factory implements Runnable {
 
 	private boolean isValidPart(final IWorkbenchPart part) {
 		if (part == null) return false;
-		if (this.getEditorParts().contains(part)) return false;
+		if (this.editorParts.contains(part)) return false;
 		if (part instanceof IEditorPart) return true;
 		return false;
 	}
@@ -58,7 +57,7 @@ public final class Factory implements Runnable {
 
 		@Override
 		public void partClosed(final IWorkbenchPart part) {
-			if (Factory.this.getEditorParts().contains(part)) Factory.this.getEditorParts().remove(part);
+			if (Factory.this.editorParts.contains(part)) Factory.this.editorParts.remove(part);
 		}
 
 		@Override

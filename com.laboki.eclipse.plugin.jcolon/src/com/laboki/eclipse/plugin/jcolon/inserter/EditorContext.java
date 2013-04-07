@@ -18,7 +18,9 @@ import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IPartService;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -40,9 +42,11 @@ public final class EditorContext {
 	}
 
 	public static Display getDisplay() {
-		Display display = Display.getCurrent();
-		if (display == null) display = Display.getDefault();
-		return display;
+		return PlatformUI.getWorkbench().getDisplay();
+	}
+
+	public static Shell getShell() {
+		return PlatformUI.getWorkbench().getModalDialogShellProvider().getShell();
 	}
 
 	public static void asyncExec(final Runnable runnable) {
@@ -123,6 +127,10 @@ public final class EditorContext {
 	public static IDocument getDocument(final IEditorPart editor) {
 		final ITextEditor textEditor = (ITextEditor) editor;
 		return textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+	}
+
+	public static IPartService getPartService() {
+		return (IPartService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(IPartService.class);
 	}
 
 	private static final class FlushEventsRunnable implements Runnable {

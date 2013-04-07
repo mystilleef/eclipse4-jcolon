@@ -4,29 +4,26 @@ import lombok.Getter;
 
 import org.eclipse.ui.IEditorPart;
 
-final class FileSyncer implements Runnable {
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
+import com.laboki.eclipse.plugin.jcolon.Task;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
-	private final Runnable syncRunnable = new SyncFileRunnable();
+final class FileSyncer {
+
 	@Getter private final IEditorPart editor = EditorContext.getEditor();
 
 	public FileSyncer() {}
 
-	@Override
-	public void run() {
-		this.sync();
-	}
+	@Subscribe
+	@AllowConcurrentEvents
+	private void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
+		EditorContext.asyncExec(new Task("") {
 
-	private void sync() {
-		EditorContext.asyncExec(this.syncRunnable);
-	}
-
-	private final class SyncFileRunnable implements Runnable {
-
-		public SyncFileRunnable() {}
-
-		@Override
-		public void run() {
-			EditorContext.syncFile(FileSyncer.this.getEditor());
-		}
+			@Override
+			public void execute() {
+				EditorContext.syncFile(FileSyncer.this.editor);;
+			}
+		});
 	}
 }

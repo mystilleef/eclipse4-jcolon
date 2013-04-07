@@ -2,9 +2,7 @@ package com.laboki.eclipse.plugin.jcolon;
 
 import lombok.ToString;
 
-import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IStartup;
-import org.eclipse.ui.PlatformUI;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.Factory;
@@ -25,6 +23,6 @@ public final class Startup implements IStartup, Runnable {
 	}
 
 	private static void start() {
-		EditorContext.asyncExec(new Factory((IPartService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(IPartService.class)));
+		EditorContext.asyncExec(new Factory());
 	}
 }
