@@ -28,8 +28,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 @Log
 public final class EditorContext {
 
-	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static EditorContext instance;
+	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 
@@ -55,6 +55,18 @@ public final class EditorContext {
 
 	public static void flushEvents() {
 		EditorContext.asyncExec(EditorContext.FLUSH_EVENTS_RUNNABLE);
+	}
+
+	private static final class FlushEventsRunnable implements Runnable {
+
+		public FlushEventsRunnable() {}
+
+		@Override
+		public void run() {
+			while (EditorContext.DISPLAY.readAndDispatch())
+				EditorContext.DISPLAY.update();
+			EditorContext.DISPLAY.update();
+		}
 	}
 
 	public static IEditorPart getEditor() {
@@ -131,17 +143,5 @@ public final class EditorContext {
 
 	public static IPartService getPartService() {
 		return (IPartService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(IPartService.class);
-	}
-
-	private static final class FlushEventsRunnable implements Runnable {
-
-		public FlushEventsRunnable() {}
-
-		@Override
-		public void run() {
-			while (EditorContext.DISPLAY.readAndDispatch())
-				EditorContext.DISPLAY.update();
-			EditorContext.DISPLAY.update();
-		}
 	}
 }
