@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 @ToString
 public final class Factory implements Runnable {
 
-	private final List<IEditorPart> editorParts = Lists.newArrayList();
+	private final List<String> editorParts = Lists.newArrayList();
 	private static final IPartService PART_SERVICE = EditorContext.getPartService();
 	private final PartListener partListener = new PartListener();
 
@@ -28,10 +28,10 @@ public final class Factory implements Runnable {
 		this.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
 	}
 
-	public void enableAutomaticInserterFor(final IWorkbenchPart part) {
+	private void enableAutomaticInserterFor(final IWorkbenchPart part) {
 		if (this.isInvalidPart(part)) return;
 		if (!EditorContext.isAJavaEditor((IEditorPart) part)) return;
-		this.editorParts.add((IEditorPart) part);
+		this.editorParts.add(((IEditorPart) part).getTitleToolTip());
 		EditorContext.asyncExec(new SemiColonInserterServices());
 	}
 
@@ -41,9 +41,13 @@ public final class Factory implements Runnable {
 
 	private boolean isValidPart(final IWorkbenchPart part) {
 		if (part == null) return false;
-		if (this.editorParts.contains(part)) return false;
+		if (this.editorParts.contains(part.getTitleToolTip())) return false;
 		if (part instanceof IEditorPart) return true;
 		return false;
+	}
+
+	private void disableAutomaticInserterFor(final IWorkbenchPart part) {
+		if (Factory.this.editorParts.contains(part.getTitleToolTip())) Factory.this.editorParts.remove(part.getTitleToolTip());
 	}
 
 	private final class PartListener implements IPartListener {
@@ -57,16 +61,22 @@ public final class Factory implements Runnable {
 
 		@Override
 		public void partClosed(final IWorkbenchPart part) {
-			if (Factory.this.editorParts.contains(part)) Factory.this.editorParts.remove(part);
+			Factory.this.disableAutomaticInserterFor(part);
 		}
 
 		@Override
-		public void partBroughtToTop(final IWorkbenchPart part) {}
+		public void partBroughtToTop(final IWorkbenchPart part) {
+			Factory.this.enableAutomaticInserterFor(part);
+		}
 
 		@Override
-		public void partDeactivated(final IWorkbenchPart part) {}
+		public void partDeactivated(final IWorkbenchPart part) {
+			Factory.this.disableAutomaticInserterFor(part);
+		}
 
 		@Override
-		public void partOpened(final IWorkbenchPart part) {}
+		public void partOpened(final IWorkbenchPart part) {
+			Factory.this.enableAutomaticInserterFor(part);
+		}
 	}
 }
