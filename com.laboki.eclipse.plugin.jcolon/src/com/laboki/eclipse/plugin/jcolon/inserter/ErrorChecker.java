@@ -28,7 +28,7 @@ final class ErrorChecker implements Instance, KeyListener, IPropertyListener {
 
 	@Override
 	public Instance begin() {
-		this.findSemiColonError();
+		this.checkError();
 		this.editor.addPropertyListener(this);
 		this.buffer.addKeyListener(this);
 		return this;
@@ -64,24 +64,35 @@ final class ErrorChecker implements Instance, KeyListener, IPropertyListener {
 		});
 	}
 
-	private static void cancelJobs() {
-		EditorContext.cancelJobsBelongingTo(ErrorChecker.TASK_FAMILY_NAME);
-	}
-
 	@Override
 	public void keyReleased(final KeyEvent arg0) {
-		this.findSemiColonError();
+		this.checkError();
 	}
 
 	@Override
 	public void propertyChanged(final Object arg0, final int propID) {
-		this.findSemiColonError();
+		this.checkError();
 	}
 
 	@Subscribe
 	@AllowConcurrentEvents
 	public void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
-		this.findSemiColonError();
+		this.checkError();
+	}
+
+	private void checkError() {
+		EditorContext.asyncExec(new Task("") {
+
+			@Override
+			public void execute() {
+				ErrorChecker.cancelJobs();
+				ErrorChecker.this.findSemiColonError();
+			}
+		});
+	}
+
+	private static void cancelJobs() {
+		EditorContext.cancelJobsBelongingTo(ErrorChecker.TASK_FAMILY_NAME);
 	}
 
 	private void findSemiColonError() {
