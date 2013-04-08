@@ -130,6 +130,10 @@ public final class EditorContext {
 		return iterator.next().getType().equals(EditorContext.JDT_ANNOTATION_ERROR);
 	}
 
+	public static boolean isNotAJavaEditor(final IEditorPart part) {
+		return !EditorContext.isAJavaEditor(part);
+	}
+
 	public static boolean isAJavaEditor(final IEditorPart part) {
 		final IFile file = EditorContext.getFile(part);
 		if (file == null) return false;
