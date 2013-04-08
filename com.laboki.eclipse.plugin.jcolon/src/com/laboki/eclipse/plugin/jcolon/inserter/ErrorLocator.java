@@ -32,15 +32,19 @@ final class ErrorLocator implements Instance {
 	}
 
 	private void findErrorLocation() {
-		if (this.hasMissingSemiColonError()) this.postEvent(this.problem.location());
+		if (this.isMissingSemiColonError()) this.postEvent(this.problem.location());
 	}
 
-	private boolean hasMissingSemiColonError() {
-		return this.hasJDTErrors() && this.problem.isMissingSemiColonError();
+	private boolean isMissingSemiColonError() {
+		return this.hasJDTErrors() && this.hasMissingSemiColonError();
 	}
 
 	private boolean hasJDTErrors() {
 		return EditorContext.hasJDTErrors(this.editor);
+	}
+
+	private boolean hasMissingSemiColonError() {
+		return this.problem.isMissingSemiColonError();
 	}
 
 	private void postEvent(final int location) {
