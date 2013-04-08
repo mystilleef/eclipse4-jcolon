@@ -13,23 +13,20 @@ import com.google.common.collect.Maps;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 
 @ToString
-public final class Factory implements Instance {
+public enum Factory implements Instance {
+	INSTANCE;
 
-	private final Map<IEditorPart, Instance> editorMap = Maps.newHashMap();
+	private static final Map<IEditorPart, Instance> PART_SERVICE_MAP = Maps.newHashMap();
 	private static final IPartService PART_SERVICE = EditorContext.getPartService();
-	private final PartListener partListener = new PartListener();
+	private static final PartListener PART_LISTENER = new PartListener();
 
-	public Factory() {
-		EditorContext.instance();
-	}
-
-	private final class PartListener implements IPartListener {
+	private static final class PartListener implements IPartListener {
 
 		public PartListener() {}
 
 		@Override
 		public void partActivated(final IWorkbenchPart part) {
-			Factory.this.enableAutomaticInserterFor(part);
+			Factory.enableAutomaticInserterFor(part);
 		}
 
 		@Override
@@ -45,9 +42,9 @@ public final class Factory implements Instance {
 		public void partOpened(final IWorkbenchPart part) {}
 	}
 
-	private void enableAutomaticInserterFor(final IWorkbenchPart part) {
+	private static void enableAutomaticInserterFor(final IWorkbenchPart part) {
 		if (Factory.isInvalidPart(part)) return;
-		this.startInserterService(part);
+		Factory.startInserterService(part);
 	}
 
 	private static boolean isInvalidPart(final IWorkbenchPart part) {
@@ -68,32 +65,32 @@ public final class Factory implements Instance {
 		return part instanceof IEditorPart;
 	}
 
-	private void startInserterService(final IWorkbenchPart part) {
-		this.stopAllInserterServices();
-		this.editorMap.put((IEditorPart) part, new SemiColonInserterServices().begin());
+	private static void startInserterService(final IWorkbenchPart part) {
+		Factory.stopAllInserterServices();
+		Factory.PART_SERVICE_MAP.put((IEditorPart) part, new SemiColonInserterServices().begin());
 	}
 
-	private void stopAllInserterServices() {
-		for (final IEditorPart part : this.editorMap.keySet())
-			this.stopInserterService(part);
+	private static void stopAllInserterServices() {
+		for (final IEditorPart part : Factory.PART_SERVICE_MAP.keySet())
+			Factory.stopInserterService(part);
 	}
 
-	private void stopInserterService(final IWorkbenchPart part) {
-		this.editorMap.get(part).end();
-		this.editorMap.remove(part);
+	private static void stopInserterService(final IWorkbenchPart part) {
+		Factory.PART_SERVICE_MAP.get(part).end();
+		Factory.PART_SERVICE_MAP.remove(part);
 	}
 
 	@Override
 	public Instance begin() {
-		this.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
-		Factory.PART_SERVICE.addPartListener(this.partListener);
+		Factory.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
+		Factory.PART_SERVICE.addPartListener(Factory.PART_LISTENER);
 		return this;
 	}
 
 	@Override
 	public Instance end() {
-		Factory.PART_SERVICE.removePartListener(this.partListener);
-		this.stopAllInserterServices();
+		Factory.PART_SERVICE.removePartListener(Factory.PART_LISTENER);
+		Factory.stopAllInserterServices();
 		return this;
 	}
 }
