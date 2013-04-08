@@ -21,7 +21,7 @@ public final class SemiColonInserterServices implements Instance {
 		this.startService(new FileSyncer());
 		this.startService(new SemiColonInserter(this.eventBus));
 		this.startService(new ErrorLocator(this.eventBus));
-		this.startService(new AnnotationsMonitor(this.eventBus));
+		this.startService(new ErrorChecker(this.eventBus));
 	}
 
 	private void startService(final Instance instance) {

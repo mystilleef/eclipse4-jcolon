@@ -6,7 +6,7 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.AnnotationModelChangedEvent;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
 
 final class ErrorLocator implements Instance {
@@ -21,7 +21,7 @@ final class ErrorLocator implements Instance {
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public void annotationModelChanged(@SuppressWarnings("unused") final AnnotationModelChangedEvent event) {
+	public void checkSemiColonError(@SuppressWarnings("unused") final CheckSemiColonErrorEvent event) {
 		EditorContext.asyncExec(new DelayedTask("", 1000) {
 
 			@Override

@@ -10,6 +10,8 @@ import lombok.extern.java.Log;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
@@ -31,9 +33,9 @@ public enum EditorContext {
 	INSTANCE;
 
 	public static final Display DISPLAY = EditorContext.getDisplay();
-	public static final Shell SHELL = EditorContext.getShell();
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
+	private static final IJobManager JOB_MANAGER = Job.getJobManager();
 
 	public static Display getDisplay() {
 		return PlatformUI.getWorkbench().getDisplay();
@@ -149,5 +151,9 @@ public enum EditorContext {
 
 	public static boolean isNull(final Object object) {
 		return object == null;
+	}
+
+	public static void cancelJobsBelongingTo(final String jobName) {
+		EditorContext.JOB_MANAGER.cancel(jobName);
 	}
 }
