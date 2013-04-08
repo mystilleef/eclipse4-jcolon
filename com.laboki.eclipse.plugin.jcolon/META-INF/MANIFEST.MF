@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.laboki.eclipse.plugin.jcolon;singleton:=true
-Bundle-Version: 20130407
+Bundle-Version: 20130407.1
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
@@ -39,7 +39,6 @@ Export-Package: com.google.common.annotations,
    org.eclipse.swt.custom,
    org.eclipse.swt.widgets",
  com.laboki.eclipse.plugin.jcolon.inserter.events,
- com.laboki.eclipse.plugin.jcolon.inserter.listeners;uses:="org.eclipse.jface.text.source",
  com.sun.jna;uses:="new com.sun.jna",
  com.sun.jna.darwin,
  com.sun.jna.ptr;uses:="com.sun.jna",
