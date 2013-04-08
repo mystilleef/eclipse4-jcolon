@@ -11,8 +11,6 @@ public final class SemiColonInserterServices implements Instance {
 	private List<Instance> instances = Lists.newArrayList();
 	private EventBus eventBus = new EventBus();
 
-	public SemiColonInserterServices() {}
-
 	@Override
 	public Instance begin() {
 		this.startServices();
