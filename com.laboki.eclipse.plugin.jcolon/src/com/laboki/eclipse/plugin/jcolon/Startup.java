@@ -18,10 +18,6 @@ public final class Startup implements IStartup, Runnable {
 
 	@Override
 	public void run() {
-		Startup.start();
-	}
-
-	private static void start() {
 		EditorContext.asyncExec(Inserter.INSTANCE);
 	}
 }
