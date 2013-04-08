@@ -11,7 +11,7 @@ import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.Task;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckSemiColonErrorEvent;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
 final class ErrorChecker implements Instance, KeyListener, IPropertyListener {
@@ -106,6 +106,6 @@ final class ErrorChecker implements Instance, KeyListener, IPropertyListener {
 	}
 
 	private void postEvent() {
-		this.eventBus.post(new CheckSemiColonErrorEvent());
+		this.eventBus.post(new LocateSemiColonErrorEvent());
 	}
 }

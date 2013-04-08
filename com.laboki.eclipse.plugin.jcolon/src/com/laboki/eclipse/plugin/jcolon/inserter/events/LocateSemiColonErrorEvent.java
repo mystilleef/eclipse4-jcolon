@@ -1,4 +1,4 @@
 package com.laboki.eclipse.plugin.jcolon.inserter.events;
 
 
-public final class CheckSemiColonErrorEvent {}
+public final class LocateSemiColonErrorEvent {}
