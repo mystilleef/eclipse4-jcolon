@@ -56,7 +56,7 @@ public final class Factory implements Instance {
 
 	private static boolean isValidPart(final IWorkbenchPart part) {
 		if (Factory.isNotEditorPart(part)) return false;
-		if (!EditorContext.isAJavaEditor((IEditorPart) part)) return false;
+		if (EditorContext.isNotAJavaEditor((IEditorPart) part)) return false;
 		return true;
 	}
 
