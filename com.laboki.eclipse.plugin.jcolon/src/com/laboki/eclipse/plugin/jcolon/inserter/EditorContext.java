@@ -4,7 +4,7 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 import java.util.Iterator;
 import java.util.logging.Level;
 
-import lombok.Synchronized;
+import lombok.ToString;
 import lombok.extern.java.Log;
 
 import org.eclipse.core.resources.IFile;
@@ -26,20 +26,13 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 @Log
-public final class EditorContext {
+@ToString
+public enum EditorContext {
+	INSTANCE;
 
-	private static EditorContext instance;
 	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
-
-	private EditorContext() {}
-
-	@Synchronized
-	public static EditorContext instance() {
-		if (EditorContext.instance == null) EditorContext.instance = new EditorContext();
-		return EditorContext.instance;
-	}
 
 	public static Display getDisplay() {
 		return PlatformUI.getWorkbench().getDisplay();
