@@ -7,20 +7,20 @@ import org.eclipse.jface.text.IDocument;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
 @ToString
-final class SemiColonInserter {
+final class SemiColonInserter implements Instance {
 
-	private final EventBus eventBus;
-	private final IDocument document = EditorContext.getDocument(EditorContext.getEditor());
+	private EventBus eventBus;
+	private IDocument document = EditorContext.getDocument(EditorContext.getEditor());
 	private static final String SEMICOLON = ";";
 
 	public SemiColonInserter(final EventBus eventBus) {
 		this.eventBus = eventBus;
-		this.eventBus.register(this);
 	}
 
 	@Subscribe
@@ -51,5 +51,19 @@ final class SemiColonInserter {
 
 	protected void postEvent() {
 		this.eventBus.post(new SyncFilesEvent());
+	}
+
+	@Override
+	public Instance begin() {
+		this.eventBus.register(this);
+		return this;
+	}
+
+	@Override
+	public Instance end() {
+		this.eventBus.unregister(this);
+		this.eventBus = null;
+		this.document = null;
+		return this;
 	}
 }

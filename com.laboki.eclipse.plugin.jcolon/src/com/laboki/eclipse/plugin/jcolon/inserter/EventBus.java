@@ -9,7 +9,7 @@ import com.laboki.eclipse.plugin.jcolon.Task;
 final class EventBus {
 
 	private static final Executor EXECUTOR = Executors.newCachedThreadPool();
-	private final AsyncEventBus bus = new AsyncEventBus(this.EXECUTOR);
+	private final AsyncEventBus bus = new AsyncEventBus(EventBus.EXECUTOR);
 
 	public EventBus() {}
 

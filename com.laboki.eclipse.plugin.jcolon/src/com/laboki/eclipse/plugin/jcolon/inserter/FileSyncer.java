@@ -4,12 +4,13 @@ import org.eclipse.ui.IEditorPart;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
-final class FileSyncer {
+final class FileSyncer implements Instance {
 
-	private final IEditorPart editor = EditorContext.getEditor();
+	private IEditorPart editor = EditorContext.getEditor();
 
 	public FileSyncer() {}
 
@@ -23,5 +24,16 @@ final class FileSyncer {
 				EditorContext.syncFile(FileSyncer.this.editor);
 			}
 		});
+	}
+
+	@Override
+	public Instance begin() {
+		return this;
+	}
+
+	@Override
+	public Instance end() {
+		this.editor = null;
+		return this;
 	}
 }

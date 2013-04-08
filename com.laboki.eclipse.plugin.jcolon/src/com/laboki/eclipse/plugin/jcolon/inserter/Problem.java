@@ -3,7 +3,6 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 import java.util.Arrays;
 import java.util.List;
 
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
@@ -13,14 +12,15 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
-final class Problem {
+import com.laboki.eclipse.plugin.jcolon.Instance;
+
+final class Problem implements Instance {
 
 	private static final String SEMICOLON = ";";
 	private static final String PERIOD = ".";
 	private static final List<Integer> PROBLEM_IDS = Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertToCompletePhrase, IProblem.ParsingErrorInsertToCompleteScope, IProblem.ParsingErrorInsertTokenAfter, IProblem.ParsingErrorInsertTokenBefore);
-	private final IEditorPart editor = EditorContext.getEditor();
-	private final IDocument document = EditorContext.getDocument(this.editor);
-	private final ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
+	private IEditorPart editor = EditorContext.getEditor();
+	private IDocument document = EditorContext.getDocument(this.editor);
 
 	public int location() {
 		return this.getSemiColonProblem().getSourceEnd() + 1;
@@ -39,7 +39,7 @@ final class Problem {
 
 	private CompilationUnit createCompilationUnitNode() {
 		final ASTParser parser = ASTParser.newParser(AST.JLS4);
-		parser.setSource(this.compilationUnit);
+		parser.setSource(JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor)));
 		return (CompilationUnit) parser.createAST(null);
 	}
 
@@ -89,5 +89,17 @@ final class Problem {
 		for (final String string : problem.getArguments())
 			if (string.trim().equals(Problem.SEMICOLON)) return true;
 		return false;
+	}
+
+	@Override
+	public Instance begin() {
+		return this;
+	}
+
+	@Override
+	public Instance end() {
+		this.editor = null;
+		this.document = null;
+		return this;
 	}
 }

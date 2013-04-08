@@ -1,6 +1,6 @@
 package com.laboki.eclipse.plugin.jcolon.inserter;
 
-import java.util.List;
+import java.util.Map;
 
 import lombok.ToString;
 
@@ -9,45 +9,18 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.laboki.eclipse.plugin.jcolon.Instance;
 
 @ToString
-public final class Factory implements Runnable {
+public final class Factory implements Runnable, Instance {
 
-	private final List<String> editorParts = Lists.newArrayList();
+	private final Map<IEditorPart, Instance> editorMap = Maps.newHashMap();
 	private static final IPartService PART_SERVICE = EditorContext.getPartService();
 	private final PartListener partListener = new PartListener();
 
 	public Factory() {
 		EditorContext.instance();
-		Factory.PART_SERVICE.addPartListener(this.partListener);
-	}
-
-	@Override
-	public void run() {
-		this.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
-	}
-
-	private void enableAutomaticInserterFor(final IWorkbenchPart part) {
-		if (this.isInvalidPart(part)) return;
-		if (!EditorContext.isAJavaEditor((IEditorPart) part)) return;
-		this.editorParts.add(((IEditorPart) part).getTitleToolTip());
-		EditorContext.asyncExec(new SemiColonInserterServices());
-	}
-
-	private boolean isInvalidPart(final IWorkbenchPart part) {
-		return !this.isValidPart(part);
-	}
-
-	private boolean isValidPart(final IWorkbenchPart part) {
-		if (part == null) return false;
-		if (this.editorParts.contains(part.getTitleToolTip())) return false;
-		if (part instanceof IEditorPart) return true;
-		return false;
-	}
-
-	private void disableAutomaticInserterFor(final IWorkbenchPart part) {
-		if (Factory.this.editorParts.contains(part.getTitleToolTip())) Factory.this.editorParts.remove(part.getTitleToolTip());
 	}
 
 	private final class PartListener implements IPartListener {
@@ -60,23 +33,76 @@ public final class Factory implements Runnable {
 		}
 
 		@Override
-		public void partClosed(final IWorkbenchPart part) {
-			Factory.this.disableAutomaticInserterFor(part);
-		}
+		public void partClosed(final IWorkbenchPart part) {}
 
 		@Override
-		public void partBroughtToTop(final IWorkbenchPart part) {
-			Factory.this.enableAutomaticInserterFor(part);
-		}
+		public void partBroughtToTop(final IWorkbenchPart part) {}
 
 		@Override
-		public void partDeactivated(final IWorkbenchPart part) {
-			Factory.this.disableAutomaticInserterFor(part);
-		}
+		public void partDeactivated(final IWorkbenchPart part) {}
 
 		@Override
-		public void partOpened(final IWorkbenchPart part) {
-			Factory.this.enableAutomaticInserterFor(part);
-		}
+		public void partOpened(final IWorkbenchPart part) {}
+	}
+
+	@Override
+	public void run() {
+		this.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
+	}
+
+	private void enableAutomaticInserterFor(final IWorkbenchPart part) {
+		if (Factory.isInvalidPart(part)) return;
+		this.startInserterService(part);
+	}
+
+	private static boolean isInvalidPart(final IWorkbenchPart part) {
+		return !Factory.isValidPart(part);
+	}
+
+	private static boolean isValidPart(final IWorkbenchPart part) {
+		if (Factory.isNotEditorPart(part)) return false;
+		if (!EditorContext.isAJavaEditor((IEditorPart) part)) return false;
+		return true;
+	}
+
+	private static boolean isNotEditorPart(final IWorkbenchPart part) {
+		return !Factory.isEditorPart(part);
+	}
+
+	private static boolean isEditorPart(final IWorkbenchPart part) {
+		return part instanceof IEditorPart;
+	}
+
+	private void startInserterService(final IWorkbenchPart part) {
+		this.stopAllInserterServices();
+		this.editorMap.put((IEditorPart) part, new SemiColonInserterServices().begin());
+	}
+
+	private void stopAllInserterServices() {
+		for (final IEditorPart part : this.editorMap.keySet())
+			this.stopInserterService(part);
+	}
+
+	private void stopInserterService(final IWorkbenchPart part) {
+		this.editorMap.get(part).end();
+		this.editorMap.remove(part);
+	}
+
+	public Runnable init() {
+		this.begin();
+		return this;
+	}
+
+	@Override
+	public Instance begin() {
+		Factory.PART_SERVICE.addPartListener(this.partListener);
+		return this;
+	}
+
+	@Override
+	public Instance end() {
+		Factory.PART_SERVICE.removePartListener(this.partListener);
+		this.stopAllInserterServices();
+		return this;
 	}
 }

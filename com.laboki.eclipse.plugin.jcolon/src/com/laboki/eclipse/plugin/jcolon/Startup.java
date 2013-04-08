@@ -23,6 +23,6 @@ public final class Startup implements IStartup, Runnable {
 	}
 
 	private static void start() {
-		EditorContext.asyncExec(new Factory());
+		EditorContext.asyncExec(new Factory().init());
 	}
 }
