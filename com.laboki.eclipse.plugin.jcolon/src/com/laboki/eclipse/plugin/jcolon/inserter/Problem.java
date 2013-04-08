@@ -3,6 +3,7 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
@@ -21,6 +22,7 @@ final class Problem implements Instance {
 	private static final List<Integer> PROBLEM_IDS = Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertToCompletePhrase, IProblem.ParsingErrorInsertToCompleteScope, IProblem.ParsingErrorInsertTokenAfter, IProblem.ParsingErrorInsertTokenBefore);
 	private IEditorPart editor = EditorContext.getEditor();
 	private IDocument document = EditorContext.getDocument(this.editor);
+	private final ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
 
 	public int location() {
 		return this.getSemiColonProblem().getSourceEnd() + 1;
@@ -39,7 +41,7 @@ final class Problem implements Instance {
 
 	private CompilationUnit createCompilationUnitNode() {
 		final ASTParser parser = ASTParser.newParser(AST.JLS4);
-		parser.setSource(JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor)));
+		parser.setSource(this.compilationUnit);
 		return (CompilationUnit) parser.createAST(null);
 	}
 
