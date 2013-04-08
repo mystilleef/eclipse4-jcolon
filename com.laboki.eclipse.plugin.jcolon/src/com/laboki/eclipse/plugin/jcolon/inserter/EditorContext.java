@@ -148,4 +148,12 @@ public final class EditorContext {
 	public static IPartService getPartService() {
 		return (IPartService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(IPartService.class);
 	}
+
+	public static boolean isNotNull(final Object object) {
+		return !EditorContext.isNull(object);
+	}
+
+	public static boolean isNull(final Object object) {
+		return object == null;
+	}
 }
