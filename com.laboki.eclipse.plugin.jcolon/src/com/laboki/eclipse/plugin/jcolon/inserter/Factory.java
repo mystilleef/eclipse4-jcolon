@@ -13,7 +13,7 @@ import com.google.common.collect.Maps;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 
 @ToString
-public final class Factory implements Runnable, Instance {
+public final class Factory implements Instance {
 
 	private final Map<IEditorPart, Instance> editorMap = Maps.newHashMap();
 	private static final IPartService PART_SERVICE = EditorContext.getPartService();
@@ -43,11 +43,6 @@ public final class Factory implements Runnable, Instance {
 
 		@Override
 		public void partOpened(final IWorkbenchPart part) {}
-	}
-
-	@Override
-	public void run() {
-		this.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
 	}
 
 	private void enableAutomaticInserterFor(final IWorkbenchPart part) {
@@ -88,13 +83,9 @@ public final class Factory implements Runnable, Instance {
 		this.editorMap.remove(part);
 	}
 
-	public Runnable init() {
-		this.begin();
-		return this;
-	}
-
 	@Override
 	public Instance begin() {
+		this.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
 		Factory.PART_SERVICE.addPartListener(this.partListener);
 		return this;
 	}

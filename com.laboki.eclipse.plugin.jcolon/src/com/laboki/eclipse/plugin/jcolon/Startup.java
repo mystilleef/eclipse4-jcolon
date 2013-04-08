@@ -5,7 +5,6 @@ import lombok.ToString;
 import org.eclipse.ui.IStartup;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
-import com.laboki.eclipse.plugin.jcolon.inserter.Factory;
 
 @ToString
 public final class Startup implements IStartup, Runnable {
@@ -23,6 +22,6 @@ public final class Startup implements IStartup, Runnable {
 	}
 
 	private static void start() {
-		EditorContext.asyncExec(new Factory().init());
+		EditorContext.asyncExec(Inserter.INSTANCE);
 	}
 }
