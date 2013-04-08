@@ -33,25 +33,29 @@ final class AnnotationsMonitor implements IAnnotationModelListener, Instance {
 		this.eventBus.post(new AnnotationModelChangedEvent());
 	}
 
-	public void add() {
-		this.annotationModel.addAnnotationModelListener(this);
-	}
-
-	public void remove() {
-		this.annotationModel.removeAnnotationModelListener(this);
-	}
-
 	@Override
 	public Instance begin() {
 		this.add();
 		return this;
 	}
 
+	public void add() {
+		this.annotationModel.addAnnotationModelListener(this);
+	}
+
 	@Override
 	public Instance end() {
 		this.remove();
+		this.nullifyFields();
+		return this;
+	}
+
+	public void remove() {
+		this.annotationModel.removeAnnotationModelListener(this);
+	}
+
+	private void nullifyFields() {
 		this.eventBus = null;
 		this.annotationModel = null;
-		return this;
 	}
 }
