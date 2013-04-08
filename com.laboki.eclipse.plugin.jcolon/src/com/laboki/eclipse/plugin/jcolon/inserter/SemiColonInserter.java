@@ -30,23 +30,27 @@ final class SemiColonInserter implements Instance {
 
 			@Override
 			public void execute() {
-				SemiColonInserter.this.tryToInsertSemiColon(event.getLocation());
+				SemiColonInserter.this.insertSemiColon(event.getLocation());
 				SemiColonInserter.this.postEvent();
 			}
 		});
 	}
 
-	private void tryToInsertSemiColon(final int location) {
+	private void insertSemiColon(final int location) {
 		try {
-			this.insertSemiColonInDocument(location);
+			this.tryToInsertSemiColon(location);
 		} catch (final BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void insertSemiColonInDocument(final int location) throws BadLocationException {
-		if (String.valueOf(this.document.getChar(location)).equals(SemiColonInserter.SEMICOLON)) return;
+	private void tryToInsertSemiColon(final int location) throws BadLocationException {
+		if (this.semiColonIsAlreadyInserted(location)) return;
 		SemiColonInserter.this.document.replace(location, 0, SemiColonInserter.SEMICOLON);
+	}
+
+	private boolean semiColonIsAlreadyInserted(final int location) throws BadLocationException {
+		return String.valueOf(this.document.getChar(location)).equals(SemiColonInserter.SEMICOLON);
 	}
 
 	protected void postEvent() {
@@ -62,8 +66,12 @@ final class SemiColonInserter implements Instance {
 	@Override
 	public Instance end() {
 		this.eventBus.unregister(this);
+		this.nullifyFields();
+		return this;
+	}
+
+	private void nullifyFields() {
 		this.eventBus = null;
 		this.document = null;
-		return this;
 	}
 }
