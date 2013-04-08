@@ -31,6 +31,7 @@ public enum EditorContext {
 	INSTANCE;
 
 	public static final Display DISPLAY = EditorContext.getDisplay();
+	public static final Shell SHELL = EditorContext.getShell();
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 
