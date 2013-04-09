@@ -2,19 +2,20 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.laboki.eclipse.plugin.jcolon;singleton:=true
-Bundle-Version: 20130408.2
+Bundle-Version: 20130409.2
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  lombok.jar,
  guava-14.0.1.jar
 Require-Bundle: org.eclipse.ui;bundle-version="3.104.0",
- org.eclipse.core.runtime;bundle-version="3.8.0",
  org.eclipse.jdt.core;bundle-version="3.8.3",
  org.eclipse.core.resources;bundle-version="3.8.1",
- org.eclipse.jface.text;bundle-version="3.8.2",
  org.eclipse.ui.ide;bundle-version="3.8.2",
- org.eclipse.ui.editors
+ org.eclipse.ui.editors,
+ org.eclipse.core.runtime.compatibility;bundle-version="3.2.200",
+ org.eclipse.jface;bundle-version="3.8.102",
+ org.eclipse.jface.text;bundle-version="3.8.2"
 Export-Package: com.google.common.annotations,
  com.google.common.base,
  com.google.common.base.internal;x-internal:=true,
