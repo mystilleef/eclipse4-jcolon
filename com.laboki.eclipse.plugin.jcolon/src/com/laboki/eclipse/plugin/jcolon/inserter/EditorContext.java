@@ -36,6 +36,7 @@ public enum EditorContext {
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 	private static final IJobManager JOB_MANAGER = Job.getJobManager();
+	public static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
 
 	public static Display getDisplay() {
 		return PlatformUI.getWorkbench().getDisplay();

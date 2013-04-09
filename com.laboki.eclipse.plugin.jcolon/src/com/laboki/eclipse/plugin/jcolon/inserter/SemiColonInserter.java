@@ -7,8 +7,8 @@ import org.eclipse.jface.text.IDocument;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
@@ -26,7 +26,7 @@ final class SemiColonInserter implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void semiColonErrorLocation(final SemiColonErrorLocationEvent event) {
-		EditorContext.asyncExec(new Task("") {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, 1000) {
 
 			@Override
 			public void execute() {

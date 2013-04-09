@@ -1,10 +1,8 @@
 package com.laboki.eclipse.plugin.jcolon.inserter;
 
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPropertyListener;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
@@ -14,12 +12,11 @@ import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
-final class ErrorChecker implements Instance, KeyListener, IPropertyListener {
+final class ErrorChecker implements Instance, VerifyListener {
 
 	private EventBus eventBus;
 	private static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
-	private Control buffer = EditorContext.getBuffer(EditorContext.getEditor());
-	private IEditorPart editor = EditorContext.getEditor();
+	private StyledText buffer = EditorContext.getBuffer(EditorContext.getEditor());
 
 	public ErrorChecker(final EventBus eventBus) {
 		this.eventBus = eventBus;
@@ -29,16 +26,14 @@ final class ErrorChecker implements Instance, KeyListener, IPropertyListener {
 	@Override
 	public Instance begin() {
 		this.checkError();
-		this.editor.addPropertyListener(this);
-		this.buffer.addKeyListener(this);
+		this.buffer.addVerifyListener(this);
 		return this;
 	}
 
 	@Override
 	public Instance end() {
 		this.eventBus.unregister(this);
-		this.editor.removePropertyListener(this);
-		this.buffer.removeKeyListener(this);
+		this.buffer.removeVerifyListener(this);
 		this.nullifyFields();
 		return this;
 	}
@@ -46,37 +41,16 @@ final class ErrorChecker implements Instance, KeyListener, IPropertyListener {
 	private void nullifyFields() {
 		this.eventBus = null;
 		this.buffer = null;
-		this.editor = null;
-	}
-
-	@Override
-	public void keyPressed(final KeyEvent arg0) {
-		ErrorChecker.cancelFindSemiColonError();
-	}
-
-	private static void cancelFindSemiColonError() {
-		EditorContext.asyncExec(new Task("") {
-
-			@Override
-			public void execute() {
-				ErrorChecker.cancelJobs();
-			}
-		});
-	}
-
-	@Override
-	public void keyReleased(final KeyEvent arg0) {
-		this.checkError();
-	}
-
-	@Override
-	public void propertyChanged(final Object arg0, final int propID) {
-		this.checkError();
 	}
 
 	@Subscribe
 	@AllowConcurrentEvents
 	public void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
+		this.checkError();
+	}
+
+	@Override
+	public void verifyText(final VerifyEvent arg0) {
 		this.checkError();
 	}
 

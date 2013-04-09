@@ -22,7 +22,7 @@ final class ErrorLocator implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void locateSemiColonError(@SuppressWarnings("unused") final LocateSemiColonErrorEvent event) {
-		EditorContext.asyncExec(new DelayedTask("", 1000) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, 1000) {
 
 			@Override
 			public void execute() {
