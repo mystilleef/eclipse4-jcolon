@@ -16,6 +16,7 @@ import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 final class SemiColonInserter implements Instance {
 
 	private EventBus eventBus;
+	private final Problem problem = new Problem();
 	private IDocument document = EditorContext.getDocument(EditorContext.getEditor());
 	private static final String SEMICOLON = ";";
 
@@ -26,7 +27,7 @@ final class SemiColonInserter implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void semiColonErrorLocation(final SemiColonErrorLocationEvent event) {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, 1000) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.INSERTER_DELAY_TIME_IN_MILLISECONDS) {
 
 			@Override
 			public void execute() {
@@ -46,11 +47,16 @@ final class SemiColonInserter implements Instance {
 
 	private void tryToInsertSemiColon(final int location) throws BadLocationException {
 		if (this.semiColonIsAlreadyInserted(location)) return;
+		if (this.locationErrorMismatch(location)) return;
 		SemiColonInserter.this.document.replace(location, 0, SemiColonInserter.SEMICOLON);
 	}
 
 	private boolean semiColonIsAlreadyInserted(final int location) throws BadLocationException {
 		return String.valueOf(this.document.getChar(location)).equals(SemiColonInserter.SEMICOLON);
+	}
+
+	private boolean locationErrorMismatch(final int location) {
+		return location != this.problem.location();
 	}
 
 	protected void postEvent() {

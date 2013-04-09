@@ -4,8 +4,8 @@ import org.eclipse.ui.IEditorPart;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
 final class FileSyncer implements Instance {
@@ -17,7 +17,7 @@ final class FileSyncer implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
-		EditorContext.asyncExec(new Task("") {
+		EditorContext.asyncExec(new DelayedTask("", EditorContext.INSERTER_DELAY_TIME_IN_MILLISECONDS) {
 
 			@Override
 			public void execute() {

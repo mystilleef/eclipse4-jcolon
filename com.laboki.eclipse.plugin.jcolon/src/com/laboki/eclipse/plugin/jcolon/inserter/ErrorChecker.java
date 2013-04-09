@@ -15,7 +15,6 @@ import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 final class ErrorChecker implements Instance, VerifyListener {
 
 	private EventBus eventBus;
-	private static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
 	private StyledText buffer = EditorContext.getBuffer(EditorContext.getEditor());
 
 	public ErrorChecker(final EventBus eventBus) {
@@ -36,11 +35,6 @@ final class ErrorChecker implements Instance, VerifyListener {
 		this.buffer.removeVerifyListener(this);
 		this.nullifyFields();
 		return this;
-	}
-
-	private void nullifyFields() {
-		this.eventBus = null;
-		this.buffer = null;
 	}
 
 	@Subscribe
@@ -66,11 +60,11 @@ final class ErrorChecker implements Instance, VerifyListener {
 	}
 
 	private static void cancelJobs() {
-		EditorContext.cancelJobsBelongingTo(ErrorChecker.TASK_FAMILY_NAME);
+		EditorContext.cancelJobsBelongingTo(EditorContext.TASK_FAMILY_NAME);
 	}
 
 	private void findSemiColonError() {
-		EditorContext.asyncExec(new DelayedTask(ErrorChecker.TASK_FAMILY_NAME, 1000) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.INSERTER_DELAY_TIME_IN_MILLISECONDS) {
 
 			@Override
 			public void execute() {
@@ -81,5 +75,10 @@ final class ErrorChecker implements Instance, VerifyListener {
 
 	private void postEvent() {
 		this.eventBus.post(new LocateSemiColonErrorEvent());
+	}
+
+	private void nullifyFields() {
+		this.eventBus = null;
+		this.buffer = null;
 	}
 }
