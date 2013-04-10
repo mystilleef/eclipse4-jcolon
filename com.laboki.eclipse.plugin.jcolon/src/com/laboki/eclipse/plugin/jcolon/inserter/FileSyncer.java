@@ -17,7 +17,7 @@ final class FileSyncer implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
-		EditorContext.asyncExec(new DelayedTask("", EditorContext.INSERTER_DELAY_TIME_IN_MILLISECONDS) {
+		EditorContext.asyncExec(new DelayedTask("", EditorContext.DELAY_TIME_IN_MILLISECONDS) {
 
 			@Override
 			public void execute() {

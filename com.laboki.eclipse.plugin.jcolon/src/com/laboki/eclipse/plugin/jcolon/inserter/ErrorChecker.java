@@ -64,7 +64,7 @@ final class ErrorChecker implements Instance, VerifyListener {
 	}
 
 	private void findSemiColonError() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.INSERTER_DELAY_TIME_IN_MILLISECONDS) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
 
 			@Override
 			public void execute() {
