@@ -9,7 +9,7 @@ import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.Task;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.FindSemiColonErrorsEvent;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckForSemiColonErrorsEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
@@ -45,7 +45,7 @@ final class ErrorChecker implements Instance, VerifyListener {
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public void semiColonErrors(@SuppressWarnings("unused") final FindSemiColonErrorsEvent event) {
+	public void checkForSemiColonErrors(@SuppressWarnings("unused") final CheckForSemiColonErrorsEvent event) {
 		this.checkError();
 	}
 
