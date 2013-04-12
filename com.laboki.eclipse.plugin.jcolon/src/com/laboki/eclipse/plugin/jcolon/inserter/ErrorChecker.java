@@ -44,7 +44,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	@Override
-	public void verifyText(final VerifyEvent arg0) {
+	public void verifyText(final VerifyEvent event) {
 		this.checkError();
 	}
 
