@@ -36,7 +36,7 @@ public enum EditorContext {
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 	private static final IJobManager JOB_MANAGER = Job.getJobManager();
 	public static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
-	public static final int DELAY_TIME_IN_MILLISECONDS = 1000;
+	public static final int DELAY_TIME_IN_MILLISECONDS = 500;
 
 	public static Display getDisplay() {
 		return PlatformUI.getWorkbench().getDisplay();

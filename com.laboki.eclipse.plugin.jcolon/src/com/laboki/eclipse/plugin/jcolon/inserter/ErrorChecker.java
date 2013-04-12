@@ -9,6 +9,7 @@ import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.Task;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.FindSemiColonErrorsEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
@@ -37,14 +38,14 @@ final class ErrorChecker implements Instance, VerifyListener {
 		return this;
 	}
 
-	@Subscribe
-	@AllowConcurrentEvents
-	public void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
+	@Override
+	public void verifyText(final VerifyEvent arg0) {
 		this.checkError();
 	}
 
-	@Override
-	public void verifyText(final VerifyEvent arg0) {
+	@Subscribe
+	@AllowConcurrentEvents
+	public void semiColonErrors(@SuppressWarnings("unused") final FindSemiColonErrorsEvent event) {
 		this.checkError();
 	}
 
@@ -74,11 +75,12 @@ final class ErrorChecker implements Instance, VerifyListener {
 	}
 
 	private void postEvent() {
+		this.eventBus.post(new SyncFilesEvent());
 		this.eventBus.post(new LocateSemiColonErrorEvent());
 	}
 
 	private void nullifyFields() {
-		this.eventBus = null;
 		this.buffer = null;
+		this.eventBus = null;
 	}
 }

@@ -9,6 +9,7 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.FindSemiColonErrorsEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
@@ -61,6 +62,7 @@ final class SemiColonInserter implements Instance {
 
 	protected void postEvent() {
 		this.eventBus.post(new SyncFilesEvent());
+		this.eventBus.post(new FindSemiColonErrorsEvent());
 	}
 
 	@Override
