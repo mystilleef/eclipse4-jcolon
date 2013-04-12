@@ -1,6 +1,7 @@
 package com.laboki.eclipse.plugin.jcolon.inserter;
 
-import org.eclipse.swt.custom.StyledText;
+import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
@@ -13,10 +14,12 @@ import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckForSemiColonErrorsE
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
-final class ErrorChecker implements Instance, VerifyListener {
+final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelListener {
 
 	private EventBus eventBus;
-	private StyledText buffer = EditorContext.getBuffer(EditorContext.getEditor());
+	// private StyledText buffer =
+	// EditorContext.getBuffer(EditorContext.getEditor());
+	private IAnnotationModel annotationModel = EditorContext.getView(EditorContext.getEditor()).getAnnotationModel();
 
 	public ErrorChecker(final EventBus eventBus) {
 		this.eventBus = eventBus;
@@ -26,20 +29,27 @@ final class ErrorChecker implements Instance, VerifyListener {
 	@Override
 	public Instance begin() {
 		this.checkError();
-		this.buffer.addVerifyListener(this);
+		this.annotationModel.addAnnotationModelListener(this);
+		// this.buffer.addVerifyListener(this);
 		return this;
 	}
 
 	@Override
 	public Instance end() {
 		this.eventBus.unregister(this);
-		this.buffer.removeVerifyListener(this);
+		this.annotationModel.removeAnnotationModelListener(this);
+		// this.buffer.removeVerifyListener(this);
 		this.nullifyFields();
 		return this;
 	}
 
 	@Override
 	public void verifyText(final VerifyEvent arg0) {
+		this.checkError();
+	}
+
+	@Override
+	public void modelChanged(final IAnnotationModel model) {
 		this.checkError();
 	}
 
@@ -80,7 +90,8 @@ final class ErrorChecker implements Instance, VerifyListener {
 	}
 
 	private void nullifyFields() {
-		this.buffer = null;
+		// this.buffer = null;
 		this.eventBus = null;
+		this.annotationModel = null;
 	}
 }
