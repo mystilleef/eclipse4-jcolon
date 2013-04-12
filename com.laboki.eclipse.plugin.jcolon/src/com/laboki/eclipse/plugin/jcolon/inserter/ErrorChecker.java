@@ -2,23 +2,20 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelListener;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.Task;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckForSemiColonErrorsEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
 final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelListener {
 
 	private EventBus eventBus;
-	// private StyledText buffer =
-	// EditorContext.getBuffer(EditorContext.getEditor());
+	private StyledText buffer = EditorContext.getBuffer(EditorContext.getEditor());
 	private IAnnotationModel annotationModel = EditorContext.getView(EditorContext.getEditor()).getAnnotationModel();
 
 	public ErrorChecker(final EventBus eventBus) {
@@ -30,7 +27,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	public Instance begin() {
 		this.checkError();
 		this.annotationModel.addAnnotationModelListener(this);
-		// this.buffer.addVerifyListener(this);
+		this.buffer.addVerifyListener(this);
 		return this;
 	}
 
@@ -38,7 +35,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	public Instance end() {
 		this.eventBus.unregister(this);
 		this.annotationModel.removeAnnotationModelListener(this);
-		// this.buffer.removeVerifyListener(this);
+		this.buffer.removeVerifyListener(this);
 		this.nullifyFields();
 		return this;
 	}
@@ -50,12 +47,6 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 
 	@Override
 	public void modelChanged(final IAnnotationModel model) {
-		this.checkError();
-	}
-
-	@Subscribe
-	@AllowConcurrentEvents
-	public void checkForSemiColonErrors(@SuppressWarnings("unused") final CheckForSemiColonErrorsEvent event) {
 		this.checkError();
 	}
 
@@ -90,7 +81,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void nullifyFields() {
-		// this.buffer = null;
+		this.buffer = null;
 		this.eventBus = null;
 		this.annotationModel = null;
 	}

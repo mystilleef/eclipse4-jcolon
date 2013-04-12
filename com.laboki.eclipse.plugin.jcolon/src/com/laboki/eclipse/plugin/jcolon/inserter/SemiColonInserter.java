@@ -61,8 +61,6 @@ final class SemiColonInserter implements Instance {
 
 	protected void postEvent() {
 		this.eventBus.post(new SyncFilesEvent());
-		// this.eventBus.post(new
-		// CheckForSemiColonErrorsEvent());
 	}
 
 	@Override
