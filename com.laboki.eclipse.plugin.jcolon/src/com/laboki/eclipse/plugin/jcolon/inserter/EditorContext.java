@@ -34,7 +34,7 @@ public enum EditorContext {
 	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
-	private static final IJobManager JOB_MANAGER = Job.getJobManager();
+	public static final IJobManager JOB_MANAGER = Job.getJobManager();
 	public static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
 	public static final int DELAY_TIME_IN_MILLISECONDS = 500;
 
@@ -47,6 +47,7 @@ public enum EditorContext {
 	}
 
 	public static void asyncExec(final Runnable runnable) {
+		if (EditorContext.isNull(EditorContext.DISPLAY) || EditorContext.DISPLAY.isDisposed()) return;
 		EditorContext.DISPLAY.asyncExec(runnable);
 	}
 

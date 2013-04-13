@@ -26,18 +26,23 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	@Override
 	public Instance begin() {
 		this.checkError();
-		this.annotationModel.addAnnotationModelListener(this);
 		this.buffer.addVerifyListener(this);
+		this.annotationModel.addAnnotationModelListener(this);
 		return this;
 	}
 
 	@Override
 	public Instance end() {
 		this.eventBus.unregister(this);
-		this.annotationModel.removeAnnotationModelListener(this);
-		this.buffer.removeVerifyListener(this);
+		ErrorChecker.cancelJobs();
+		if (EditorContext.isNotNull(this.buffer) && this.bufferisNotDisposed()) this.buffer.removeVerifyListener(this);
+		if (EditorContext.isNotNull(this.annotationModel)) this.annotationModel.removeAnnotationModelListener(this);
 		this.nullifyFields();
 		return this;
+	}
+
+	private boolean bufferisNotDisposed() {
+		return !this.buffer.isDisposed();
 	}
 
 	@Override
@@ -76,6 +81,12 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void postEvent() {
+		try {
+			this.tryToPostEvent();
+		} catch (final Exception e) {}
+	}
+
+	private void tryToPostEvent() {
 		this.eventBus.post(new SyncFilesEvent());
 		this.eventBus.post(new LocateSemiColonErrorEvent());
 	}

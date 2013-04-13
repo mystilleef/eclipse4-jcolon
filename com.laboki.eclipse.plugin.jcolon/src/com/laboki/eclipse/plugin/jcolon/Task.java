@@ -23,7 +23,8 @@ public abstract class Task extends Job implements Runnable {
 	}
 
 	@Override
-	protected IStatus run(final IProgressMonitor arg0) {
+	protected IStatus run(final IProgressMonitor monitor) {
+		if (monitor.isCanceled()) return Status.CANCEL_STATUS;
 		EditorContext.asyncExec(new Runnable() {
 
 			@Override
