@@ -31,7 +31,7 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partClosed(final IWorkbenchPart part) {
-			Factory.stopInserterService(part);
+			Factory.stopInserterServiceFor(part);
 		}
 
 		@Override
@@ -39,7 +39,7 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partDeactivated(final IWorkbenchPart part) {
-			Factory.stopInserterService(part);
+			Factory.stopInserterServiceFor(part);
 		}
 
 		@Override
@@ -48,7 +48,7 @@ public enum Factory implements Instance {
 
 	private static void enableAutomaticInserterFor(final IWorkbenchPart part) {
 		if (Factory.isInvalidPart(part)) return;
-		Factory.startInserterService(part);
+		Factory.startInserterServiceFor(part);
 	}
 
 	private static boolean isInvalidPart(final IWorkbenchPart part) {
@@ -69,17 +69,17 @@ public enum Factory implements Instance {
 		return part instanceof IEditorPart;
 	}
 
-	private static void startInserterService(final IWorkbenchPart part) {
+	private static void startInserterServiceFor(final IWorkbenchPart part) {
 		Factory.stopAllInserterServices();
 		Factory.SERVICES_MAP.put((IEditorPart) part, new SemiColonInserterServices().begin());
 	}
 
 	private static void stopAllInserterServices() {
 		for (final IEditorPart part : Factory.SERVICES_MAP.keySet())
-			Factory.stopInserterService(part);
+			Factory.stopInserterServiceFor(part);
 	}
 
-	private static void stopInserterService(final IWorkbenchPart part) {
+	private static void stopInserterServiceFor(final IWorkbenchPart part) {
 		if (Factory.servicesMapDoesNotContain(part)) return;
 		Factory.SERVICES_MAP.get(part).end();
 		Factory.SERVICES_MAP.remove(part);
