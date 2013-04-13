@@ -40,7 +40,7 @@ final class SemiColonInserter implements Instance {
 	private void insertSemiColon(final int location) {
 		try {
 			this.tryToInsertSemiColon(location);
-		} catch (final BadLocationException e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
