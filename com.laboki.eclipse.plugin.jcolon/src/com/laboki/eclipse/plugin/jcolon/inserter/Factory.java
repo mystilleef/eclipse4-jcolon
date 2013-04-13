@@ -16,7 +16,7 @@ import com.laboki.eclipse.plugin.jcolon.Instance;
 public enum Factory implements Instance {
 	INSTANCE;
 
-	private static final Map<IEditorPart, Instance> PART_SERVICE_MAP = Maps.newHashMap();
+	private static final Map<IEditorPart, Instance> SERVICES_MAP = Maps.newHashMap();
 	private static final IPartService PART_SERVICE = EditorContext.getPartService();
 	private static final PartListener PART_LISTENER = new PartListener();
 
@@ -30,13 +30,17 @@ public enum Factory implements Instance {
 		}
 
 		@Override
-		public void partClosed(final IWorkbenchPart part) {}
+		public void partClosed(final IWorkbenchPart part) {
+			Factory.stopInserterService(part);
+		}
 
 		@Override
 		public void partBroughtToTop(final IWorkbenchPart part) {}
 
 		@Override
-		public void partDeactivated(final IWorkbenchPart part) {}
+		public void partDeactivated(final IWorkbenchPart part) {
+			Factory.stopInserterService(part);
+		}
 
 		@Override
 		public void partOpened(final IWorkbenchPart part) {}
@@ -67,17 +71,22 @@ public enum Factory implements Instance {
 
 	private static void startInserterService(final IWorkbenchPart part) {
 		Factory.stopAllInserterServices();
-		Factory.PART_SERVICE_MAP.put((IEditorPart) part, new SemiColonInserterServices().begin());
+		Factory.SERVICES_MAP.put((IEditorPart) part, new SemiColonInserterServices().begin());
 	}
 
 	private static void stopAllInserterServices() {
-		for (final IEditorPart part : Factory.PART_SERVICE_MAP.keySet())
+		for (final IEditorPart part : Factory.SERVICES_MAP.keySet())
 			Factory.stopInserterService(part);
 	}
 
 	private static void stopInserterService(final IWorkbenchPart part) {
-		Factory.PART_SERVICE_MAP.get(part).end();
-		Factory.PART_SERVICE_MAP.remove(part);
+		if (Factory.servicesMapDoesNotContain(part)) return;
+		Factory.SERVICES_MAP.get(part).end();
+		Factory.SERVICES_MAP.remove(part);
+	}
+
+	private static boolean servicesMapDoesNotContain(final IWorkbenchPart part) {
+		return !Factory.SERVICES_MAP.containsKey(part);
 	}
 
 	@Override
