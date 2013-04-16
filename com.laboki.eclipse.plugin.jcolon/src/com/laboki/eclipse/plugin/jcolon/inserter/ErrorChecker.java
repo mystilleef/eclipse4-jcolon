@@ -5,6 +5,7 @@ import org.eclipse.jface.text.source.IAnnotationModelListener;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.ui.IEditorPart;
 
 import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
@@ -15,8 +16,9 @@ import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelListener {
 
 	private EventBus eventBus;
-	private StyledText buffer = EditorContext.getBuffer(EditorContext.getEditor());
-	private IAnnotationModel annotationModel = EditorContext.getView(EditorContext.getEditor()).getAnnotationModel();
+	private IEditorPart editor = EditorContext.getEditor();
+	private StyledText buffer = EditorContext.getBuffer(this.editor);
+	private IAnnotationModel annotationModel = EditorContext.getView(this.editor).getAnnotationModel();
 
 	public ErrorChecker(final EventBus eventBus) {
 		this.eventBus = eventBus;
@@ -75,6 +77,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 
 			@Override
 			public void execute() {
+				if (EditorContext.isInEditMode(ErrorChecker.this.editor)) return;
 				ErrorChecker.this.postEvent();
 			}
 		});
@@ -92,6 +95,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void nullifyFields() {
+		this.editor = null;
 		this.buffer = null;
 		this.eventBus = null;
 		this.annotationModel = null;

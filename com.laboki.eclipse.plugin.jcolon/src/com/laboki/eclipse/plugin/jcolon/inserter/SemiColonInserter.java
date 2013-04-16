@@ -4,6 +4,7 @@ import lombok.ToString;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.ui.IEditorPart;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
@@ -16,8 +17,9 @@ import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 final class SemiColonInserter implements Instance {
 
 	private EventBus eventBus;
-	private final Problem problem = new Problem();
-	private IDocument document = EditorContext.getDocument(EditorContext.getEditor());
+	private Problem problem = new Problem();
+	private IEditorPart editor = EditorContext.getEditor();
+	private IDocument document = EditorContext.getDocument(this.editor);
 	private static final String SEMICOLON = ";";
 
 	public SemiColonInserter(final EventBus eventBus) {
@@ -48,6 +50,7 @@ final class SemiColonInserter implements Instance {
 	private void tryToInsertSemiColon(final int location) throws BadLocationException {
 		if (this.semiColonIsAlreadyInserted(location)) return;
 		if (this.locationErrorMismatch(location)) return;
+		if (EditorContext.isInEditMode(this.editor)) return;
 		SemiColonInserter.this.document.replace(location, 0, SemiColonInserter.SEMICOLON);
 	}
 
@@ -79,5 +82,7 @@ final class SemiColonInserter implements Instance {
 	private void nullifyFields() {
 		this.eventBus = null;
 		this.document = null;
+		this.editor = null;
+		this.problem = null;
 	}
 }
