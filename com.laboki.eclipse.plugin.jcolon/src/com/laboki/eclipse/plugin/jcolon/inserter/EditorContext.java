@@ -1,6 +1,7 @@
 package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 
 import lombok.ToString;
@@ -26,17 +27,24 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import com.google.common.collect.Lists;
+
 @Log
 @ToString
 public enum EditorContext {
 	INSTANCE;
 
+	private static final String LINK_SLAVE = "org.eclipse.ui.internal.workbench.texteditor.link.slave";
+	private static final String LINK_MASTER = "org.eclipse.ui.internal.workbench.texteditor.link.master";
+	private static final String LINK_TARGET = "org.eclipse.ui.internal.workbench.texteditor.link.target";
+	private static final String LINK_EXIT = "org.eclipse.ui.internal.workbench.texteditor.link.exit";
 	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
 	public static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
-	public static final int DELAY_TIME_IN_MILLISECONDS = 500;
+	public static final int DELAY_TIME_IN_MILLISECONDS = 250;
+	private static final List<String> LINK_ANNOTATIONS = Lists.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
 
 	public static Display getDisplay() {
 		return PlatformUI.getWorkbench().getDisplay();
@@ -157,5 +165,34 @@ public enum EditorContext {
 
 	public static void cancelJobsBelongingTo(final String jobName) {
 		EditorContext.JOB_MANAGER.cancel(jobName);
+	}
+
+	public static boolean isInEditMode(final IEditorPart editor) {
+		return EditorContext.hasSelection(editor) || EditorContext.hasBlockSelection(editor) || EditorContext.isInLinkMode(editor);
+	}
+
+	public static boolean isInLinkMode(final IEditorPart editor) {
+		EditorContext.syncFile(editor);
+		return EditorContext.hasLinkAnnotations(editor);
+	}
+
+	private static boolean hasLinkAnnotations(final IEditorPart editor) {
+		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
+		while (iterator.hasNext())
+			if (EditorContext.isLinkModeAnnotation(iterator)) return true;
+		return false;
+	}
+
+	private static boolean isLinkModeAnnotation(final Iterator<Annotation> iterator) {
+		if (EditorContext.LINK_ANNOTATIONS.contains(iterator.next().getType())) return true;
+		return false;
+	}
+
+	public static boolean hasSelection(final IEditorPart editor) {
+		return EditorContext.getBuffer(editor).getSelectionCount() > 0;
+	}
+
+	public static boolean hasBlockSelection(final IEditorPart editor) {
+		return EditorContext.getBuffer(editor).getBlockSelection();
 	}
 }
