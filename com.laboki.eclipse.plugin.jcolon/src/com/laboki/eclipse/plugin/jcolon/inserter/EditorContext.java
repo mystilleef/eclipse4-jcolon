@@ -168,7 +168,11 @@ public enum EditorContext {
 	}
 
 	public static boolean isInEditMode(final IEditorPart editor) {
-		return EditorContext.hasSelection(editor) || EditorContext.hasBlockSelection(editor) || EditorContext.isInLinkMode(editor);
+		try {
+			return EditorContext.hasSelection(editor) || EditorContext.hasBlockSelection(editor) || EditorContext.isInLinkMode(editor);
+		} catch (final Exception e) {
+			return true;
+		}
 	}
 
 	public static boolean isInLinkMode(final IEditorPart editor) {
