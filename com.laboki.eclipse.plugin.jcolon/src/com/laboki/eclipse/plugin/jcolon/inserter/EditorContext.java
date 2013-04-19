@@ -199,4 +199,20 @@ public enum EditorContext {
 	public static boolean hasBlockSelection(final IEditorPart editor) {
 		return EditorContext.getBuffer(editor).getBlockSelection();
 	}
+
+	public static boolean isBusy() {
+		return EditorContext.jobManagerIsBusy() || EditorContext.uiThreadIsBusy();
+	}
+
+	public static boolean jobManagerIsBusy() {
+		return !EditorContext.jobManagerIsIdle();
+	}
+
+	public static boolean jobManagerIsIdle() {
+		return EditorContext.JOB_MANAGER.isIdle();
+	}
+
+	public static boolean uiThreadIsBusy() {
+		return EditorContext.DISPLAY.readAndDispatch();
+	}
 }
