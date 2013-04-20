@@ -13,7 +13,6 @@ import org.eclipse.ui.IEditorPart;
 
 import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
@@ -66,18 +65,30 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void checkError() {
-		EditorContext.asyncExec(new Runnable() {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
 
 			@Override
-			public void run() {
+			public void execute() {
+				ErrorChecker.cancelAllJobs();
 				if (EditorContext.isBusy()) ErrorChecker.this.checkErrorLater();
 				else ErrorChecker.this.checkErrorNow();
 			}
 		});
 	}
 
+	private void checkErrorLater() {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
+
+			@Override
+			public void execute() {
+				ErrorChecker.cancelAllJobs();
+				ErrorChecker.this.checkError();
+			}
+		});
+	}
+
 	private void checkErrorNow() {
-		EditorContext.asyncExec(new Task("") {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
 
 			@Override
 			public void execute() {
@@ -89,6 +100,11 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 
 	private static void cancelJobs() {
 		EditorContext.cancelJobsBelongingTo(EditorContext.TASK_FAMILY_NAME);
+	}
+
+	private static void cancelAllJobs() {
+		ErrorChecker.cancelJobs();
+		EditorContext.cancelJobsBelongingTo(EditorContext.TASK_FAMILY_NAME_2);
 	}
 
 	private void findSemiColonError() {
@@ -111,16 +127,6 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	private void tryToPostEvent() {
 		this.eventBus.post(new SyncFilesEvent());
 		this.eventBus.post(new LocateSemiColonErrorEvent());
-	}
-
-	private void checkErrorLater() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
-
-			@Override
-			public void execute() {
-				ErrorChecker.this.checkError();
-			}
-		});
 	}
 
 	private void nullifyFields() {

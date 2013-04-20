@@ -43,6 +43,7 @@ public enum EditorContext {
 	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
 	public static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
+	public static final String TASK_FAMILY_NAME_2 = "SEMI_COLON_ERROR_CHECKER2";
 	public static final int DELAY_TIME_IN_MILLISECONDS = 250;
 	private static final List<String> LINK_ANNOTATIONS = Lists.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
 
