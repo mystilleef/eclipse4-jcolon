@@ -59,22 +59,16 @@ public enum EditorContext {
 	}
 
 	public static void asyncExec(final Runnable runnable) {
-		if (EditorContext.isNull(EditorContext.DISPLAY) || EditorContext.DISPLAY.isDisposed()) return;
+		if ((EditorContext.DISPLAY == null) || EditorContext.DISPLAY.isDisposed()) return;
 		EditorContext.DISPLAY.asyncExec(runnable);
 	}
 
-	public static void flushEvents() {
-		// EditorContext.asyncExec(new Task("") {
-		//
-		// @Override
-		// public void execute() {
-		// // while
-		// // (EditorContext.DISPLAY.readAndDispatch());
-		// // EditorContext.DISPLAY.update();
-		// // EditorContext.DISPLAY.update();
-		// }
-		// });
+	public static void syncExec(final Runnable runnable) {
+		if ((EditorContext.DISPLAY == null) || EditorContext.DISPLAY.isDisposed()) return;
+		EditorContext.DISPLAY.syncExec(runnable);
 	}
+
+	public static void flushEvents() {}
 
 	public static IEditorPart getEditor() {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
