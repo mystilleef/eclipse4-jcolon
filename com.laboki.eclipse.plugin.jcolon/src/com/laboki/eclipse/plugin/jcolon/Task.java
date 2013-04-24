@@ -29,6 +29,7 @@ public abstract class Task extends Job implements Runnable {
 
 			@Override
 			public void run() {
+				if (monitor.isCanceled()) return;
 				Task.this.execute();
 			}
 		});

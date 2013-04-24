@@ -31,6 +31,7 @@ public abstract class DelayedTask extends Job implements Runnable {
 
 			@Override
 			public void run() {
+				if (monitor.isCanceled()) return;
 				DelayedTask.this.execute();
 			}
 		});
