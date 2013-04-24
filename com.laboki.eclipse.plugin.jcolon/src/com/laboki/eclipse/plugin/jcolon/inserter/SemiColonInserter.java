@@ -59,7 +59,11 @@ final class SemiColonInserter implements Instance {
 	}
 
 	private boolean locationErrorMismatch(final int location) {
-		return location != this.problem.location();
+		try {
+			return location != this.problem.location();
+		} catch (final Exception e) {
+			return false;
+		}
 	}
 
 	protected void postEvent() {
