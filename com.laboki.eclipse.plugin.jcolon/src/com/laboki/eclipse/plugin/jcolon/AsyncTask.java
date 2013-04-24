@@ -7,21 +7,19 @@ import org.eclipse.core.runtime.jobs.Job;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 
-public abstract class DelayedTask extends Job implements Runnable {
+public abstract class AsyncTask extends Job implements Runnable {
 
-	private final int timeInMilliSeconds;
 	private final String name;
 
-	public DelayedTask(final String name, final int timeInMilliSeconds) {
+	public AsyncTask(final String name) {
 		super(name);
 		this.name = name;
-		this.timeInMilliSeconds = timeInMilliSeconds;
-		this.setPriority(Job.DECORATE);
+		this.setPriority(Job.INTERACTIVE);
 	}
 
 	@Override
 	public void run() {
-		this.schedule(this.timeInMilliSeconds);
+		this.schedule();
 	}
 
 	@Override
@@ -32,7 +30,7 @@ public abstract class DelayedTask extends Job implements Runnable {
 			@Override
 			public void run() {
 				if (monitor.isCanceled()) return;
-				DelayedTask.this.execute();
+				AsyncTask.this.execute();
 			}
 		});
 		return Status.OK_STATUS;

@@ -11,7 +11,7 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.ui.IEditorPart;
 
-import com.laboki.eclipse.plugin.jcolon.DelayedTask;
+import com.laboki.eclipse.plugin.jcolon.AsyncDelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
@@ -70,7 +70,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void checkNow() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.LONG_DELAY_TIME) {
+		EditorContext.asyncExec(new AsyncDelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.LONG_DELAY_TIME) {
 
 			@Override
 			public void execute() {
@@ -89,7 +89,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void findSemiColonError() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
+		EditorContext.asyncExec(new AsyncDelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
