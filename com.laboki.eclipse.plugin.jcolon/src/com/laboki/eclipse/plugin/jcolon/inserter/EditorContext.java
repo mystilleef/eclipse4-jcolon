@@ -40,11 +40,14 @@ public enum EditorContext {
 	private static final String LINK_EXIT = "org.eclipse.ui.internal.workbench.texteditor.link.exit";
 	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
-	private static final FlushEventsRunnable FLUSH_EVENTS_RUNNABLE = new EditorContext.FlushEventsRunnable();
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
 	public static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
 	public static final String TASK_FAMILY_NAME_2 = "SEMI_COLON_ERROR_CHECKER2";
 	public static final int DELAY_TIME_IN_MILLISECONDS = 250;
+	public static final int SHORT_DELAY_TIME = 250;
+	public static final int MEDIUM_SHORT_DELAY_TIME = 500;
+	public static final int MEDIUM_LONG_DELAY_TIME = 750;
+	public static final int LONG_DELAY_TIME = 1000;
 	private static final List<String> LINK_ANNOTATIONS = Lists.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
 
 	public static Display getDisplay() {
@@ -61,19 +64,16 @@ public enum EditorContext {
 	}
 
 	public static void flushEvents() {
-		EditorContext.asyncExec(EditorContext.FLUSH_EVENTS_RUNNABLE);
-	}
-
-	private static final class FlushEventsRunnable implements Runnable {
-
-		public FlushEventsRunnable() {}
-
-		@Override
-		public void run() {
-			while (EditorContext.DISPLAY.readAndDispatch())
-				EditorContext.DISPLAY.update();
-			EditorContext.DISPLAY.update();
-		}
+		// EditorContext.asyncExec(new Task("") {
+		//
+		// @Override
+		// public void execute() {
+		// // while
+		// // (EditorContext.DISPLAY.readAndDispatch());
+		// // EditorContext.DISPLAY.update();
+		// // EditorContext.DISPLAY.update();
+		// }
+		// });
 	}
 
 	public static IEditorPart getEditor() {
@@ -96,11 +96,12 @@ public enum EditorContext {
 		return EditorContext.hasJDTAnnotationError(editor);
 	}
 
-	static void syncFile(final IEditorPart editor) {
-		EditorContext.flushEvents();
-		EditorContext.tryToSyncFile(editor);
+	static void syncFile(@SuppressWarnings("unused") final IEditorPart editor) {
+		// EditorContext.flushEvents();
+		// EditorContext.tryToSyncFile(editor);
 	}
 
+	@SuppressWarnings("unused")
 	private static void tryToSyncFile(final IEditorPart editor) {
 		try {
 			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE, null);
