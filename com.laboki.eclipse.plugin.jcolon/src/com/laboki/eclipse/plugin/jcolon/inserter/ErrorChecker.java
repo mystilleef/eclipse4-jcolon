@@ -65,34 +65,15 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void checkError() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
-
-			@Override
-			public void execute() {
-				ErrorChecker.cancelAllJobs();
-				if (EditorContext.isBusy()) ErrorChecker.this.checkErrorLater();
-				else ErrorChecker.this.checkErrorNow();
-			}
-		});
+		ErrorChecker.cancelAllJobs();
+		this.checkNow();
 	}
 
-	private void checkErrorLater() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
+	private void checkNow() {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.LONG_DELAY_TIME) {
 
 			@Override
 			public void execute() {
-				ErrorChecker.cancelAllJobs();
-				ErrorChecker.this.checkError();
-			}
-		});
-	}
-
-	private void checkErrorNow() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
-
-			@Override
-			public void execute() {
-				ErrorChecker.cancelJobs();
 				ErrorChecker.this.findSemiColonError();
 			}
 		});
@@ -103,12 +84,12 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private static void cancelAllJobs() {
-		ErrorChecker.cancelJobs();
 		EditorContext.cancelJobsBelongingTo(EditorContext.TASK_FAMILY_NAME_2);
+		ErrorChecker.cancelJobs();
 	}
 
 	private void findSemiColonError() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
