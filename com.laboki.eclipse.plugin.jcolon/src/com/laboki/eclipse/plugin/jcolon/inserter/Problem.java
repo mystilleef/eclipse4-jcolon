@@ -20,8 +20,8 @@ final class Problem implements Instance {
 	private static final String SEMICOLON = ";";
 	private static final String PERIOD = ".";
 	private static final List<Integer> PROBLEM_IDS = Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertToCompletePhrase, IProblem.ParsingErrorInsertToCompleteScope, IProblem.ParsingErrorInsertTokenAfter, IProblem.ParsingErrorInsertTokenBefore);
-	private IEditorPart editor = EditorContext.getEditor();
-	private IDocument document = EditorContext.getDocument(this.editor);
+	private final IEditorPart editor = EditorContext.getEditor();
+	private final IDocument document = EditorContext.getDocument(this.editor);
 	private final ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
 
 	public int location() {
@@ -100,8 +100,6 @@ final class Problem implements Instance {
 
 	@Override
 	public Instance end() {
-		this.editor = null;
-		this.document = null;
 		return this;
 	}
 }

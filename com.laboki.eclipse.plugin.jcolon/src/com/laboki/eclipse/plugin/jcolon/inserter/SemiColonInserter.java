@@ -8,18 +8,17 @@ import org.eclipse.ui.IEditorPart;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
-import com.laboki.eclipse.plugin.jcolon.AsyncDelayedTask;
+import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
 @ToString
 final class SemiColonInserter implements Instance {
 
-	private EventBus eventBus;
-	private Problem problem = new Problem();
-	private IEditorPart editor = EditorContext.getEditor();
-	private IDocument document = EditorContext.getDocument(this.editor);
+	private final EventBus eventBus;
+	private final Problem problem = new Problem();
+	private final IEditorPart editor = EditorContext.getEditor();
+	private final IDocument document = EditorContext.getDocument(this.editor);
 	private static final String SEMICOLON = ";";
 
 	public SemiColonInserter(final EventBus eventBus) {
@@ -29,12 +28,11 @@ final class SemiColonInserter implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void semiColonErrorLocation(final SemiColonErrorLocationEvent event) {
-		EditorContext.asyncExec(new AsyncDelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
-			public void execute() {
+			public void asyncExec() {
 				SemiColonInserter.this.insertSemiColon(event.getLocation());
-				SemiColonInserter.this.postEvent();
 			}
 		});
 	}
@@ -66,10 +64,6 @@ final class SemiColonInserter implements Instance {
 		}
 	}
 
-	protected void postEvent() {
-		this.eventBus.post(new SyncFilesEvent());
-	}
-
 	@Override
 	public Instance begin() {
 		this.eventBus.register(this);
@@ -79,14 +73,6 @@ final class SemiColonInserter implements Instance {
 	@Override
 	public Instance end() {
 		this.eventBus.unregister(this);
-		this.nullifyFields();
 		return this;
-	}
-
-	private void nullifyFields() {
-		this.eventBus = null;
-		this.document = null;
-		this.editor = null;
-		this.problem = null;
 	}
 }

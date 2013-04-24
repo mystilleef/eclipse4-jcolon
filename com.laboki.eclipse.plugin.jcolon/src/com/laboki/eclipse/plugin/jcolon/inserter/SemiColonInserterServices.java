@@ -8,8 +8,8 @@ import com.laboki.eclipse.plugin.jcolon.Instance;
 
 public final class SemiColonInserterServices implements Instance {
 
-	private List<Instance> instances = Lists.newArrayList();
-	private EventBus eventBus = new EventBus();
+	private final List<Instance> instances = Lists.newArrayList();
+	private final EventBus eventBus = new EventBus();
 
 	@Override
 	public Instance begin() {
@@ -18,9 +18,9 @@ public final class SemiColonInserterServices implements Instance {
 	}
 
 	private void startServices() {
-		this.startService(new FileSyncer());
 		this.startService(new SemiColonInserter(this.eventBus));
 		this.startService(new ErrorLocator(this.eventBus));
+		this.startService(new FileSyncer(this.eventBus));
 		this.startService(new ErrorChecker(this.eventBus));
 	}
 
@@ -32,7 +32,6 @@ public final class SemiColonInserterServices implements Instance {
 	@Override
 	public Instance end() {
 		this.stopServices();
-		this.nullifyFields();
 		return this;
 	}
 
@@ -44,11 +43,5 @@ public final class SemiColonInserterServices implements Instance {
 	private void stopService(final Instance instance) {
 		instance.end();
 		this.instances.remove(instance);
-	}
-
-	private void nullifyFields() {
-		this.instances.clear();
-		this.instances = null;
-		this.eventBus = null;
 	}
 }

@@ -4,7 +4,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import com.google.common.eventbus.AsyncEventBus;
-import com.laboki.eclipse.plugin.jcolon.AsyncTask;
+import com.laboki.eclipse.plugin.jcolon.Task;
 
 final class EventBus {
 
@@ -22,7 +22,7 @@ final class EventBus {
 	}
 
 	public void post(final Object object) {
-		EditorContext.asyncExec(new AsyncTask("") {
+		EditorContext.asyncExec(new Task("") {
 
 			@Override
 			public void execute() {

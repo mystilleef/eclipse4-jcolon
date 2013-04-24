@@ -2,8 +2,6 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelListener;
-import org.eclipse.swt.custom.CaretEvent;
-import org.eclipse.swt.custom.CaretListener;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -11,17 +9,16 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.ui.IEditorPart;
 
-import com.laboki.eclipse.plugin.jcolon.AsyncDelayedTask;
+import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
-final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelListener, CaretListener, KeyListener {
+final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelListener, KeyListener {
 
-	private EventBus eventBus;
-	private IEditorPart editor = EditorContext.getEditor();
-	private StyledText buffer = EditorContext.getBuffer(this.editor);
-	private IAnnotationModel annotationModel = EditorContext.getView(this.editor).getAnnotationModel();
+	private final EventBus eventBus;
+	private final IEditorPart editor = EditorContext.getEditor();
+	private final StyledText buffer = EditorContext.getBuffer(this.editor);
+	private final IAnnotationModel annotationModel = EditorContext.getView(this.editor).getAnnotationModel();
 
 	public ErrorChecker(final EventBus eventBus) {
 		this.eventBus = eventBus;
@@ -32,7 +29,6 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	public Instance begin() {
 		this.checkError();
 		this.buffer.addVerifyListener(this);
-		this.buffer.addCaretListener(this);
 		this.buffer.addKeyListener(this);
 		this.annotationModel.addAnnotationModelListener(this);
 		return this;
@@ -43,10 +39,8 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 		this.eventBus.unregister(this);
 		ErrorChecker.cancelJobs();
 		if (EditorContext.isNotNull(this.buffer) && this.bufferisNotDisposed()) this.buffer.removeVerifyListener(this);
-		if (EditorContext.isNotNull(this.buffer) && this.bufferisNotDisposed()) this.buffer.removeCaretListener(this);
 		if (EditorContext.isNotNull(this.buffer) && this.bufferisNotDisposed()) this.buffer.removeKeyListener(this);
 		if (EditorContext.isNotNull(this.annotationModel)) this.annotationModel.removeAnnotationModelListener(this);
-		this.nullifyFields();
 		return this;
 	}
 
@@ -65,15 +59,11 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void checkError() {
-		ErrorChecker.cancelAllJobs();
-		this.checkNow();
-	}
-
-	private void checkNow() {
-		EditorContext.asyncExec(new AsyncDelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.LONG_DELAY_TIME) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
+				ErrorChecker.cancelAllJobs();
 				ErrorChecker.this.findSemiColonError();
 			}
 		});
@@ -89,10 +79,10 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void findSemiColonError() {
-		EditorContext.asyncExec(new AsyncDelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
-			public void execute() {
+			public void asyncExec() {
 				if (EditorContext.isInEditMode(ErrorChecker.this.editor)) return;
 				ErrorChecker.this.postEvent();
 			}
@@ -107,19 +97,6 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 
 	private void tryToPostEvent() {
 		this.eventBus.post(new SyncFilesEvent());
-		this.eventBus.post(new LocateSemiColonErrorEvent());
-	}
-
-	private void nullifyFields() {
-		this.editor = null;
-		this.buffer = null;
-		this.eventBus = null;
-		this.annotationModel = null;
-	}
-
-	@Override
-	public void caretMoved(final CaretEvent arg0) {
-		this.checkError();
 	}
 
 	@Override

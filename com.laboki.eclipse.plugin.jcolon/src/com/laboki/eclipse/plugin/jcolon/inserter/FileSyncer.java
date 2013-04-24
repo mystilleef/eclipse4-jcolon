@@ -5,35 +5,41 @@ import org.eclipse.ui.IEditorPart;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.AsyncTask;
+import com.laboki.eclipse.plugin.jcolon.Task;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
 final class FileSyncer implements Instance {
 
-	private IEditorPart editor = EditorContext.getEditor();
+	private final IEditorPart editor = EditorContext.getEditor();
+	private final EventBus eventBus;
 
-	public FileSyncer() {}
+	public FileSyncer(final EventBus eventBus) {
+		this.eventBus = eventBus;
+	}
 
 	@Subscribe
 	@AllowConcurrentEvents
 	public void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
-		EditorContext.asyncExec(new AsyncTask("") {
+		EditorContext.asyncExec(new Task(EditorContext.TASK_FAMILY_NAME) {
 
 			@Override
-			public void execute() {
+			public void asyncExec() {
 				EditorContext.syncFile(FileSyncer.this.editor);
+				FileSyncer.this.eventBus.post(new LocateSemiColonErrorEvent());
 			}
 		});
 	}
 
 	@Override
 	public Instance begin() {
+		this.eventBus.register(this);
 		return this;
 	}
 
 	@Override
 	public Instance end() {
-		this.editor = null;
+		this.eventBus.unregister(this);
 		return this;
 	}
 }

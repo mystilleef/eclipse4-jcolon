@@ -4,16 +4,16 @@ import org.eclipse.ui.IEditorPart;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
-import com.laboki.eclipse.plugin.jcolon.AsyncDelayedTask;
+import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
 
 final class ErrorLocator implements Instance {
 
-	private EventBus eventBus;
-	private Problem problem = new Problem();
-	private IEditorPart editor = EditorContext.getEditor();
+	private final EventBus eventBus;
+	private final Problem problem = new Problem();
+	private final IEditorPart editor = EditorContext.getEditor();
 
 	public ErrorLocator(final EventBus eventBus) {
 		this.eventBus = eventBus;
@@ -22,10 +22,10 @@ final class ErrorLocator implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void locateSemiColonError(@SuppressWarnings("unused") final LocateSemiColonErrorEvent event) {
-		EditorContext.asyncExec(new AsyncDelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.DELAY_TIME_IN_MILLISECONDS) {
+		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
-			public void execute() {
+			public void asyncExec() {
 				ErrorLocator.this.findErrorLocation();
 			}
 		});
@@ -61,13 +61,6 @@ final class ErrorLocator implements Instance {
 	public Instance end() {
 		this.eventBus.unregister(this);
 		this.problem.end();
-		this.nullifyFields();
 		return this;
-	}
-
-	private void nullifyFields() {
-		this.eventBus = null;
-		this.problem = null;
-		this.editor = null;
 	}
 }
