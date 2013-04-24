@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.laboki.eclipse.plugin.jcolon;singleton:=true
-Bundle-Version: 20130422.2
+Bundle-Version: 20130424
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
@@ -145,3 +145,4 @@ Export-Package: com.google.common.annotations,
  lombok.patcher.equinox;uses:="lombok.patcher",
  lombok.patcher.inject;uses:="com.sun.jna.ptr,com.sun.jna",
  lombok.patcher.scripts;uses:="lombok.patcher,lombok.libs.org.objectweb.asm"
+Bundle-ActivationPolicy: lazy
