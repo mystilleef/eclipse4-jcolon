@@ -9,8 +9,8 @@ import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.ui.IEditorPart;
 
-import com.laboki.eclipse.plugin.jcolon.DelayedTask;
 import com.laboki.eclipse.plugin.jcolon.Instance;
+import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
 
 final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelListener, KeyListener {
@@ -59,11 +59,15 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void checkError() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME_2, EditorContext.SHORT_DELAY_TIME) {
+		EditorContext.asyncExec(new Task(EditorContext.TASK_FAMILY_NAME_2, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
 				ErrorChecker.cancelAllJobs();
+			}
+
+			@Override
+			protected void postExecute() {
 				ErrorChecker.this.findSemiColonError();
 			}
 		});
@@ -79,7 +83,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void findSemiColonError() {
-		EditorContext.asyncExec(new DelayedTask(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
+		EditorContext.asyncExec(new Task(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void asyncExec() {
