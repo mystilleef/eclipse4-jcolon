@@ -27,6 +27,8 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.google.common.collect.Lists;
+import com.laboki.eclipse.plugin.jcolon.Task;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckErrorEvent;
 
 @Log
 @ToString
@@ -37,16 +39,11 @@ public enum EditorContext {
 	private static final String LINK_MASTER = "org.eclipse.ui.internal.workbench.texteditor.link.master";
 	private static final String LINK_TARGET = "org.eclipse.ui.internal.workbench.texteditor.link.target";
 	private static final String LINK_EXIT = "org.eclipse.ui.internal.workbench.texteditor.link.exit";
-	public static final Display DISPLAY = EditorContext.getDisplay();
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
+	public static final String ERROR_CHECKING_TASK = "jcolon semicolon error checking task";
+	public static final Display DISPLAY = EditorContext.getDisplay();
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
-	public static final String TASK_FAMILY_NAME = "SEMI_COLON_ERROR_CHECKER";
-	public static final String TASK_FAMILY_NAME_2 = "SEMI_COLON_ERROR_CHECKER2";
-	public static final int DELAY_TIME_IN_MILLISECONDS = 250;
 	public static final int SHORT_DELAY_TIME = 250;
-	public static final int MEDIUM_SHORT_DELAY_TIME = 500;
-	public static final int MEDIUM_LONG_DELAY_TIME = 750;
-	public static final int LONG_DELAY_TIME = 1000;
 	private static final List<String> LINK_ANNOTATIONS = Lists.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
 
 	public static Display getDisplay() {
@@ -147,6 +144,10 @@ public enum EditorContext {
 		return object == null;
 	}
 
+	public static void cancelErrorCheckingJobs() {
+		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_TASK);
+	}
+
 	public static void cancelJobsBelongingTo(final String jobName) {
 		EditorContext.JOB_MANAGER.cancel(jobName);
 	}
@@ -181,5 +182,15 @@ public enum EditorContext {
 
 	public static boolean hasBlockSelection(final IEditorPart editor) {
 		return EditorContext.getBuffer(editor).getBlockSelection();
+	}
+
+	public static void scheduleErrorChecking(final EventBus eventBus) {
+		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK) {
+
+			@Override
+			public void execute() {
+				eventBus.post(new CheckErrorEvent());
+			}
+		});
 	}
 }
