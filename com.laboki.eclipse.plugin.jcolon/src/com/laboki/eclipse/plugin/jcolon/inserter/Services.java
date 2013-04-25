@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.Instance;
+import com.laboki.eclipse.plugin.jcolon.listeners.AnnotationsListener;
 
 public final class Services implements Instance {
 
@@ -22,6 +23,7 @@ public final class Services implements Instance {
 		this.startService(new ErrorLocator(this.eventBus));
 		this.startService(new FileSyncer(this.eventBus));
 		this.startService(new ErrorChecker(this.eventBus));
+		this.startService(new AnnotationsListener(this.eventBus));
 	}
 
 	private void startService(final Instance instance) {
