@@ -9,7 +9,6 @@ import lombok.extern.java.Log;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.JavaCore;
@@ -68,8 +67,6 @@ public enum EditorContext {
 		EditorContext.DISPLAY.syncExec(runnable);
 	}
 
-	public static void flushEvents() {}
-
 	public static IEditorPart getEditor() {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 	}
@@ -90,19 +87,11 @@ public enum EditorContext {
 		return EditorContext.hasJDTAnnotationError(editor);
 	}
 
-	static void syncFile(@SuppressWarnings("unused") final IEditorPart editor) {
-		// EditorContext.flushEvents();
-		// EditorContext.tryToSyncFile(editor);
-	}
-
-	@SuppressWarnings("unused")
-	private static void tryToSyncFile(final IEditorPart editor) {
+	public static void syncFile(final IEditorPart editor) {
 		try {
 			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (final CoreException e) {
-			EditorContext.log.log(Level.FINEST, "Failed to sync IFile resource", e);
-		} finally {
-			EditorContext.flushEvents();
+		} catch (final Exception e) {
+			EditorContext.log.log(Level.WARNING, "Failed to sync IFile resource", e);
 		}
 	}
 
@@ -143,8 +132,7 @@ public enum EditorContext {
 	}
 
 	public static IDocument getDocument(final IEditorPart editor) {
-		final ITextEditor textEditor = (ITextEditor) editor;
-		return textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+		return ((ITextEditor) editor).getDocumentProvider().getDocument(((ITextEditor) editor).getEditorInput());
 	}
 
 	public static IPartService getPartService() {
@@ -172,7 +160,6 @@ public enum EditorContext {
 	}
 
 	public static boolean isInLinkMode(final IEditorPart editor) {
-		EditorContext.syncFile(editor);
 		return EditorContext.hasLinkAnnotations(editor);
 	}
 
@@ -194,21 +181,5 @@ public enum EditorContext {
 
 	public static boolean hasBlockSelection(final IEditorPart editor) {
 		return EditorContext.getBuffer(editor).getBlockSelection();
-	}
-
-	public static boolean isBusy() {
-		return EditorContext.jobManagerIsBusy() || EditorContext.uiThreadIsBusy();
-	}
-
-	public static boolean jobManagerIsBusy() {
-		return !EditorContext.jobManagerIsIdle();
-	}
-
-	public static boolean jobManagerIsIdle() {
-		return EditorContext.JOB_MANAGER.isIdle();
-	}
-
-	public static boolean uiThreadIsBusy() {
-		return EditorContext.DISPLAY.readAndDispatch();
 	}
 }
