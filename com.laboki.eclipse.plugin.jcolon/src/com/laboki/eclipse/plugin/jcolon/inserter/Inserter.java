@@ -13,7 +13,7 @@ import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
 
 @ToString
-final class SemiColonInserter implements Instance {
+final class Inserter implements Instance {
 
 	private final EventBus eventBus;
 	private final Problem problem = new Problem();
@@ -21,7 +21,7 @@ final class SemiColonInserter implements Instance {
 	private final IDocument document = EditorContext.getDocument(this.editor);
 	private static final String SEMICOLON = ";";
 
-	public SemiColonInserter(final EventBus eventBus) {
+	public Inserter(final EventBus eventBus) {
 		this.eventBus = eventBus;
 	}
 
@@ -32,7 +32,7 @@ final class SemiColonInserter implements Instance {
 
 			@Override
 			public void asyncExec() {
-				SemiColonInserter.this.insertSemiColon(event.getLocation());
+				Inserter.this.insertSemiColon(event.getLocation());
 			}
 		});
 	}
@@ -49,11 +49,11 @@ final class SemiColonInserter implements Instance {
 		if (this.semiColonIsAlreadyInserted(location)) return;
 		if (this.locationErrorMismatch(location)) return;
 		if (EditorContext.isInEditMode(this.editor)) return;
-		SemiColonInserter.this.document.replace(location, 0, SemiColonInserter.SEMICOLON);
+		Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
 	}
 
 	private boolean semiColonIsAlreadyInserted(final int location) throws BadLocationException {
-		return String.valueOf(this.document.getChar(location)).equals(SemiColonInserter.SEMICOLON);
+		return String.valueOf(this.document.getChar(location)).equals(Inserter.SEMICOLON);
 	}
 
 	private boolean locationErrorMismatch(final int location) {

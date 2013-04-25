@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 
-public final class SemiColonInserterServices implements Instance {
+public final class Services implements Instance {
 
 	private final List<Instance> instances = Lists.newArrayList();
 	private final EventBus eventBus = new EventBus();
@@ -18,7 +18,7 @@ public final class SemiColonInserterServices implements Instance {
 	}
 
 	private void startServices() {
-		this.startService(new SemiColonInserter(this.eventBus));
+		this.startService(new Inserter(this.eventBus));
 		this.startService(new ErrorLocator(this.eventBus));
 		this.startService(new FileSyncer(this.eventBus));
 		this.startService(new ErrorChecker(this.eventBus));

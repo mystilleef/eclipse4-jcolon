@@ -71,7 +71,7 @@ public enum Factory implements Instance {
 
 	private static void startInserterServiceFor(final IWorkbenchPart part) {
 		Factory.stopAllInserterServices();
-		Factory.SERVICES_MAP.put((IEditorPart) part, new SemiColonInserterServices().begin());
+		Factory.SERVICES_MAP.put((IEditorPart) part, new Services().begin());
 	}
 
 	private static void stopAllInserterServices() {
