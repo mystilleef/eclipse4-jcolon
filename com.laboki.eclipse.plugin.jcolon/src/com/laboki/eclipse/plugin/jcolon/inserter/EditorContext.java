@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
@@ -192,5 +193,13 @@ public enum EditorContext {
 				eventBus.post(new CheckErrorEvent());
 			}
 		});
+	}
+
+	public static IAnnotationModel getAnnotationModel() {
+		try {
+			return EditorContext.getView(EditorContext.getEditor()).getAnnotationModel();
+		} catch (final Exception e) {
+			return null;
+		}
 	}
 }
