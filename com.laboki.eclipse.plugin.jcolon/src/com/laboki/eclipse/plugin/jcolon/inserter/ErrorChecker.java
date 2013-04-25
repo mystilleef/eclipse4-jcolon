@@ -59,7 +59,7 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private void checkError() {
-		EditorContext.asyncExec(new Task(EditorContext.TASK_FAMILY_NAME_2, EditorContext.SHORT_DELAY_TIME) {
+		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
@@ -74,16 +74,16 @@ final class ErrorChecker implements Instance, VerifyListener, IAnnotationModelLi
 	}
 
 	private static void cancelJobs() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.TASK_FAMILY_NAME);
+		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_TASK);
 	}
 
 	private static void cancelAllJobs() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.TASK_FAMILY_NAME_2);
+		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_TASK);
 		ErrorChecker.cancelJobs();
 	}
 
 	private void findSemiColonError() {
-		EditorContext.asyncExec(new Task(EditorContext.TASK_FAMILY_NAME, EditorContext.SHORT_DELAY_TIME) {
+		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void asyncExec() {
