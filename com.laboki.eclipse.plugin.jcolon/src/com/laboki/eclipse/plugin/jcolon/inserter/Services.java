@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.listeners.AnnotationsListener;
+import com.laboki.eclipse.plugin.jcolon.listeners.KeyEventListener;
+import com.laboki.eclipse.plugin.jcolon.listeners.TextInsertionListener;
 
 public final class Services implements Instance {
 
@@ -23,6 +25,9 @@ public final class Services implements Instance {
 		this.startService(new ErrorLocator(this.eventBus));
 		this.startService(new FileSyncer(this.eventBus));
 		this.startService(new ErrorChecker(this.eventBus));
+		this.startService(new Scheduler(this.eventBus));
+		this.startService(new KeyEventListener(this.eventBus));
+		this.startService(new TextInsertionListener(this.eventBus));
 		this.startService(new AnnotationsListener(this.eventBus));
 	}
 

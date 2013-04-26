@@ -5,32 +5,19 @@ import java.util.logging.Level;
 import lombok.extern.java.Log;
 
 import com.laboki.eclipse.plugin.jcolon.Instance;
+import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
 
 @Log
 public abstract class AbstractListener implements IListener, Instance {
 
-	private static final Level FINEST = Level.FINEST;
+	private static final Level LOG_LEVEL = Level.FINEST;
 	private final EventBus eventBus;
 
 	public AbstractListener(final EventBus eventbus) {
 		this.eventBus = eventbus;
 	}
-
-	private void tryToAdd() {
-		try {
-			this.add();
-		} catch (final Exception e) {
-			AbstractListener.log.log(AbstractListener.FINEST, "failed to add listener");
-		}
-	}
-
-	@Override
-	public void add() {}
-
-	@Override
-	public void remove() {}
 
 	@Override
 	public Instance begin() {
@@ -38,6 +25,17 @@ public abstract class AbstractListener implements IListener, Instance {
 		this.tryToAdd();
 		return this;
 	}
+
+	private void tryToAdd() {
+		try {
+			this.add();
+		} catch (final Exception e) {
+			AbstractListener.log.log(AbstractListener.LOG_LEVEL, "failed to add listener");
+		}
+	}
+
+	@Override
+	public void add() {}
 
 	@Override
 	public Instance end() {
@@ -50,11 +48,20 @@ public abstract class AbstractListener implements IListener, Instance {
 		try {
 			this.remove();
 		} catch (final Exception e) {
-			AbstractListener.log.log(AbstractListener.FINEST, "failed to remove listener");
+			AbstractListener.log.log(AbstractListener.LOG_LEVEL, "failed to remove listener");
 		}
 	}
 
+	@Override
+	public void remove() {}
+
 	protected void scheduleErrorChecking() {
-		EditorContext.scheduleErrorChecking(this.eventBus);
+		EditorContext.asyncExec(new Task() {
+
+			@Override
+			public void execute() {
+				EditorContext.scheduleErrorChecking(AbstractListener.this.eventBus);
+			}
+		});
 	}
 }
