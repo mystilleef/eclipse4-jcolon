@@ -29,7 +29,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.Task;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckErrorEvent;
+import com.laboki.eclipse.plugin.jcolon.inserter.events.ScheduleCheckErrorEvent;
 
 @Log
 @ToString
@@ -45,6 +45,7 @@ public enum EditorContext {
 	public static final Display DISPLAY = EditorContext.getDisplay();
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
 	public static final int SHORT_DELAY_TIME = 250;
+	public static final int LONG_DELAY_TIME = 1000;
 	private static final List<String> LINK_ANNOTATIONS = Lists.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
 
 	public static Display getDisplay() {
@@ -67,6 +68,10 @@ public enum EditorContext {
 
 	public static IEditorPart getEditor() {
 		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	}
+
+	public static Control getControl(final IEditorPart editor) {
+		return (Control) editor.getAdapter(Control.class);
 	}
 
 	public static StyledText getBuffer(final IEditorPart editor) {
@@ -186,11 +191,11 @@ public enum EditorContext {
 	}
 
 	public static void scheduleErrorChecking(final EventBus eventBus) {
-		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK) {
+		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
-				eventBus.post(new CheckErrorEvent());
+				eventBus.post(new ScheduleCheckErrorEvent());
 			}
 		});
 	}
