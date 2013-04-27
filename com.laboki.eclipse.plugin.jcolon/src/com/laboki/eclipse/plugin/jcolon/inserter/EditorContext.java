@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartService;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -42,18 +43,15 @@ public enum EditorContext {
 	private static final String LINK_EXIT = "org.eclipse.ui.internal.workbench.texteditor.link.exit";
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
 	public static final String ERROR_CHECKING_TASK = "jcolon semicolon error checking task";
-	public static final Display DISPLAY = EditorContext.getDisplay();
+	private static final IWorkbench WORKBENCH = PlatformUI.getWorkbench();
+	public static final Display DISPLAY = EditorContext.WORKBENCH.getDisplay();
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
 	public static final int SHORT_DELAY_TIME = 250;
 	public static final int LONG_DELAY_TIME = 1000;
 	private static final List<String> LINK_ANNOTATIONS = Lists.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
 
 	public static Display getDisplay() {
-		return PlatformUI.getWorkbench().getDisplay();
-	}
-
-	public static Shell getShell() {
-		return PlatformUI.getWorkbench().getModalDialogShellProvider().getShell();
+		return EditorContext.DISPLAY;
 	}
 
 	public static void flushEvents() {
@@ -70,8 +68,16 @@ public enum EditorContext {
 		EditorContext.DISPLAY.syncExec(runnable);
 	}
 
+	public static Shell getShell() {
+		return EditorContext.WORKBENCH.getModalDialogShellProvider().getShell();
+	}
+
 	public static IEditorPart getEditor() {
-		return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		return EditorContext.WORKBENCH.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+	}
+
+	public static IPartService getPartService() {
+		return (IPartService) EditorContext.WORKBENCH.getActiveWorkbenchWindow().getService(IPartService.class);
 	}
 
 	public static Control getControl(final IEditorPart editor) {
@@ -82,32 +88,20 @@ public enum EditorContext {
 		return (StyledText) editor.getAdapter(Control.class);
 	}
 
-	public static SourceViewer getView() {
-		return (SourceViewer) EditorContext.getEditor().getAdapter(ITextOperationTarget.class);
-	}
-
 	public static SourceViewer getView(final IEditorPart editor) {
 		return (SourceViewer) editor.getAdapter(ITextOperationTarget.class);
 	}
 
-	public static boolean hasJDTErrors(final IEditorPart editor) {
-		return EditorContext.hasJDTAnnotationError(editor);
-	}
-
-	public static void syncFile(final IEditorPart editor) {
+	public static IAnnotationModel getAnnotationModel() {
 		try {
-			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (final Exception e) {
-			EditorContext.log.log(Level.WARNING, "Failed to sync IFile resource", e);
-		}
-	}
-
-	public static IFile getFile(final IEditorPart editor) {
-		try {
-			return ((FileEditorInput) editor.getEditorInput()).getFile();
+			return EditorContext.getView(EditorContext.getEditor()).getAnnotationModel();
 		} catch (final Exception e) {
 			return null;
 		}
+	}
+
+	public static boolean hasJDTErrors(final IEditorPart editor) {
+		return EditorContext.hasJDTAnnotationError(editor);
 	}
 
 	private static boolean hasJDTAnnotationError(final IEditorPart editor) {
@@ -128,30 +122,36 @@ public enum EditorContext {
 		return iterator.next().getType().equals(EditorContext.JDT_ANNOTATION_ERROR);
 	}
 
+	public static void syncFile(final IEditorPart editor) {
+		try {
+			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (final Exception e) {
+			EditorContext.log.log(Level.WARNING, "Failed to sync IFile resource", e);
+		}
+	}
+
 	public static boolean isNotAJavaEditor(final IEditorPart part) {
 		return !EditorContext.isAJavaEditor(part);
 	}
 
 	public static boolean isAJavaEditor(final IEditorPart part) {
-		final IFile file = EditorContext.getFile(part);
-		if (file == null) return false;
-		return JavaCore.isJavaLikeFileName(file.getName());
+		try {
+			return JavaCore.isJavaLikeFileName(EditorContext.getFile(part).getName());
+		} catch (final Exception e) {
+			return false;
+		}
+	}
+
+	public static IFile getFile(final IEditorPart editor) {
+		try {
+			return ((FileEditorInput) editor.getEditorInput()).getFile();
+		} catch (final Exception e) {
+			return null;
+		}
 	}
 
 	public static IDocument getDocument(final IEditorPart editor) {
 		return ((ITextEditor) editor).getDocumentProvider().getDocument(((ITextEditor) editor).getEditorInput());
-	}
-
-	public static IPartService getPartService() {
-		return (IPartService) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getService(IPartService.class);
-	}
-
-	public static boolean isNotNull(final Object object) {
-		return !EditorContext.isNull(object);
-	}
-
-	public static boolean isNull(final Object object) {
-		return object == null;
 	}
 
 	public static void cancelErrorCheckingJobs() {
@@ -170,6 +170,14 @@ public enum EditorContext {
 		}
 	}
 
+	public static boolean hasSelection(final IEditorPart editor) {
+		return EditorContext.getBuffer(editor).getSelectionCount() > 0;
+	}
+
+	public static boolean hasBlockSelection(final IEditorPart editor) {
+		return EditorContext.getBuffer(editor).getBlockSelection();
+	}
+
 	public static boolean isInLinkMode(final IEditorPart editor) {
 		return EditorContext.hasLinkAnnotations(editor);
 	}
@@ -186,14 +194,6 @@ public enum EditorContext {
 		return false;
 	}
 
-	public static boolean hasSelection(final IEditorPart editor) {
-		return EditorContext.getBuffer(editor).getSelectionCount() > 0;
-	}
-
-	public static boolean hasBlockSelection(final IEditorPart editor) {
-		return EditorContext.getBuffer(editor).getBlockSelection();
-	}
-
 	public static void scheduleErrorChecking(final EventBus eventBus) {
 		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
@@ -204,11 +204,11 @@ public enum EditorContext {
 		});
 	}
 
-	public static IAnnotationModel getAnnotationModel() {
-		try {
-			return EditorContext.getView(EditorContext.getEditor()).getAnnotationModel();
-		} catch (final Exception e) {
-			return null;
-		}
+	public static boolean isNotNull(final Object object) {
+		return !EditorContext.isNull(object);
+	}
+
+	public static boolean isNull(final Object object) {
+		return object == null;
 	}
 }
