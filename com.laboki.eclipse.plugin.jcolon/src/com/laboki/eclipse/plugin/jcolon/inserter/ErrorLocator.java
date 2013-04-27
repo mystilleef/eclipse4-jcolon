@@ -27,7 +27,9 @@ final class ErrorLocator implements Instance {
 			}
 
 			private void findErrorLocation() {
-				if (this.hasMissingSemiColonError()) this.postEvent(ErrorLocator.this.problem.location());
+				try {
+					if (this.hasMissingSemiColonError()) this.postEvent(ErrorLocator.this.problem.location());
+				} catch (final Exception e) {}
 			}
 
 			private boolean hasMissingSemiColonError() {

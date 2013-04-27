@@ -24,7 +24,7 @@ final class Problem implements Instance {
 	private final IDocument document = EditorContext.getDocument(this.editor);
 	private final ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
 
-	public int location() {
+	public int location() throws Exception {
 		return this.getSemiColonProblem().getSourceEnd() + 1;
 	}
 
