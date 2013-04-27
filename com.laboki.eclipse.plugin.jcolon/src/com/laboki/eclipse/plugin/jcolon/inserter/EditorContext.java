@@ -184,8 +184,10 @@ public enum EditorContext {
 
 	private static boolean hasLinkAnnotations(final IEditorPart editor) {
 		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
-		while (iterator.hasNext())
+		while (iterator.hasNext()) {
+			EditorContext.flushEvents();
 			if (EditorContext.isLinkModeAnnotation(iterator)) return true;
+		}
 		return false;
 	}
 
