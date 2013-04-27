@@ -49,6 +49,7 @@ final class Inserter implements Instance {
 		if (this.semiColonIsAlreadyInserted(location)) return;
 		if (this.locationErrorMismatch(location)) return;
 		if (EditorContext.isInEditMode(this.editor)) return;
+		EditorContext.flushEvents();
 		Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
 	}
 
