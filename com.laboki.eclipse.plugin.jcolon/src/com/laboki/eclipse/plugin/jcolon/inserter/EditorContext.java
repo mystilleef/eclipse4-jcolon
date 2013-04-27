@@ -56,6 +56,10 @@ public enum EditorContext {
 		return PlatformUI.getWorkbench().getModalDialogShellProvider().getShell();
 	}
 
+	public static void flushEvents() {
+		while (EditorContext.DISPLAY.readAndDispatch());
+	}
+
 	public static void asyncExec(final Runnable runnable) {
 		if ((EditorContext.DISPLAY == null) || EditorContext.DISPLAY.isDisposed()) return;
 		EditorContext.DISPLAY.asyncExec(runnable);
