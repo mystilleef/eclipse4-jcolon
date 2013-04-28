@@ -8,7 +8,5 @@ import org.eclipse.ui.IStartup;
 public final class Startup implements IStartup {
 
 	@Override
-	public void earlyStartup() {
-		Plugin.INSTANCE.begin();
-	}
+	public void earlyStartup() {}
 }
