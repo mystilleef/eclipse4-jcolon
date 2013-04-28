@@ -4,20 +4,11 @@ import lombok.ToString;
 
 import org.eclipse.ui.IStartup;
 
-import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
-
 @ToString
-public final class Startup implements IStartup, Runnable {
-
-	public Startup() {}
+public final class Startup implements IStartup {
 
 	@Override
 	public void earlyStartup() {
-		EditorContext.asyncExec(this);
-	}
-
-	@Override
-	public void run() {
-		EditorContext.asyncExec(Inserter.INSTANCE);
+		Plugin.INSTANCE.begin();
 	}
 }
