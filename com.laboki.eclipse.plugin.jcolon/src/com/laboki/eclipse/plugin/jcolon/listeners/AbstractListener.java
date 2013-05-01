@@ -50,7 +50,7 @@ public abstract class AbstractListener implements IListener, Instance {
 	public void remove() {}
 
 	protected void scheduleErrorChecking() {
-		EditorContext.asyncExec(new Task() {
+		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, 1000) {
 
 			@Override
 			public void execute() {
