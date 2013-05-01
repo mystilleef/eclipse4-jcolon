@@ -2,10 +2,6 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-
-import lombok.ToString;
-import lombok.extern.java.Log;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -32,8 +28,6 @@ import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.ScheduleCheckErrorEvent;
 
-@Log
-@ToString
 public enum EditorContext {
 	INSTANCE;
 
@@ -55,7 +49,11 @@ public enum EditorContext {
 	}
 
 	public static void flushEvents() {
-		while (EditorContext.DISPLAY.readAndDispatch());
+		try {
+			while (EditorContext.DISPLAY.readAndDispatch());
+		} catch (final Exception e) {
+			// EditorContext.log.log(Level.INFO, "failed to flush events");
+		}
 	}
 
 	public static void asyncExec(final Runnable runnable) {
@@ -126,7 +124,7 @@ public enum EditorContext {
 		try {
 			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (final Exception e) {
-			EditorContext.log.log(Level.WARNING, "Failed to sync IFile resource", e);
+			// EditorContext.log.log(Level.WARNING, "Failed to sync IFile resource", e);
 		}
 	}
 

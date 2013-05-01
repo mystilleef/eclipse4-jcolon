@@ -2,8 +2,6 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 
 import java.util.Map;
 
-import lombok.ToString;
-
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPartService;
@@ -12,7 +10,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import com.google.common.collect.Maps;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 
-@ToString
 public enum Factory implements Instance {
 	INSTANCE;
 

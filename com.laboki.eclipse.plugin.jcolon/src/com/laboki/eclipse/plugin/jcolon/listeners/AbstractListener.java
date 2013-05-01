@@ -1,18 +1,12 @@
 package com.laboki.eclipse.plugin.jcolon.listeners;
 
-import java.util.logging.Level;
-
-import lombok.extern.java.Log;
-
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
 
-@Log
 public abstract class AbstractListener implements IListener, Instance {
 
-	private static final Level LOG_LEVEL = Level.FINEST;
 	private final EventBus eventBus;
 
 	public AbstractListener(final EventBus eventbus) {
@@ -30,7 +24,7 @@ public abstract class AbstractListener implements IListener, Instance {
 		try {
 			this.add();
 		} catch (final Exception e) {
-			AbstractListener.log.log(AbstractListener.LOG_LEVEL, "failed to add listener");
+			// AbstractListener.log.log(AbstractListener.LOG_LEVEL, "failed to add listener");
 		}
 	}
 
@@ -48,7 +42,7 @@ public abstract class AbstractListener implements IListener, Instance {
 		try {
 			this.remove();
 		} catch (final Exception e) {
-			AbstractListener.log.log(AbstractListener.LOG_LEVEL, "failed to remove listener");
+			// AbstractListener.log.log(AbstractListener.LOG_LEVEL, "failed to remove listener");
 		}
 	}
 

@@ -1,7 +1,5 @@
 package com.laboki.eclipse.plugin.jcolon.inserter;
 
-import lombok.ToString;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
@@ -12,7 +10,6 @@ import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
 
-@ToString
 final class Inserter implements Instance {
 
 	private final EventBus eventBus;
