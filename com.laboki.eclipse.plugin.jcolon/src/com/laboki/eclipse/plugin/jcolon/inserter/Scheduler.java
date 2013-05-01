@@ -26,7 +26,7 @@ public final class Scheduler implements Instance {
 			}
 
 			@Override
-			protected void postExecute() {
+			public void postExecute() {
 				Scheduler.this.eventBus.post(new CheckErrorEvent());
 			}
 		});

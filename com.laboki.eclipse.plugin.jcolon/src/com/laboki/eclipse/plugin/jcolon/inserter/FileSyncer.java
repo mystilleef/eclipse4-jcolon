@@ -24,12 +24,12 @@ final class FileSyncer implements Instance {
 		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
-			protected void execute() {
+			public void execute() {
 				EditorContext.syncFile(FileSyncer.this.editor);
 			}
 
 			@Override
-			protected void postExecute() {
+			public void postExecute() {
 				FileSyncer.this.eventBus.post(new LocateSemiColonErrorEvent());
 			}
 		});
