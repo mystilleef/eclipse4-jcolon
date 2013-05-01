@@ -21,7 +21,7 @@ final class FileSyncer implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
-		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
@@ -32,7 +32,7 @@ final class FileSyncer implements Instance {
 			public void postExecute() {
 				FileSyncer.this.eventBus.post(new LocateSemiColonErrorEvent());
 			}
-		});
+		}.begin();
 	}
 
 	@Override

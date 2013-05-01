@@ -9,6 +9,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import com.google.common.collect.Maps;
 import com.laboki.eclipse.plugin.jcolon.Instance;
+import com.laboki.eclipse.plugin.jcolon.Task;
 
 public enum Factory implements Instance {
 	INSTANCE;
@@ -23,12 +24,24 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partActivated(final IWorkbenchPart part) {
-			Factory.enableAutomaticInserterFor(part);
+			EditorContext.asyncExec(new Task() {
+
+				@Override
+				public void asyncExec() {
+					Factory.enableAutomaticInserterFor(part);
+				}
+			});
 		}
 
 		@Override
 		public void partClosed(final IWorkbenchPart part) {
-			Factory.stopInserterServiceFor(part);
+			EditorContext.asyncExec(new Task() {
+
+				@Override
+				public void asyncExec() {
+					Factory.stopInserterServiceFor(part);
+				}
+			});
 		}
 
 		@Override
@@ -36,7 +49,13 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partDeactivated(final IWorkbenchPart part) {
-			Factory.stopInserterServiceFor(part);
+			EditorContext.asyncExec(new Task() {
+
+				@Override
+				public void asyncExec() {
+					Factory.stopInserterServiceFor(part);
+				}
+			});
 		}
 
 		@Override

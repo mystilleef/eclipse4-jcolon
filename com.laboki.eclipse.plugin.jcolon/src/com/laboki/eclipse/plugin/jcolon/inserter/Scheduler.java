@@ -18,7 +18,7 @@ public final class Scheduler implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void scheduleErrorCheck(@SuppressWarnings("unused") final ScheduleCheckErrorEvent event) {
-		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
@@ -29,7 +29,7 @@ public final class Scheduler implements Instance {
 			public void postExecute() {
 				Scheduler.this.eventBus.post(new CheckErrorEvent());
 			}
-		});
+		}.begin();
 	}
 
 	@Override

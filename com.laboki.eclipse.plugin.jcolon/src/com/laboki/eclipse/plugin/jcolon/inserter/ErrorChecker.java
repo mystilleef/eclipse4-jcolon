@@ -21,7 +21,7 @@ final class ErrorChecker implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void checkError(@SuppressWarnings("unused") final CheckErrorEvent event) {
-		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void asyncExec() {
@@ -36,7 +36,7 @@ final class ErrorChecker implements Instance {
 			private boolean doesNotHaveJDTErrors() {
 				return !EditorContext.hasJDTErrors(ErrorChecker.this.editor);
 			}
-		});
+		}.begin();
 	}
 
 	@Override

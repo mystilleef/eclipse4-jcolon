@@ -35,7 +35,7 @@ final class Problem implements Instance {
 
 	private IProblem getSemiColonProblem() {
 		for (final IProblem problem : this.createCompilationUnitNode().getProblems())
-			if (this.isValidSemiColonProblem(problem)) return problem;
+			if (Problem.isValidSemiColonProblem(problem)) return problem;
 		return null;
 	}
 
@@ -45,23 +45,26 @@ final class Problem implements Instance {
 		return (CompilationUnit) parser.createAST(null);
 	}
 
-	private boolean isValidSemiColonProblem(final IProblem problem) {
-		if (this.lineEndsWithSemiColon(problem) || this.lineEndsWithPeriod(problem)) return false;
-		if (Problem.isConstructorDeclaration(problem)) return false;
+	private static boolean isValidSemiColonProblem(final IProblem problem) {
+		// if (this.lineEndsWithSemiColon(problem) || this.lineEndsWithPeriod(problem)) return false;
+		// if (Problem.isConstructorDeclaration(problem)) return false;
 		if (Problem.isSemiColonProblem(problem)) return true;
 		return false;
 	}
 
+	@SuppressWarnings("unused")
 	private static boolean isConstructorDeclaration(final IProblem problem) {
 		for (final String string : problem.getArguments())
 			if (string.trim().equals("ConstructorDeclaration")) return true;
 		return false;
 	}
 
+	@SuppressWarnings("unused")
 	private boolean lineEndsWithSemiColon(final IProblem problem) {
 		return this.lineEndsWith(problem, Problem.SEMICOLON);
 	}
 
+	@SuppressWarnings("unused")
 	private boolean lineEndsWithPeriod(final IProblem problem) {
 		return this.lineEndsWith(problem, Problem.PERIOD);
 	}

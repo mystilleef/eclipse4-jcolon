@@ -25,41 +25,41 @@ final class Inserter implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void semiColonErrorLocation(final SemiColonErrorLocationEvent event) {
-		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void asyncExec() {
-				Inserter.this.insertSemiColon(event.getLocation());
+				this.insertSemiColon(event.getLocation());
 			}
-		});
-	}
 
-	private void insertSemiColon(final int location) {
-		try {
-			this.tryToInsertSemiColon(location);
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-	}
+			private void insertSemiColon(final int location) {
+				try {
+					this.tryToInsertSemiColon(location);
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+			}
 
-	private void tryToInsertSemiColon(final int location) throws BadLocationException {
-		if (this.semiColonIsAlreadyInserted(location)) return;
-		if (this.locationErrorMismatch(location)) return;
-		if (EditorContext.isInEditMode(this.editor)) return;
-		EditorContext.flushEvents();
-		Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
-	}
+			private void tryToInsertSemiColon(final int location) throws BadLocationException {
+				if (this.semiColonIsAlreadyInserted(location)) return;
+				if (this.locationErrorMismatch(location)) return;
+				if (EditorContext.isInEditMode(Inserter.this.editor)) return;
+				EditorContext.flushEvents();
+				Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
+			}
 
-	private boolean semiColonIsAlreadyInserted(final int location) throws BadLocationException {
-		return String.valueOf(this.document.getChar(location)).equals(Inserter.SEMICOLON);
-	}
+			private boolean semiColonIsAlreadyInserted(final int location) throws BadLocationException {
+				return String.valueOf(Inserter.this.document.getChar(location)).equals(Inserter.SEMICOLON);
+			}
 
-	private boolean locationErrorMismatch(final int location) {
-		try {
-			return location != this.problem.location();
-		} catch (final Exception e) {
-			return false;
-		}
+			private boolean locationErrorMismatch(final int location) {
+				try {
+					return location != Inserter.this.problem.location();
+				} catch (final Exception e) {
+					return false;
+				}
+			}
+		}.begin();
 	}
 
 	@Override

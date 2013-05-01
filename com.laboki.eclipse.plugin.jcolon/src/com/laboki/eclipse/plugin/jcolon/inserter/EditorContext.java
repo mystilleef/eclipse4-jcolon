@@ -191,13 +191,13 @@ public enum EditorContext {
 	}
 
 	public static void scheduleErrorChecking(final EventBus eventBus) {
-		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
 				eventBus.post(new ScheduleCheckErrorEvent());
 			}
-		});
+		}.begin();
 	}
 
 	public static boolean isNotNull(final Object object) {

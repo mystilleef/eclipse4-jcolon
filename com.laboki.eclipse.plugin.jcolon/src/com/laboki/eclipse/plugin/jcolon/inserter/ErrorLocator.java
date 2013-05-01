@@ -19,7 +19,7 @@ final class ErrorLocator implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void locateSemiColonError(@SuppressWarnings("unused") final LocateSemiColonErrorEvent event) {
-		EditorContext.asyncExec(new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void execute() {
@@ -39,7 +39,7 @@ final class ErrorLocator implements Instance {
 			private void postEvent(final int location) {
 				ErrorLocator.this.eventBus.post(new SemiColonErrorLocationEvent(location));
 			}
-		});
+		}.begin();
 	}
 
 	@Override

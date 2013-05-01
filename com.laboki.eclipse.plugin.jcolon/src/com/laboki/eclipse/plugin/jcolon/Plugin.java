@@ -1,6 +1,5 @@
 package com.laboki.eclipse.plugin.jcolon;
 
-import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.Factory;
 
 public enum Plugin implements Instance {
@@ -8,25 +7,25 @@ public enum Plugin implements Instance {
 
 	@Override
 	public Instance begin() {
-		EditorContext.asyncExec(new Task() {
+		new Task() {
 
 			@Override
 			public void asyncExec() {
 				Factory.INSTANCE.begin();
 			}
-		});
+		}.begin();
 		return this;
 	}
 
 	@Override
 	public Instance end() {
-		EditorContext.asyncExec(new Task() {
+		new Task() {
 
 			@Override
 			public void asyncExec() {
 				Factory.INSTANCE.end();
 			}
-		});
+		}.begin();
 		return this;
 	}
 }
