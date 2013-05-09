@@ -9,7 +9,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import com.google.common.collect.Maps;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.Task;
+import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public enum Factory implements Instance {
 	INSTANCE;

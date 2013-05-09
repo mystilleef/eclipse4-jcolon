@@ -1,4 +1,6 @@
-package com.laboki.eclipse.plugin.jcolon;
+package com.laboki.eclipse.plugin.jcolon.task;
+
+import com.laboki.eclipse.plugin.jcolon.Instance;
 
 
 public class Task extends AbstractTask implements Instance {

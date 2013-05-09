@@ -3,9 +3,9 @@ package com.laboki.eclipse.plugin.jcolon.inserter;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.ScheduleCheckErrorEvent;
+import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public final class Scheduler implements Instance {
 

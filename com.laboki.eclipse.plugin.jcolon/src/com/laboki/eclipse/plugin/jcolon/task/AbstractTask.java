@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.jcolon;
+package com.laboki.eclipse.plugin.jcolon.task;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;

@@ -1,6 +1,7 @@
 package com.laboki.eclipse.plugin.jcolon;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.Factory;
+import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public enum Plugin implements Instance {
 	INSTANCE;

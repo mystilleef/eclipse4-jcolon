@@ -5,9 +5,9 @@ import org.eclipse.ui.IEditorPart;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.Task;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
+import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 final class FileSyncer implements Instance {
 
