@@ -28,7 +28,7 @@ final class Inserter implements Instance {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
-			public void asyncExec() {
+			public void asyncExecute() {
 				this.insertSemiColon(event.getLocation());
 			}
 

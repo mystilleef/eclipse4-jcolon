@@ -57,13 +57,13 @@ abstract class AbstractTask extends Job implements Runnable, ITask {
 			@Override
 			public void run() {
 				EditorContext.flushEvents();
-				AbstractTask.this.asyncExec();
+				AbstractTask.this.asyncExecute();
 			}
 		});
 	}
 
 	@Override
-	public void asyncExec() {}
+	public void asyncExecute() {}
 
 	@Override
 	public void postExecute() {}

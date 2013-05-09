@@ -27,7 +27,7 @@ public enum Factory implements Instance {
 			EditorContext.asyncExec(new Task() {
 
 				@Override
-				public void asyncExec() {
+				public void asyncExecute() {
 					Factory.enableAutomaticInserterFor(part);
 				}
 			});
@@ -38,7 +38,7 @@ public enum Factory implements Instance {
 			EditorContext.asyncExec(new Task() {
 
 				@Override
-				public void asyncExec() {
+				public void asyncExecute() {
 					Factory.stopInserterServiceFor(part);
 				}
 			});
@@ -52,7 +52,7 @@ public enum Factory implements Instance {
 			EditorContext.asyncExec(new Task() {
 
 				@Override
-				public void asyncExec() {
+				public void asyncExecute() {
 					Factory.stopInserterServiceFor(part);
 				}
 			});

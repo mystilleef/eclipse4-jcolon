@@ -4,7 +4,7 @@ interface ITask {
 
 	void execute();
 
-	void asyncExec();
+	void asyncExecute();
 
 	void postExecute();
 }
