@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 
-abstract class AbstractTask extends Job implements Runnable, ITask, Instance {
+abstract class AbstractTask extends Job implements Runnable, Instance {
 
 	private final int delayTime;
 	private final String name;
@@ -53,8 +53,7 @@ abstract class AbstractTask extends Job implements Runnable, ITask, Instance {
 
 	protected void runTask() {}
 
-	@Override
-	public void execute() {}
+	protected void execute() {}
 
 	protected void runAsyncExecute() {
 		EditorContext.asyncExec(new Runnable() {
@@ -68,8 +67,7 @@ abstract class AbstractTask extends Job implements Runnable, ITask, Instance {
 		});
 	}
 
-	@Override
-	public void asyncExecute() {}
+	protected void asyncExecute() {}
 
 	protected void runSyncExecute() {
 		EditorContext.syncExec(new Runnable() {
@@ -83,6 +81,5 @@ abstract class AbstractTask extends Job implements Runnable, ITask, Instance {
 		});
 	}
 
-	@Override
-	public void syncExecute() {}
+	protected void syncExecute() {}
 }
