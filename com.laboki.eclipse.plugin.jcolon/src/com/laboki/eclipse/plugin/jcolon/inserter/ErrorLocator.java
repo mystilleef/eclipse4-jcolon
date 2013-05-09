@@ -51,7 +51,6 @@ final class ErrorLocator implements Instance {
 	@Override
 	public Instance end() {
 		this.eventBus.unregister(this);
-		this.problem.end();
 		return this;
 	}
 }

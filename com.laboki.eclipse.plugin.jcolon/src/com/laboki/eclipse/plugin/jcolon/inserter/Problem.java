@@ -9,19 +9,13 @@ import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
-import com.laboki.eclipse.plugin.jcolon.Instance;
-
-final class Problem implements Instance {
+final class Problem {
 
 	private static final String SEMICOLON = ";";
-	private static final String PERIOD = ".";
 	private static final List<Integer> PROBLEM_IDS = Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertToCompletePhrase, IProblem.ParsingErrorInsertToCompleteScope, IProblem.ParsingErrorInsertTokenAfter, IProblem.ParsingErrorInsertTokenBefore);
 	private final IEditorPart editor = EditorContext.getEditor();
-	private final IDocument document = EditorContext.getDocument(this.editor);
 	private final ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
 
 	public int location() throws Exception {
@@ -34,9 +28,13 @@ final class Problem implements Instance {
 	}
 
 	private IProblem getSemiColonProblem() {
-		for (final IProblem problem : this.createCompilationUnitNode().getProblems())
+		for (final IProblem problem : this.getCompilerProblems())
 			if (Problem.isValidSemiColonProblem(problem)) return problem;
 		return null;
+	}
+
+	private IProblem[] getCompilerProblems() {
+		return this.createCompilationUnitNode().getProblems();
 	}
 
 	private CompilationUnit createCompilationUnitNode() {
@@ -46,43 +44,6 @@ final class Problem implements Instance {
 	}
 
 	private static boolean isValidSemiColonProblem(final IProblem problem) {
-		// if (this.lineEndsWithSemiColon(problem) || this.lineEndsWithPeriod(problem)) return false;
-		// if (Problem.isConstructorDeclaration(problem)) return false;
-		if (Problem.isSemiColonProblem(problem)) return true;
-		return false;
-	}
-
-	@SuppressWarnings("unused")
-	private static boolean isConstructorDeclaration(final IProblem problem) {
-		for (final String string : problem.getArguments())
-			if (string.trim().equals("ConstructorDeclaration")) return true;
-		return false;
-	}
-
-	@SuppressWarnings("unused")
-	private boolean lineEndsWithSemiColon(final IProblem problem) {
-		return this.lineEndsWith(problem, Problem.SEMICOLON);
-	}
-
-	@SuppressWarnings("unused")
-	private boolean lineEndsWithPeriod(final IProblem problem) {
-		return this.lineEndsWith(problem, Problem.PERIOD);
-	}
-
-	private boolean lineEndsWith(final IProblem problem, final String string) {
-		try {
-			return this.getLineString(problem).endsWith(string);
-		} catch (final BadLocationException e) {
-			return false;
-		}
-	}
-
-	private String getLineString(final IProblem problem) throws BadLocationException {
-		final int lineNumber = problem.getSourceLineNumber() - 1;
-		return this.document.get(this.document.getLineOffset(lineNumber), this.document.getLineLength(lineNumber)).trim();
-	}
-
-	private static boolean isSemiColonProblem(final IProblem problem) {
 		return Problem.isInsertionErrorID(problem) && Problem.containsSemiColon(problem);
 	}
 
@@ -92,17 +53,11 @@ final class Problem implements Instance {
 
 	private static boolean containsSemiColon(final IProblem problem) {
 		for (final String string : problem.getArguments())
-			if (string.trim().equals(Problem.SEMICOLON)) return true;
+			if (Problem.isSemiColon(string)) return true;
 		return false;
 	}
 
-	@Override
-	public Instance begin() {
-		return this;
-	}
-
-	@Override
-	public Instance end() {
-		return this;
+	private static boolean isSemiColon(final String string) {
+		return string.trim().equals(Problem.SEMICOLON);
 	}
 }
