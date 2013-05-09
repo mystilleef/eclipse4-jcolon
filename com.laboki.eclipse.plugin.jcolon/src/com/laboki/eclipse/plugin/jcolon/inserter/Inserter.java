@@ -35,7 +35,7 @@ final class Inserter implements Instance {
 				try {
 					this.insertSemiColon(location);
 				} catch (final Exception e) {
-					e.printStackTrace();
+					// e.printStackTrace();
 				}
 			}
 
