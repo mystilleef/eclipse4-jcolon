@@ -34,22 +34,18 @@ abstract class AbstractTask extends Job implements Runnable, ITask {
 	@Override
 	protected IStatus run(final IProgressMonitor monitor) {
 		if (monitor.isCanceled()) return Status.CANCEL_STATUS;
-		this.execute();
-		this.runAsyncExec();
-		this.postExecute();
 		this.runTask();
 		return Status.OK_STATUS;
 	}
 
-	private void runTask() {}
+	private void runTask() {
+		this.execute();
+		this.runAsyncExec();
+		this.postExecute();
+	}
 
 	@Override
 	public void execute() {}
-
-	@SuppressWarnings("unused")
-	private void runExec() {
-		this.runAsyncExec();
-	}
 
 	private void runAsyncExec() {
 		EditorContext.asyncExec(new Runnable() {
