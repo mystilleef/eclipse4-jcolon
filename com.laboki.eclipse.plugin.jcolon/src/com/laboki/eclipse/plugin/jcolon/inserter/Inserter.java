@@ -1,6 +1,5 @@
 package com.laboki.eclipse.plugin.jcolon.inserter;
 
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
@@ -29,18 +28,18 @@ final class Inserter implements Instance {
 
 			@Override
 			public void asyncExecute() {
-				this.insertSemiColon(event.getLocation());
+				this.tryToInsertSemiColon(event.getLocation());
 			}
 
-			private void insertSemiColon(final int location) {
+			private void tryToInsertSemiColon(final int location) {
 				try {
-					this.tryToInsertSemiColon(location);
+					this.insertSemiColon(location);
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}
 			}
 
-			private void tryToInsertSemiColon(final int location) throws BadLocationException {
+			private void insertSemiColon(final int location) throws Exception {
 				if (this.semiColonIsAlreadyInserted(location)) return;
 				if (this.locationErrorMismatch(location)) return;
 				if (EditorContext.isInEditMode(Inserter.this.editor)) return;
@@ -48,7 +47,7 @@ final class Inserter implements Instance {
 				Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
 			}
 
-			private boolean semiColonIsAlreadyInserted(final int location) throws BadLocationException {
+			private boolean semiColonIsAlreadyInserted(final int location) throws Exception {
 				return String.valueOf(Inserter.this.document.getChar(location)).equals(Inserter.SEMICOLON);
 			}
 
