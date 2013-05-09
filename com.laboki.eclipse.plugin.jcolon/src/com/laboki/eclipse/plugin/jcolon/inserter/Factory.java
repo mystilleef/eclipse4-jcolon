@@ -24,24 +24,24 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partActivated(final IWorkbenchPart part) {
-			EditorContext.asyncExec(new AsyncTask() {
+			new AsyncTask() {
 
 				@Override
 				public void asyncExecute() {
 					Factory.enableAutomaticInserterFor(part);
 				}
-			});
+			}.begin();
 		}
 
 		@Override
 		public void partClosed(final IWorkbenchPart part) {
-			EditorContext.asyncExec(new AsyncTask() {
+			new AsyncTask() {
 
 				@Override
 				public void asyncExecute() {
 					Factory.stopInserterServiceFor(part);
 				}
-			});
+			}.begin();
 		}
 
 		@Override
@@ -49,13 +49,13 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partDeactivated(final IWorkbenchPart part) {
-			EditorContext.asyncExec(new AsyncTask() {
+			new AsyncTask() {
 
 				@Override
 				public void asyncExecute() {
 					Factory.stopInserterServiceFor(part);
 				}
-			});
+			}.begin();
 		}
 
 		@Override
