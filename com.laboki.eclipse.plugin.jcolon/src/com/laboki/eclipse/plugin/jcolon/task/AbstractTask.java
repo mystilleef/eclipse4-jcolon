@@ -9,11 +9,6 @@ import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 
 abstract class AbstractTask extends Job implements Runnable, ITask {
 
-	public static final int TASK_INTERACTIVE = Job.INTERACTIVE;
-	public static final int TASK_SHORT = Job.SHORT;
-	public static final int TASK_LONG = Job.LONG;
-	public static final int TASK_BUILD = Job.BUILD;
-	public static final int TASK_DECORATE = Job.DECORATE;
 	private final int delayTime;
 	private final String name;
 
