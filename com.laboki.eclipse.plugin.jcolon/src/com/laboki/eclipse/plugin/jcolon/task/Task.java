@@ -2,9 +2,7 @@ package com.laboki.eclipse.plugin.jcolon.task;
 
 import org.eclipse.core.runtime.jobs.Job;
 
-import com.laboki.eclipse.plugin.jcolon.Instance;
-
-public class Task extends AbstractTask implements Instance {
+public class Task extends AbstractTask {
 
 	public Task() {
 		super("", 0, Job.INTERACTIVE);
@@ -24,17 +22,5 @@ public class Task extends AbstractTask implements Instance {
 
 	public Task(final String name, final int delayTime, final int priority) {
 		super(name, delayTime, priority);
-	}
-
-	@Override
-	public Instance begin() {
-		this.run();
-		return this;
-	}
-
-	@Override
-	public Instance end() {
-		this.cancel();
-		return this;
 	}
 }

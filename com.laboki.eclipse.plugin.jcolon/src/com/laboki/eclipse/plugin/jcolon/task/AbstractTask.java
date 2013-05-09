@@ -5,9 +5,10 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 
-abstract class AbstractTask extends Job implements Runnable, ITask {
+abstract class AbstractTask extends Job implements Runnable, ITask, Instance {
 
 	private final int delayTime;
 	private final String name;
@@ -22,6 +23,18 @@ abstract class AbstractTask extends Job implements Runnable, ITask {
 	@Override
 	public boolean belongsTo(final Object family) {
 		return this.name.equals(family);
+	}
+
+	@Override
+	public Instance end() {
+		this.cancel();
+		return this;
+	}
+
+	@Override
+	public Instance begin() {
+		this.run();
+		return this;
 	}
 
 	@Override
