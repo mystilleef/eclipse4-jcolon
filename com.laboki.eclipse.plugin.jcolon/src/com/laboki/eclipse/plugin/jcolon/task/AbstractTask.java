@@ -85,7 +85,4 @@ abstract class AbstractTask extends Job implements Runnable, ITask, Instance {
 
 	@Override
 	public void syncExecute() {}
-
-	@Override
-	public void postExecute() {}
 }
