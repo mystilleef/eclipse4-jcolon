@@ -49,7 +49,16 @@ public enum EditorContext {
 	}
 
 	public static void flushEvents() {
-		while (EditorContext.DISPLAY.readAndDispatch());
+		try {
+			EditorContext.tryToFlushEvent();
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void tryToFlushEvent() {
+		while (EditorContext.DISPLAY.readAndDispatch())
+			EditorContext.DISPLAY.update();
 	}
 
 	public static void asyncExec(final Runnable runnable) {
