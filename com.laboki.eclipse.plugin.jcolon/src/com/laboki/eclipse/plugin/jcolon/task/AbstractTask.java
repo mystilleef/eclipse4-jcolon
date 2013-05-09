@@ -51,28 +51,40 @@ abstract class AbstractTask extends Job implements Runnable, ITask, Instance {
 		return Status.OK_STATUS;
 	}
 
-	private void runTask() {
-		this.execute();
-		this.runAsyncExec();
-		this.postExecute();
-	}
+	protected void runTask() {}
 
 	@Override
 	public void execute() {}
 
-	private void runAsyncExec() {
+	protected void runAsyncExecute() {
 		EditorContext.asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
 				EditorContext.flushEvents();
 				AbstractTask.this.asyncExecute();
+				EditorContext.flushEvents();
 			}
 		});
 	}
 
 	@Override
 	public void asyncExecute() {}
+
+	protected void runSyncExecute() {
+		EditorContext.syncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				EditorContext.flushEvents();
+				AbstractTask.this.syncExecute();
+				EditorContext.flushEvents();
+			}
+		});
+	}
+
+	@Override
+	public void syncExecute() {}
 
 	@Override
 	public void postExecute() {}
