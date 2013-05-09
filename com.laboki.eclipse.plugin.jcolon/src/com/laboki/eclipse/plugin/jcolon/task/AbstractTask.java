@@ -53,6 +53,10 @@ abstract class AbstractTask extends Job implements Runnable, Instance {
 
 	protected void runTask() {}
 
+	protected void runExecute() {
+		this.execute();
+	}
+
 	protected void execute() {}
 
 	protected void runAsyncExecute() {

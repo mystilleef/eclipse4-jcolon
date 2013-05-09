@@ -26,6 +26,6 @@ public class Task extends AbstractTask {
 
 	@Override
 	protected void runTask() {
-		this.execute();
+		this.runExecute();
 	}
 }
