@@ -25,7 +25,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.google.common.collect.Lists;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.ScheduleCheckErrorEvent;
+import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public enum EditorContext {

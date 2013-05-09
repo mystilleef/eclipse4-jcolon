@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.jcolon.inserter.events;
+package com.laboki.eclipse.plugin.jcolon.events;
 
 public final class SemiColonErrorLocationEvent {
 

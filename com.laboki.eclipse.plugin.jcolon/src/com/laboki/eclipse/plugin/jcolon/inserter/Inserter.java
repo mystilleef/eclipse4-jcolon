@@ -7,7 +7,7 @@ import org.eclipse.ui.IEditorPart;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.inserter.events.SemiColonErrorLocationEvent;
+import com.laboki.eclipse.plugin.jcolon.events.SemiColonErrorLocationEvent;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 final class Inserter implements Instance {
