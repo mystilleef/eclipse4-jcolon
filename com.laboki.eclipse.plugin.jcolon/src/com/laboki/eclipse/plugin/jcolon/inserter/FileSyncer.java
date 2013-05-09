@@ -26,10 +26,6 @@ final class FileSyncer implements Instance {
 			@Override
 			public void execute() {
 				EditorContext.syncFile(FileSyncer.this.editor);
-			}
-
-			@Override
-			public void postExecute() {
 				FileSyncer.this.eventBus.post(new LocateSemiColonErrorEvent());
 			}
 		}.begin();

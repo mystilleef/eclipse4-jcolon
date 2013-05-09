@@ -1,14 +1,14 @@
 package com.laboki.eclipse.plugin.jcolon;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.Factory;
-import com.laboki.eclipse.plugin.jcolon.task.Task;
+import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 public enum Plugin implements Instance {
 	INSTANCE;
 
 	@Override
 	public Instance begin() {
-		new Task() {
+		new AsyncTask() {
 
 			@Override
 			public void asyncExecute() {
@@ -20,7 +20,7 @@ public enum Plugin implements Instance {
 
 	@Override
 	public Instance end() {
-		new Task() {
+		new AsyncTask() {
 
 			@Override
 			public void asyncExecute() {

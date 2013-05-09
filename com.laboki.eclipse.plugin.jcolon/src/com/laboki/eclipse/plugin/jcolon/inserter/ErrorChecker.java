@@ -7,7 +7,7 @@ import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.CheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.inserter.events.SyncFilesEvent;
-import com.laboki.eclipse.plugin.jcolon.task.Task;
+import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 final class ErrorChecker implements Instance {
 
@@ -21,7 +21,7 @@ final class ErrorChecker implements Instance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void checkError(@SuppressWarnings("unused") final CheckErrorEvent event) {
-		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new AsyncTask(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
 			public void asyncExecute() {

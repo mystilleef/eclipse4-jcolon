@@ -23,10 +23,6 @@ public final class Scheduler implements Instance {
 			@Override
 			public void execute() {
 				EditorContext.cancelErrorCheckingJobs();
-			}
-
-			@Override
-			public void postExecute() {
 				Scheduler.this.eventBus.post(new CheckErrorEvent());
 			}
 		}.begin();

@@ -9,7 +9,7 @@ import org.eclipse.ui.IWorkbenchPart;
 
 import com.google.common.collect.Maps;
 import com.laboki.eclipse.plugin.jcolon.Instance;
-import com.laboki.eclipse.plugin.jcolon.task.Task;
+import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 public enum Factory implements Instance {
 	INSTANCE;
@@ -24,7 +24,7 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partActivated(final IWorkbenchPart part) {
-			EditorContext.asyncExec(new Task() {
+			EditorContext.asyncExec(new AsyncTask() {
 
 				@Override
 				public void asyncExecute() {
@@ -35,7 +35,7 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partClosed(final IWorkbenchPart part) {
-			EditorContext.asyncExec(new Task() {
+			EditorContext.asyncExec(new AsyncTask() {
 
 				@Override
 				public void asyncExecute() {
@@ -49,7 +49,7 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partDeactivated(final IWorkbenchPart part) {
-			EditorContext.asyncExec(new Task() {
+			EditorContext.asyncExec(new AsyncTask() {
 
 				@Override
 				public void asyncExecute() {
