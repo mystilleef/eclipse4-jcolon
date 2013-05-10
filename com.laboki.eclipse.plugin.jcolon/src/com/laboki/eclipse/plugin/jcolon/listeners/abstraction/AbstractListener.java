@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.jcolon.listeners;
+package com.laboki.eclipse.plugin.jcolon.listeners.abstraction;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;

@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Control;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
+import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
 
 public final class KeyEventListener extends AbstractListener implements KeyListener {
 

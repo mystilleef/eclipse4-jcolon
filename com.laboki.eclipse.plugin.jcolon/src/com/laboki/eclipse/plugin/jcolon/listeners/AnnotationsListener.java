@@ -5,6 +5,7 @@ import org.eclipse.jface.text.source.IAnnotationModelListener;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
+import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
 
 public final class AnnotationsListener extends AbstractListener implements IAnnotationModelListener {
 

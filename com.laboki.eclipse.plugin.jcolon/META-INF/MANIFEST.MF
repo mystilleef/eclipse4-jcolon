@@ -40,6 +40,7 @@ Export-Package: com.google.common.annotations,
    org.eclipse.swt.widgets",
  com.laboki.eclipse.plugin.jcolon.instance,
  com.laboki.eclipse.plugin.jcolon.listeners,
+ com.laboki.eclipse.plugin.jcolon.listeners.abstraction,
  com.laboki.eclipse.plugin.jcolon.task
 Plugin-Class: com.laboki.eclipse.plugin.jcolon.Activator
 Bundle-ActivationPolicy: lazy

@@ -6,6 +6,7 @@ import org.eclipse.swt.events.VerifyListener;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
+import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
 
 public class TextInsertionListener extends AbstractListener implements VerifyListener {
 
