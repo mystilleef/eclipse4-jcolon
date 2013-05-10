@@ -42,7 +42,6 @@ final class Inserter extends AbstractEventBusInstance {
 				if (this.semiColonIsAlreadyInserted(location)) return;
 				if (this.locationErrorMismatch(location)) return;
 				if (EditorContext.isInEditMode(Inserter.this.editor)) return;
-				EditorContext.flushEvents();
 				Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
 			}
 
