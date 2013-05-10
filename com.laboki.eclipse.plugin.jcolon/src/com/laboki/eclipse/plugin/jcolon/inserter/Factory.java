@@ -24,6 +24,26 @@ public enum Factory implements Instance {
 
 		@Override
 		public void partActivated(final IWorkbenchPart part) {
+			PartListener.enableInserterServiceFor(part);
+		}
+
+		@Override
+		public void partClosed(final IWorkbenchPart part) {
+			PartListener.disableInserterServiceFor(part);
+		}
+
+		@Override
+		public void partBroughtToTop(final IWorkbenchPart part) {}
+
+		@Override
+		public void partDeactivated(final IWorkbenchPart part) {
+			PartListener.disableInserterServiceFor(part);
+		}
+
+		@Override
+		public void partOpened(final IWorkbenchPart part) {}
+
+		private static void enableInserterServiceFor(final IWorkbenchPart part) {
 			new AsyncTask() {
 
 				@Override
@@ -33,8 +53,7 @@ public enum Factory implements Instance {
 			}.begin();
 		}
 
-		@Override
-		public void partClosed(final IWorkbenchPart part) {
+		private static void disableInserterServiceFor(final IWorkbenchPart part) {
 			new AsyncTask() {
 
 				@Override
@@ -43,23 +62,6 @@ public enum Factory implements Instance {
 				}
 			}.begin();
 		}
-
-		@Override
-		public void partBroughtToTop(final IWorkbenchPart part) {}
-
-		@Override
-		public void partDeactivated(final IWorkbenchPart part) {
-			new AsyncTask() {
-
-				@Override
-				public void asyncExecute() {
-					Factory.stopInserterServiceFor(part);
-				}
-			}.begin();
-		}
-
-		@Override
-		public void partOpened(final IWorkbenchPart part) {}
 	}
 
 	private static void enableAutomaticInserterFor(final IWorkbenchPart part) {
