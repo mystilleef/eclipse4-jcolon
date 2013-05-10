@@ -6,16 +6,15 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SyncFilesEvent;
-import com.laboki.eclipse.plugin.jcolon.instance.Instance;
+import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-final class FileSyncer implements Instance {
+final class FileSyncer extends AbstractEventBusInstance {
 
 	private final IEditorPart editor = EditorContext.getEditor();
-	private final EventBus eventBus;
 
 	public FileSyncer(final EventBus eventBus) {
-		this.eventBus = eventBus;
+		super(eventBus);
 	}
 
 	@Subscribe
@@ -29,17 +28,5 @@ final class FileSyncer implements Instance {
 				FileSyncer.this.eventBus.post(new LocateSemiColonErrorEvent());
 			}
 		}.begin();
-	}
-
-	@Override
-	public Instance begin() {
-		this.eventBus.register(this);
-		return this;
-	}
-
-	@Override
-	public Instance end() {
-		this.eventBus.unregister(this);
-		return this;
 	}
 }

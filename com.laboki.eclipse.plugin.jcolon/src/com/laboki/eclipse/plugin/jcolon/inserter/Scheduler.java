@@ -4,15 +4,14 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.CheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
+import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-public final class Scheduler implements Instance {
-
-	private final EventBus eventBus;
+public final class Scheduler extends AbstractEventBusInstance {
 
 	public Scheduler(final EventBus eventBus) {
-		this.eventBus = eventBus;
+		super(eventBus);
 	}
 
 	@Subscribe
@@ -29,15 +28,8 @@ public final class Scheduler implements Instance {
 	}
 
 	@Override
-	public Instance begin() {
-		this.eventBus.register(this);
-		return this;
-	}
-
-	@Override
 	public Instance end() {
-		this.eventBus.unregister(this);
 		EditorContext.cancelErrorCheckingJobs();
-		return this;
+		return super.end();
 	}
 }

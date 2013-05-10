@@ -6,19 +6,18 @@ import org.eclipse.ui.IEditorPart;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.SemiColonErrorLocationEvent;
-import com.laboki.eclipse.plugin.jcolon.instance.Instance;
+import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
-final class Inserter implements Instance {
+final class Inserter extends AbstractEventBusInstance {
 
-	private final EventBus eventBus;
 	private final Problem problem = new Problem();
 	private final IEditorPart editor = EditorContext.getEditor();
 	private final IDocument document = EditorContext.getDocument(this.editor);
 	private static final String SEMICOLON = ";";
 
 	public Inserter(final EventBus eventBus) {
-		this.eventBus = eventBus;
+		super(eventBus);
 	}
 
 	@Subscribe
@@ -59,17 +58,5 @@ final class Inserter implements Instance {
 				}
 			}
 		}.begin();
-	}
-
-	@Override
-	public Instance begin() {
-		this.eventBus.register(this);
-		return this;
-	}
-
-	@Override
-	public Instance end() {
-		this.eventBus.unregister(this);
-		return this;
 	}
 }

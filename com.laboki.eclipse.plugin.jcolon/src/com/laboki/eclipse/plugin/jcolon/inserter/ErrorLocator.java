@@ -4,16 +4,15 @@ import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SemiColonErrorLocationEvent;
-import com.laboki.eclipse.plugin.jcolon.instance.Instance;
+import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-final class ErrorLocator implements Instance {
+final class ErrorLocator extends AbstractEventBusInstance {
 
-	private final EventBus eventBus;
 	private final Problem problem = new Problem();
 
 	public ErrorLocator(final EventBus eventBus) {
-		this.eventBus = eventBus;
+		super(eventBus);
 	}
 
 	@Subscribe
@@ -40,17 +39,5 @@ final class ErrorLocator implements Instance {
 				ErrorLocator.this.eventBus.post(new SemiColonErrorLocationEvent(location));
 			}
 		}.begin();
-	}
-
-	@Override
-	public Instance begin() {
-		this.eventBus.register(this);
-		return this;
-	}
-
-	@Override
-	public Instance end() {
-		this.eventBus.unregister(this);
-		return this;
 	}
 }
