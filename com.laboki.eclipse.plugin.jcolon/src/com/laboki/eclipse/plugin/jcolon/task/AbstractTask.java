@@ -33,15 +33,15 @@ abstract class AbstractTask extends Job implements Runnable, Instance {
 
 	@Override
 	public Instance begin() {
-		this.run();
+		this.setUser(false);
+		this.setSystem(true);
+		this.schedule(this.delayTime);
 		return this;
 	}
 
 	@Override
 	public void run() {
-		this.setUser(false);
-		this.setSystem(true);
-		this.schedule(this.delayTime);
+		this.begin();
 	}
 
 	@Override
