@@ -8,7 +8,7 @@ import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchPart;
 
 import com.google.common.collect.Maps;
-import com.laboki.eclipse.plugin.jcolon.Instance;
+import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 public enum Factory implements Instance {

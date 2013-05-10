@@ -1,8 +1,8 @@
 package com.laboki.eclipse.plugin.jcolon.listeners;
 
-import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
+import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public abstract class AbstractListener implements IListener, Instance {

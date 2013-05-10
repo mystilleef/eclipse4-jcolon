@@ -4,18 +4,17 @@ import org.eclipse.ui.IEditorPart;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
-import com.laboki.eclipse.plugin.jcolon.Instance;
 import com.laboki.eclipse.plugin.jcolon.events.CheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SyncFilesEvent;
+import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
-final class ErrorChecker implements Instance {
+final class ErrorChecker extends AbstractEventBusInstance {
 
-	private final EventBus eventBus;
 	private final IEditorPart editor = EditorContext.getEditor();
 
 	public ErrorChecker(final EventBus eventBus) {
-		this.eventBus = eventBus;
+		super(eventBus);
 	}
 
 	@Subscribe
@@ -37,17 +36,5 @@ final class ErrorChecker implements Instance {
 				return !EditorContext.hasJDTErrors(ErrorChecker.this.editor);
 			}
 		}.begin();
-	}
-
-	@Override
-	public Instance begin() {
-		this.eventBus.register(this);
-		return this;
-	}
-
-	@Override
-	public Instance end() {
-		this.eventBus.unregister(this);
-		return this;
 	}
 }

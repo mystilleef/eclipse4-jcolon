@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.jcolon;
+package com.laboki.eclipse.plugin.jcolon.instance;
 
 public interface Instance {
 

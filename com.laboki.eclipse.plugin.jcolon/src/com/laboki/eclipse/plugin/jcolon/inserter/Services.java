@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.laboki.eclipse.plugin.jcolon.Instance;
+import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.listeners.AnnotationsListener;
 import com.laboki.eclipse.plugin.jcolon.listeners.KeyEventListener;
 import com.laboki.eclipse.plugin.jcolon.listeners.TextInsertionListener;
