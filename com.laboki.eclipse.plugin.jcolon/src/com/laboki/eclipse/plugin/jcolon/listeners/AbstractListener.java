@@ -2,22 +2,20 @@ package com.laboki.eclipse.plugin.jcolon.listeners;
 
 import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
+import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-public abstract class AbstractListener implements IListener, Instance {
-
-	private final EventBus eventBus;
+public abstract class AbstractListener extends AbstractEventBusInstance implements IListener {
 
 	public AbstractListener(final EventBus eventbus) {
-		this.eventBus = eventbus;
+		super(eventbus);
 	}
 
 	@Override
 	public Instance begin() {
-		this.eventBus.register(this);
 		this.tryToAdd();
-		return this;
+		return super.begin();
 	}
 
 	private void tryToAdd() {
@@ -33,9 +31,8 @@ public abstract class AbstractListener implements IListener, Instance {
 
 	@Override
 	public Instance end() {
-		this.eventBus.unregister(this);
 		this.tryToRemove();
-		return this;
+		return super.end();
 	}
 
 	private void tryToRemove() {
