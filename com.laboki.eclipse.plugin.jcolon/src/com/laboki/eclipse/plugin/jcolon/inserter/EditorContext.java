@@ -60,13 +60,17 @@ public enum EditorContext {
 	}
 
 	public static void asyncExec(final Runnable runnable) {
-		if ((EditorContext.DISPLAY == null) || EditorContext.DISPLAY.isDisposed()) return;
+		if (EditorContext.isInvalidDisplay()) return;
 		EditorContext.DISPLAY.asyncExec(runnable);
 	}
 
 	public static void syncExec(final Runnable runnable) {
-		if ((EditorContext.DISPLAY == null) || EditorContext.DISPLAY.isDisposed()) return;
+		if (EditorContext.isInvalidDisplay()) return;
 		EditorContext.DISPLAY.syncExec(runnable);
+	}
+
+	private static boolean isInvalidDisplay() {
+		return (EditorContext.DISPLAY == null) || EditorContext.DISPLAY.isDisposed();
 	}
 
 	public static Shell getShell() {
@@ -201,13 +205,5 @@ public enum EditorContext {
 				eventBus.post(new ScheduleCheckErrorEvent());
 			}
 		}.begin();
-	}
-
-	public static boolean isNotNull(final Object object) {
-		return !EditorContext.isNull(object);
-	}
-
-	public static boolean isNull(final Object object) {
-		return object == null;
 	}
 }
