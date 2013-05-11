@@ -33,9 +33,7 @@ final class Inserter extends AbstractEventBusInstance {
 			private void tryToInsertSemiColon(final int location) {
 				try {
 					this.insertSemiColon(location);
-				} catch (final Exception e) {
-					// e.printStackTrace();
-				}
+				} catch (final Exception e) {}
 			}
 
 			private void insertSemiColon(final int location) throws Exception {
@@ -44,10 +42,6 @@ final class Inserter extends AbstractEventBusInstance {
 			}
 
 			private boolean canNotInsertSemiColon(final int location) throws Exception {
-				return !this.canInsertSemiColon(location);
-			}
-
-			private boolean canInsertSemiColon(final int location) throws Exception {
 				return this.semiColonIsAlreadyInserted(location) || this.locationErrorMismatch(location) || EditorContext.isInEditMode(Inserter.this.editor);
 			}
 
