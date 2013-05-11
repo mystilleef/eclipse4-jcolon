@@ -24,16 +24,23 @@ final class ErrorChecker extends AbstractEventBusInstance {
 
 			@Override
 			public void asyncExecute() {
-				if (this.isInEditMode() || this.doesNotHaveJDTErrors()) return;
+				if (this.canPostEvent()) this.postEvent();
+			}
+
+			private boolean canPostEvent() {
+				return this.isNotInEditMode() || this.hasJDTErrors();
+			}
+
+			private boolean isNotInEditMode() {
+				return !EditorContext.isInEditMode(ErrorChecker.this.editor);
+			}
+
+			private boolean hasJDTErrors() {
+				return EditorContext.hasJDTErrors(ErrorChecker.this.editor);
+			}
+
+			private void postEvent() {
 				ErrorChecker.this.eventBus.post(new SyncFilesEvent());
-			}
-
-			private boolean isInEditMode() {
-				return EditorContext.isInEditMode(ErrorChecker.this.editor);
-			}
-
-			private boolean doesNotHaveJDTErrors() {
-				return !EditorContext.hasJDTErrors(ErrorChecker.this.editor);
 			}
 		}.begin();
 	}
