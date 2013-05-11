@@ -22,13 +22,17 @@ final class ErrorLocator extends AbstractEventBusInstance {
 
 			@Override
 			public void execute() {
-				this.findErrorLocation();
+				this.tryTofindErrorLocation();
 			}
 
-			private void findErrorLocation() {
+			private void tryTofindErrorLocation() {
 				try {
-					if (this.hasMissingSemiColonError()) this.postEvent(ErrorLocator.this.problem.location());
+					this.findErrorLocation();
 				} catch (final Exception e) {}
+			}
+
+			private void findErrorLocation() throws Exception {
+				if (this.hasMissingSemiColonError()) this.postEvent(ErrorLocator.this.problem.location());
 			}
 
 			private boolean hasMissingSemiColonError() {
