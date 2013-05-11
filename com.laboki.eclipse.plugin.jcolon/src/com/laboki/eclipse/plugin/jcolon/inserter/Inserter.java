@@ -39,10 +39,16 @@ final class Inserter extends AbstractEventBusInstance {
 			}
 
 			private void insertSemiColon(final int location) throws Exception {
-				if (this.semiColonIsAlreadyInserted(location)) return;
-				if (this.locationErrorMismatch(location)) return;
-				if (EditorContext.isInEditMode(Inserter.this.editor)) return;
+				if (this.canNotInsertSemiColon(location)) return;
 				Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
+			}
+
+			private boolean canNotInsertSemiColon(final int location) throws Exception {
+				return !this.canInsertSemiColon(location);
+			}
+
+			private boolean canInsertSemiColon(final int location) throws Exception {
+				return this.semiColonIsAlreadyInserted(location) || this.locationErrorMismatch(location) || EditorContext.isInEditMode(Inserter.this.editor);
 			}
 
 			private boolean semiColonIsAlreadyInserted(final int location) throws Exception {
