@@ -51,9 +51,7 @@ public enum EditorContext {
 	public static void flushEvents() {
 		try {
 			EditorContext.tryToFlushEvent();
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
+		} catch (final Exception e) {}
 	}
 
 	private static void tryToFlushEvent() {
@@ -128,9 +126,7 @@ public enum EditorContext {
 	public static void syncFile(final IEditorPart editor) {
 		try {
 			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (final Exception e) {
-			// EditorContext.log.log(Level.WARNING, "Failed to sync IFile resource", e);
-		}
+		} catch (final Exception e) {}
 	}
 
 	public static boolean isNotAJavaEditor(final IEditorPart part) {
@@ -187,10 +183,8 @@ public enum EditorContext {
 
 	private static boolean hasLinkAnnotations(final IEditorPart editor) {
 		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
-		while (iterator.hasNext()) {
-			EditorContext.flushEvents();
+		while (iterator.hasNext())
 			if (EditorContext.isLinkModeAnnotation(iterator)) return true;
-		}
 		return false;
 	}
 
