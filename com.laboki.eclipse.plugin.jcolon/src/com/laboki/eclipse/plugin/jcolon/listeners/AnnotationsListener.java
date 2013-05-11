@@ -9,7 +9,7 @@ import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
 
 public final class AnnotationsListener extends AbstractListener implements IAnnotationModelListener {
 
-	private final IAnnotationModel annotationModel = EditorContext.getAnnotationModel();
+	private final IAnnotationModel annotationModel = AnnotationsListener.getAnnotationModel();
 
 	public AnnotationsListener(final EventBus eventbus) {
 		super(eventbus);
@@ -28,5 +28,13 @@ public final class AnnotationsListener extends AbstractListener implements IAnno
 	@Override
 	public void remove() {
 		this.annotationModel.removeAnnotationModelListener(this);
+	}
+
+	private static IAnnotationModel getAnnotationModel() {
+		try {
+			return EditorContext.getAnnotationModel();
+		} catch (final Exception e) {
+			return null;
+		}
 	}
 }

@@ -97,12 +97,8 @@ public enum EditorContext {
 		return (SourceViewer) editor.getAdapter(ITextOperationTarget.class);
 	}
 
-	public static IAnnotationModel getAnnotationModel() {
-		try {
-			return EditorContext.getView(EditorContext.getEditor()).getAnnotationModel();
-		} catch (final Exception e) {
-			return null;
-		}
+	public static IAnnotationModel getAnnotationModel() throws Exception {
+		return EditorContext.getView(EditorContext.getEditor()).getAnnotationModel();
 	}
 
 	public static boolean hasJDTErrors(final IEditorPart editor) {
@@ -145,12 +141,8 @@ public enum EditorContext {
 		}
 	}
 
-	public static IFile getFile(final IEditorPart editor) {
-		try {
-			return ((FileEditorInput) editor.getEditorInput()).getFile();
-		} catch (final Exception e) {
-			return null;
-		}
+	public static IFile getFile(final IEditorPart editor) throws Exception {
+		return ((FileEditorInput) editor.getEditorInput()).getFile();
 	}
 
 	public static IDocument getDocument(final IEditorPart editor) {

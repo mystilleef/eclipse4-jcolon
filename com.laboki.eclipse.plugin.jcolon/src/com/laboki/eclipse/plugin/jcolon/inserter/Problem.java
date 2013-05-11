@@ -16,10 +16,18 @@ final class Problem {
 	private static final String SEMICOLON = ";";
 	private static final List<Integer> PROBLEM_IDS = Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertToCompletePhrase, IProblem.ParsingErrorInsertToCompleteScope, IProblem.ParsingErrorInsertTokenAfter, IProblem.ParsingErrorInsertTokenBefore);
 	private final IEditorPart editor = EditorContext.getEditor();
-	private final ICompilationUnit compilationUnit = JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
+	private final ICompilationUnit compilationUnit = this.getCompilationUnit();
 
 	public int location() throws Exception {
 		return this.getSemiColonProblem().getSourceEnd() + 1;
+	}
+
+	private ICompilationUnit getCompilationUnit() {
+		try {
+			return JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
+		} catch (final Exception e) {
+			return null;
+		}
 	}
 
 	public boolean isMissingSemiColonError() {
@@ -34,7 +42,11 @@ final class Problem {
 	}
 
 	private IProblem[] getCompilerProblems() {
-		return this.createCompilationUnitNode().getProblems();
+		try {
+			return this.createCompilationUnitNode().getProblems();
+		} catch (final Exception e) {
+			return new IProblem[0];
+		}
 	}
 
 	private CompilationUnit createCompilationUnitNode() {
