@@ -23,6 +23,16 @@ final class ErrorChecker extends AbstractEventBusInstance {
 		new AsyncTask(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
+			public boolean shouldSchedule() {
+				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+			}
+
+			@Override
+			public boolean shouldRun() {
+				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+			}
+
+			@Override
 			public void asyncExecute() {
 				if (this.canPostEvent()) this.postEvent();
 			}

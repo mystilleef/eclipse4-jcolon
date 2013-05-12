@@ -21,6 +21,16 @@ final class ErrorLocator extends AbstractEventBusInstance {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
+			public boolean shouldSchedule() {
+				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+			}
+
+			@Override
+			public boolean shouldRun() {
+				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+			}
+
+			@Override
 			public void execute() {
 				this.tryTofindErrorLocation();
 			}
