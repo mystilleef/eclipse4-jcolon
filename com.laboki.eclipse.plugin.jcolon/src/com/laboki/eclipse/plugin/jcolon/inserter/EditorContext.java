@@ -31,12 +31,12 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 public enum EditorContext {
 	INSTANCE;
 
-	public static final String LISTENER_TASK = "JColonAbstractListenerTask";
 	private static final String LINK_SLAVE = "org.eclipse.ui.internal.workbench.texteditor.link.slave";
 	private static final String LINK_MASTER = "org.eclipse.ui.internal.workbench.texteditor.link.master";
 	private static final String LINK_TARGET = "org.eclipse.ui.internal.workbench.texteditor.link.target";
 	private static final String LINK_EXIT = "org.eclipse.ui.internal.workbench.texteditor.link.exit";
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
+	public static final String LISTENER_TASK = "jcolon eclipse listener handler task";
 	public static final String ERROR_CHECKING_TASK = "jcolon semicolon error checking task";
 	private static final IWorkbench WORKBENCH = PlatformUI.getWorkbench();
 	public static final Display DISPLAY = EditorContext.WORKBENCH.getDisplay();
