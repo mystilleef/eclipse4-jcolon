@@ -43,7 +43,17 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	public void remove() {}
 
 	protected void scheduleErrorChecking() {
-		new Task(EditorContext.ERROR_CHECKING_TASK, 1000) {
+		new Task(EditorContext.LISTENER_TASK, 1000) {
+
+			@Override
+			public boolean shouldSchedule() {
+				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+			}
+
+			@Override
+			public boolean shouldRun() {
+				return EditorContext.shouldSchedule(EditorContext.ERROR_CHECKING_TASK);
+			}
 
 			@Override
 			public void execute() {

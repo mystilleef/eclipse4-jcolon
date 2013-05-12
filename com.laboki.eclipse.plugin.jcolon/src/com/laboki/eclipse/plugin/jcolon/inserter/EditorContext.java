@@ -31,6 +31,7 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 public enum EditorContext {
 	INSTANCE;
 
+	public static final String LISTENER_TASK = "JColonAbstractListenerTask";
 	private static final String LINK_SLAVE = "org.eclipse.ui.internal.workbench.texteditor.link.slave";
 	private static final String LINK_MASTER = "org.eclipse.ui.internal.workbench.texteditor.link.master";
 	private static final String LINK_TARGET = "org.eclipse.ui.internal.workbench.texteditor.link.target";
@@ -193,9 +194,23 @@ public enum EditorContext {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
+			public boolean shouldSchedule() {
+				return EditorContext.shouldSchedule(EditorContext.ERROR_CHECKING_TASK);
+			}
+
+			@Override
+			public boolean shouldRun() {
+				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+			}
+
+			@Override
 			public void execute() {
 				eventBus.post(new ScheduleCheckErrorEvent());
 			}
 		}.begin();
+	}
+
+	public static boolean shouldSchedule(final String name) {
+		return EditorContext.JOB_MANAGER.find(name).length == 0;
 	}
 }
