@@ -21,9 +21,7 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	private void tryToAdd() {
 		try {
 			this.add();
-		} catch (final Exception e) {
-			// AbstractListener.log.log(AbstractListener.LOG_LEVEL, "failed to add listener");
-		}
+		} catch (final Exception e) {}
 	}
 
 	@Override
@@ -38,9 +36,7 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	private void tryToRemove() {
 		try {
 			this.remove();
-		} catch (final Exception e) {
-			// AbstractListener.log.log(AbstractListener.LOG_LEVEL, "failed to remove listener");
-		}
+		} catch (final Exception e) {}
 	}
 
 	@Override
