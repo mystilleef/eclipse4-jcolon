@@ -195,12 +195,12 @@ public enum EditorContext {
 
 			@Override
 			public boolean shouldSchedule() {
-				return EditorContext.shouldSchedule(EditorContext.ERROR_CHECKING_TASK);
+				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_TASK);
 			}
 
 			@Override
 			public boolean shouldRun() {
-				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
@@ -210,7 +210,7 @@ public enum EditorContext {
 		}.begin();
 	}
 
-	public static boolean shouldSchedule(final String name) {
+	public static boolean taskDoesNotExist(final String name) {
 		return EditorContext.JOB_MANAGER.find(name).length == 0;
 	}
 }

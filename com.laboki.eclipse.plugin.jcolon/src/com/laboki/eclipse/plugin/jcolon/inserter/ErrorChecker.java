@@ -24,12 +24,12 @@ final class ErrorChecker extends AbstractEventBusInstance {
 
 			@Override
 			public boolean shouldSchedule() {
-				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
 			public boolean shouldRun() {
-				return EditorContext.shouldSchedule(EditorContext.LISTENER_TASK);
+				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
