@@ -41,7 +41,7 @@ public enum EditorContext {
 	private static final IWorkbench WORKBENCH = PlatformUI.getWorkbench();
 	public static final Display DISPLAY = EditorContext.WORKBENCH.getDisplay();
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
-	public static final int SHORT_DELAY_TIME = 250;
+	public static final int SHORT_DELAY_TIME = 60;
 	public static final int LONG_DELAY_TIME = 1000;
 	private static final List<String> LINK_ANNOTATIONS = Lists.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
 
