@@ -18,7 +18,7 @@ public final class KeyEventListener extends AbstractListener implements KeyListe
 
 	@Override
 	public void keyPressed(final KeyEvent arg0) {
-		this.scheduleErrorChecking();
+		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK);
 	}
 
 	@Override
@@ -28,11 +28,13 @@ public final class KeyEventListener extends AbstractListener implements KeyListe
 
 	@Override
 	public void add() {
+		if (this.control == null) return;
 		this.control.addKeyListener(this);
 	}
 
 	@Override
 	public void remove() {
+		if (this.control == null) return;
 		this.control.removeKeyListener(this);
 	}
 }

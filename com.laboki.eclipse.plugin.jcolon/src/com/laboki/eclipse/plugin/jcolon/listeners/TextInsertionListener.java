@@ -23,11 +23,13 @@ public class TextInsertionListener extends AbstractListener implements VerifyLis
 
 	@Override
 	public void add() {
+		if (this.buffer == null) return;
 		this.buffer.addVerifyListener(this);
 	}
 
 	@Override
 	public void remove() {
+		if (this.buffer == null) return;
 		this.buffer.removeVerifyListener(this);
 	}
 }
