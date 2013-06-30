@@ -43,16 +43,11 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	public void remove() {}
 
 	protected void scheduleErrorChecking() {
-		new Task(EditorContext.LISTENER_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task(EditorContext.LISTENER_TASK, EditorContext.LONG_DELAY_TIME) {
 
 			@Override
 			public boolean shouldSchedule() {
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
-			}
-
-			@Override
-			public boolean shouldRun() {
-				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_TASK);
 			}
 
 			@Override
