@@ -150,12 +150,17 @@ public enum EditorContext {
 		return ((ITextEditor) editor).getDocumentProvider().getDocument(((ITextEditor) editor).getEditorInput());
 	}
 
+	public static void cancelAllJobs() {
+		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK, EditorContext.ERROR_CHECKING_TASK);
+	}
+
 	public static void cancelErrorCheckingJobs() {
 		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_TASK);
 	}
 
-	public static void cancelJobsBelongingTo(final String jobName) {
-		EditorContext.JOB_MANAGER.cancel(jobName);
+	public static void cancelJobsBelongingTo(final String... jobNames) {
+		for (final String jobName : jobNames)
+			EditorContext.JOB_MANAGER.cancel(jobName);
 	}
 
 	public static boolean isInEditMode(final IEditorPart editor) {
