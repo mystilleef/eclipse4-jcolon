@@ -18,7 +18,7 @@ public final class KeyEventListener extends AbstractListener implements KeyListe
 
 	@Override
 	public void keyPressed(final KeyEvent arg0) {
-		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK);
+		EditorContext.cancelAllJobs();
 	}
 
 	@Override
