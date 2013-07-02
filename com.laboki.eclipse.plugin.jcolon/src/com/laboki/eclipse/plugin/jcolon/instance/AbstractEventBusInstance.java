@@ -1,6 +1,6 @@
 package com.laboki.eclipse.plugin.jcolon.instance;
 
-import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
+import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 
 public abstract class AbstractEventBusInstance implements Instance {
 

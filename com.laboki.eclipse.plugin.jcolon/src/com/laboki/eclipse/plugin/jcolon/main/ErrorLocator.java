@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.jcolon.inserter;
+package com.laboki.eclipse.plugin.jcolon.main;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;

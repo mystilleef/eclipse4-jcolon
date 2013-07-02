@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.jcolon.inserter;
+package com.laboki.eclipse.plugin.jcolon.main;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;

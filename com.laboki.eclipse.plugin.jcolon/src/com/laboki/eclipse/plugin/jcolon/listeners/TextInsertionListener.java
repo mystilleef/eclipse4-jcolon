@@ -4,9 +4,9 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 
-import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
-import com.laboki.eclipse.plugin.jcolon.inserter.EventBus;
 import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
+import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
+import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 
 public class TextInsertionListener extends AbstractListener implements VerifyListener {
 

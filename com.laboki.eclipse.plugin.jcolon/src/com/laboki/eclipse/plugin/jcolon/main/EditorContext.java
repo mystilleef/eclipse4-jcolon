@@ -1,4 +1,4 @@
-package com.laboki.eclipse.plugin.jcolon.inserter;
+package com.laboki.eclipse.plugin.jcolon.main;
 
 import java.util.Iterator;
 import java.util.List;

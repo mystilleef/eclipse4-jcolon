@@ -5,8 +5,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-import com.laboki.eclipse.plugin.jcolon.inserter.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
+import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 
 abstract class AbstractTask extends Job implements Runnable, Instance {
 
