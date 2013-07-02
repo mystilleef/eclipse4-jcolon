@@ -37,16 +37,16 @@ final class Inserter extends AbstractEventBusInstance {
 
 			@Override
 			public void asyncExecute() {
-				this.tryToInsertSemiColon(event.getLocation());
+				this.insertSemiColon(event.getLocation());
 			}
 
-			private void tryToInsertSemiColon(final int location) {
+			private void insertSemiColon(final int location) {
 				try {
-					this.insertSemiColon(location);
+					this.tryToInsertSemiColon(location);
 				} catch (final Exception e) {}
 			}
 
-			private void insertSemiColon(final int location) throws Exception {
+			private void tryToInsertSemiColon(final int location) throws Exception {
 				if (this.cannotInsertSemiColon(location)) return;
 				Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
 			}
