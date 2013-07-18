@@ -30,7 +30,11 @@ final class ErrorLocator extends AbstractEventBusInstance {
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public void locateSemiColonError(@SuppressWarnings("unused") final LocateSemiColonErrorEvent event) {
+	public void locateSemiColonErrorEventHandler(@SuppressWarnings("unused") final LocateSemiColonErrorEvent event) {
+		this.locateSemiColonError();
+	}
+
+	private void locateSemiColonError() {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
