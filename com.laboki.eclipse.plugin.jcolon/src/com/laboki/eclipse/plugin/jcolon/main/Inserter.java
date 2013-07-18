@@ -1,5 +1,8 @@
 package com.laboki.eclipse.plugin.jcolon.main;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
@@ -16,6 +19,7 @@ final class Inserter extends AbstractEventBusInstance {
 	private final Problem problem = new Problem();
 	private final IEditorPart editor = EditorContext.getEditor();
 	private final IDocument document = EditorContext.getDocument(this.editor);
+	private final static Logger LOGGER = Logger.getLogger(Inserter.class.getName());
 	private static final String SEMICOLON = ";";
 	private boolean completionAssistantIsActive;
 
@@ -58,7 +62,9 @@ final class Inserter extends AbstractEventBusInstance {
 			private void insertSemiColon(final int location) {
 				try {
 					this.tryToInsertSemiColon(location);
-				} catch (final Exception e) {}
+				} catch (final Exception e) {
+					Inserter.LOGGER.log(Level.WARNING, "failed to insert semicolon", e);
+				}
 			}
 
 			private void tryToInsertSemiColon(final int location) throws Exception {
