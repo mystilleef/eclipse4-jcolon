@@ -196,6 +196,11 @@ public enum EditorContext {
 	}
 
 	public static void scheduleErrorChecking(final EventBus eventBus) {
+		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_TASK);
+		EditorContext.scheduleErrorCheckingTask(eventBus);
+	}
+
+	private static void scheduleErrorCheckingTask(final EventBus eventBus) {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
