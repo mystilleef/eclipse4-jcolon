@@ -21,37 +21,37 @@ final class FileSyncer extends AbstractEventBusInstance {
 	}
 
 	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
-		this.completionAssistantIsActive = true;
-	}
-
-	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
-		this.completionAssistantIsActive = false;
-	}
-
-	@Subscribe
 	@AllowConcurrentEvents
-	public void syncFiles(@SuppressWarnings("unused") final SyncFilesEvent event) {
+	public void syncFilesEventHandler(@SuppressWarnings("unused") final SyncFilesEvent event) {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
-
+	
 			@Override
 			public boolean shouldSchedule() {
 				if (FileSyncer.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
-
+	
 			@Override
 			public boolean shouldRun() {
 				if (FileSyncer.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
-
+	
 			@Override
 			public void execute() {
 				EditorContext.syncFile(FileSyncer.this.editor);
 				FileSyncer.this.eventBus.post(new LocateSemiColonErrorEvent());
 			}
 		}.begin();
+	}
+
+	@Subscribe
+	public void assistSessionStartedEventHandler(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
+		this.completionAssistantIsActive = true;
+	}
+
+	@Subscribe
+	public void assistSessionEndedEventHandler(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
+		this.completionAssistantIsActive = false;
 	}
 }
