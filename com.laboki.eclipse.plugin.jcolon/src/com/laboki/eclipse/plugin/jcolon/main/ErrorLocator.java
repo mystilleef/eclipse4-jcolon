@@ -1,5 +1,8 @@
 package com.laboki.eclipse.plugin.jcolon.main;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
@@ -12,20 +15,11 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 final class ErrorLocator extends AbstractEventBusInstance {
 
 	private final Problem problem = new Problem();
+	private final static Logger LOGGER = Logger.getLogger(ErrorLocator.class.getName());
 	private boolean completionAssistantIsActive;
 
 	public ErrorLocator(final EventBus eventBus) {
 		super(eventBus);
-	}
-
-	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
-		this.completionAssistantIsActive = true;
-	}
-
-	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
-		this.completionAssistantIsActive = false;
 	}
 
 	@Subscribe
@@ -51,16 +45,18 @@ final class ErrorLocator extends AbstractEventBusInstance {
 
 			@Override
 			public void execute() {
-				this.tryTofindErrorLocation();
+				this.findErrorLocation();
 			}
 
-			private void tryTofindErrorLocation() {
+			private void findErrorLocation() {
 				try {
-					this.findErrorLocation();
-				} catch (final Exception e) {}
+					this.tryToFindErrorLocation();
+				} catch (final Exception e) {
+					ErrorLocator.LOGGER.log(Level.WARNING, "failed to find error location", e);
+				}
 			}
 
-			private void findErrorLocation() throws Exception {
+			private void tryToFindErrorLocation() throws Exception {
 				if (this.hasMissingSemiColonError()) this.postEvent(ErrorLocator.this.problem.location());
 			}
 
@@ -72,5 +68,15 @@ final class ErrorLocator extends AbstractEventBusInstance {
 				ErrorLocator.this.eventBus.post(new SemiColonErrorLocationEvent(location));
 			}
 		}.begin();
+	}
+
+	@Subscribe
+	public void save(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
+		this.completionAssistantIsActive = true;
+	}
+
+	@Subscribe
+	public void save(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
+		this.completionAssistantIsActive = false;
 	}
 }
