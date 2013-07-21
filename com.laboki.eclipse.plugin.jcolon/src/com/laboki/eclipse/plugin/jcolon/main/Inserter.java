@@ -81,12 +81,12 @@ final class Inserter extends AbstractEventBusInstance {
 	}
 
 	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
+	public void assistSessionStartedEventHandler(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
 		this.completionAssistantIsActive = true;
 	}
 
 	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
+	public void assistSessionEndedEventHandler(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
 		this.completionAssistantIsActive = false;
 	}
 }
