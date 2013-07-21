@@ -43,6 +43,11 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	public void remove() {}
 
 	protected void scheduleErrorChecking() {
+		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK);
+		this.scheduleTask();
+	}
+
+	private void scheduleTask() {
 		new Task(EditorContext.LISTENER_TASK, EditorContext.LONG_DELAY_TIME) {
 
 			@Override
