@@ -21,18 +21,8 @@ final class ErrorChecker extends AbstractEventBusInstance {
 	}
 
 	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
-		this.completionAssistantIsActive = true;
-	}
-
-	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
-		this.completionAssistantIsActive = false;
-	}
-
-	@Subscribe
 	@AllowConcurrentEvents
-	public void checkError(@SuppressWarnings("unused") final CheckErrorEvent event) {
+	public void checkErrorEventHandler(@SuppressWarnings("unused") final CheckErrorEvent event) {
 		new AsyncTask(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
@@ -68,5 +58,15 @@ final class ErrorChecker extends AbstractEventBusInstance {
 				ErrorChecker.this.eventBus.post(new SyncFilesEvent());
 			}
 		}.begin();
+	}
+
+	@Subscribe
+	public void assistSessionStartedEventHandler(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
+		this.completionAssistantIsActive = true;
+	}
+
+	@Subscribe
+	public void assistSessionEndedEventHandler(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
+		this.completionAssistantIsActive = false;
 	}
 }
