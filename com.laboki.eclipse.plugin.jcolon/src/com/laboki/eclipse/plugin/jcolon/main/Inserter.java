@@ -28,18 +28,8 @@ final class Inserter extends AbstractEventBusInstance {
 	}
 
 	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
-		this.completionAssistantIsActive = true;
-	}
-
-	@Subscribe
-	public void save(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
-		this.completionAssistantIsActive = false;
-	}
-
-	@Subscribe
 	@AllowConcurrentEvents
-	public void semiColonErrorLocation(final SemiColonErrorLocationEvent event) {
+	public void semiColonErrorLocationEventHandler(final SemiColonErrorLocationEvent event) {
 		new AsyncTask(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
@@ -88,5 +78,15 @@ final class Inserter extends AbstractEventBusInstance {
 				}
 			}
 		}.begin();
+	}
+
+	@Subscribe
+	public void save(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
+		this.completionAssistantIsActive = true;
+	}
+
+	@Subscribe
+	public void save(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
+		this.completionAssistantIsActive = false;
 	}
 }
