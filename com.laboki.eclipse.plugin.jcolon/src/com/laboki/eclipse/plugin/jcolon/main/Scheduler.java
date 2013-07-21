@@ -16,7 +16,12 @@ public final class Scheduler extends AbstractEventBusInstance {
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public void scheduleErrorCheck(@SuppressWarnings("unused") final ScheduleCheckErrorEvent event) {
+	public void scheduleCheckErrorEventHandler(@SuppressWarnings("unused") final ScheduleCheckErrorEvent event) {
+		EditorContext.cancelErrorCheckingJobs();
+		this.scheduleErrorChecking();
+	}
+
+	private void scheduleErrorChecking() {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
@@ -31,7 +36,6 @@ public final class Scheduler extends AbstractEventBusInstance {
 
 			@Override
 			public void execute() {
-				EditorContext.cancelErrorCheckingJobs();
 				Scheduler.this.eventBus.post(new CheckErrorEvent());
 			}
 		}.begin();
