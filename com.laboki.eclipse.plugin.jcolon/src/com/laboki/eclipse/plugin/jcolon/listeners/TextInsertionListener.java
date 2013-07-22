@@ -8,7 +8,7 @@ import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 
-public class TextInsertionListener extends AbstractListener implements VerifyListener {
+public final class TextInsertionListener extends AbstractListener implements VerifyListener {
 
 	private final StyledText buffer = EditorContext.getBuffer(EditorContext.getEditor());
 

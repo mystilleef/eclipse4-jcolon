@@ -13,7 +13,7 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	}
 
 	@Override
-	public Instance begin() {
+	public final Instance begin() {
 		this.tryToAdd();
 		return super.begin();
 	}
@@ -28,7 +28,7 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	public void add() {}
 
 	@Override
-	public Instance end() {
+	public final Instance end() {
 		this.tryToRemove();
 		return super.end();
 	}
@@ -42,7 +42,7 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	@Override
 	public void remove() {}
 
-	protected void scheduleErrorChecking() {
+	protected final void scheduleErrorChecking() {
 		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK);
 		this.scheduleTask();
 	}

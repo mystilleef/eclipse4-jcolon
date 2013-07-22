@@ -2,6 +2,8 @@ package com.laboki.eclipse.plugin.jcolon.main;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -31,18 +33,19 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 public enum EditorContext {
 	INSTANCE;
 
+	public static final String LISTENER_TASK = "jcolon eclipse listener handler task";
+	public static final String ERROR_CHECKING_TASK = "jcolon semicolon error checking task";
+	public static final IWorkbench WORKBENCH = PlatformUI.getWorkbench();
+	public static final Display DISPLAY = EditorContext.WORKBENCH.getDisplay();
+	public static final IJobManager JOB_MANAGER = Job.getJobManager();
+	public static final int SHORT_DELAY_TIME = 60;
+	public static final int LONG_DELAY_TIME = 1000;
+	private static final Logger LOGGER = Logger.getLogger(EditorContext.class.getName());
 	private static final String LINK_SLAVE = "org.eclipse.ui.internal.workbench.texteditor.link.slave";
 	private static final String LINK_MASTER = "org.eclipse.ui.internal.workbench.texteditor.link.master";
 	private static final String LINK_TARGET = "org.eclipse.ui.internal.workbench.texteditor.link.target";
 	private static final String LINK_EXIT = "org.eclipse.ui.internal.workbench.texteditor.link.exit";
 	private static final String JDT_ANNOTATION_ERROR = "org.eclipse.jdt.ui.error";
-	public static final String LISTENER_TASK = "jcolon eclipse listener handler task";
-	public static final String ERROR_CHECKING_TASK = "jcolon semicolon error checking task";
-	private static final IWorkbench WORKBENCH = PlatformUI.getWorkbench();
-	public static final Display DISPLAY = EditorContext.WORKBENCH.getDisplay();
-	public static final IJobManager JOB_MANAGER = Job.getJobManager();
-	public static final int SHORT_DELAY_TIME = 60;
-	public static final int LONG_DELAY_TIME = 1000;
 	private static final List<String> LINK_ANNOTATIONS = Lists.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
 
 	public static Display getDisplay() {
@@ -52,7 +55,9 @@ public enum EditorContext {
 	public static void flushEvents() {
 		try {
 			EditorContext.tryToFlushEvent();
-		} catch (final Exception e) {}
+		} catch (final Exception e) {
+			EditorContext.LOGGER.log(Level.WARNING, "flush event failed", e);
+		}
 	}
 
 	private static void tryToFlushEvent() {
@@ -127,7 +132,9 @@ public enum EditorContext {
 	public static void syncFile(final IEditorPart editor) {
 		try {
 			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (final Exception e) {}
+		} catch (final Exception e) {
+			EditorContext.LOGGER.log(Level.WARNING, "failed to sync file", e);
+		}
 	}
 
 	public static boolean isNotAJavaEditor(final IEditorPart part) {
@@ -165,14 +172,14 @@ public enum EditorContext {
 
 	public static boolean isInEditMode(final IEditorPart editor) {
 		try {
-			return EditorContext.hasSelection(editor) || EditorContext.hasBlockSelection(editor) || EditorContext.isInLinkMode(editor);
+			return EditorContext.hasSelection(editor) || EditorContext.isInLinkMode(editor);
 		} catch (final Exception e) {
 			return true;
 		}
 	}
 
 	public static boolean hasSelection(final IEditorPart editor) {
-		return EditorContext.getBuffer(editor).getSelectionCount() > 0;
+		return (EditorContext.getBuffer(editor).getSelectionCount() > 0) || EditorContext.hasBlockSelection(editor);
 	}
 
 	public static boolean hasBlockSelection(final IEditorPart editor) {
