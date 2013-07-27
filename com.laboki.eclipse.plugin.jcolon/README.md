@@ -1,6 +1,6 @@
-# Jcolon: Automatic Semicolon Inserter For Eclipse 4
+# Jcolon: Automatic Semicolon Inserter For Eclipse
 
-Jcolon automatically inserts semicolons in java source code in Eclipse 4.
+Jcolon automatically inserts semicolons in Java source code in Eclipse.
 
 ### Website
 
