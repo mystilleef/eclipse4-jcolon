@@ -1,5 +1,8 @@
 package com.laboki.eclipse.plugin.jcolon.listeners.abstraction;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
@@ -7,6 +10,8 @@ import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public abstract class AbstractListener extends AbstractEventBusInstance implements IListener {
+
+	private static final Logger LOGGER = Logger.getLogger(AbstractListener.class.getName());
 
 	public AbstractListener(final EventBus eventbus) {
 		super(eventbus);
@@ -21,7 +26,9 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	private void tryToAdd() {
 		try {
 			this.add();
-		} catch (final Exception e) {}
+		} catch (final Exception e) {
+			AbstractListener.LOGGER.log(Level.WARNING, e.getMessage());
+		}
 	}
 
 	@Override
@@ -36,7 +43,9 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 	private void tryToRemove() {
 		try {
 			this.remove();
-		} catch (final Exception e) {}
+		} catch (final Exception e) {
+			AbstractListener.LOGGER.log(Level.WARNING, e.getMessage());
+		}
 	}
 
 	@Override
