@@ -56,7 +56,7 @@ public enum EditorContext {
 		try {
 			EditorContext.tryToFlushEvent();
 		} catch (final Exception e) {
-			EditorContext.LOGGER.log(Level.WARNING, "flush event failed", e);
+			EditorContext.LOGGER.log(Level.WARNING, e.getMessage());
 		}
 	}
 
@@ -113,12 +113,14 @@ public enum EditorContext {
 
 	private static boolean hasJDTAnnotationError(final IEditorPart editor) {
 		try {
-			return EditorContext._hasJDTAnnotationError(editor);
-		} catch (final Exception e) {}
+			return EditorContext.tryHasJDTAnnotationError(editor);
+		} catch (final Exception e) {
+			EditorContext.LOGGER.log(Level.WARNING, e.getMessage());
+		}
 		return false;
 	}
 
-	private static boolean _hasJDTAnnotationError(final IEditorPart editor) {
+	private static boolean tryHasJDTAnnotationError(final IEditorPart editor) {
 		final Iterator<Annotation> iterator = EditorContext.getView(editor).getAnnotationModel().getAnnotationIterator();
 		while (iterator.hasNext())
 			if (EditorContext.isJdtError(iterator)) return true;
@@ -133,7 +135,7 @@ public enum EditorContext {
 		try {
 			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (final Exception e) {
-			EditorContext.LOGGER.log(Level.WARNING, "failed to sync file", e);
+			EditorContext.LOGGER.log(Level.WARNING, e.getMessage());
 		}
 	}
 
