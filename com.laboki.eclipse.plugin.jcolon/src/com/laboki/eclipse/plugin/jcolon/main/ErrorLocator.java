@@ -14,8 +14,8 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 final class ErrorLocator extends AbstractEventBusInstance {
 
+	private static final Logger LOGGER = Logger.getLogger(ErrorLocator.class.getName());
 	private final Problem problem = new Problem();
-	private final static Logger LOGGER = Logger.getLogger(ErrorLocator.class.getName());
 	private boolean completionAssistantIsActive;
 
 	public ErrorLocator(final EventBus eventBus) {
@@ -52,7 +52,7 @@ final class ErrorLocator extends AbstractEventBusInstance {
 				try {
 					this.tryToFindErrorLocation();
 				} catch (final Exception e) {
-					ErrorLocator.LOGGER.log(Level.WARNING, "failed to find error location", e);
+					ErrorLocator.LOGGER.log(Level.WARNING, e.getMessage(), e);
 				}
 			}
 

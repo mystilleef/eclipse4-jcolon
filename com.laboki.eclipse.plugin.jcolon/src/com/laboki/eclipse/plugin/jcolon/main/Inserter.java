@@ -16,11 +16,11 @@ import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 final class Inserter extends AbstractEventBusInstance {
 
+	private static final Logger LOGGER = Logger.getLogger(Inserter.class.getName());
+	private static final String SEMICOLON = ";";
 	private final Problem problem = new Problem();
 	private final IEditorPart editor = EditorContext.getEditor();
 	private final IDocument document = EditorContext.getDocument(this.editor);
-	private final static Logger LOGGER = Logger.getLogger(Inserter.class.getName());
-	private static final String SEMICOLON = ";";
 	private boolean completionAssistantIsActive;
 
 	public Inserter(final EventBus eventBus) {
@@ -53,7 +53,7 @@ final class Inserter extends AbstractEventBusInstance {
 				try {
 					this.tryToInsertSemiColon(location);
 				} catch (final Exception e) {
-					Inserter.LOGGER.log(Level.WARNING, "failed to insert semicolon", e);
+					Inserter.LOGGER.log(Level.WARNING, e.getMessage(), e);
 				}
 			}
 
