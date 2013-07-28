@@ -1,5 +1,8 @@
 package com.laboki.eclipse.plugin.jcolon.listeners;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.eclipse.jface.text.contentassist.ContentAssistEvent;
 import org.eclipse.jface.text.contentassist.ICompletionListener;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -17,6 +20,7 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public final class CompletionListener extends AbstractEventBusInstance implements ICompletionListener {
 
+	private static final Logger LOGGER = Logger.getLogger(CompletionListener.class.getName());
 	private final IEditorPart editor = EditorContext.getEditor();
 	private final ContentAssistantFacade contentAssistantFacade = this.getContentAssistantFacade();
 	private final IQuickAssistAssistant quickAssistAssistant = this.getQuickAssistAssistant();
@@ -59,7 +63,9 @@ public final class CompletionListener extends AbstractEventBusInstance implement
 	private void tryToAdd() {
 		try {
 			this.add();
-		} catch (final Exception e) {}
+		} catch (final Exception e) {
+			CompletionListener.LOGGER.log(Level.WARNING, e.getMessage());
+		}
 	}
 
 	private void add() {
@@ -76,7 +82,9 @@ public final class CompletionListener extends AbstractEventBusInstance implement
 	private void tryToRemove() {
 		try {
 			this.remove();
-		} catch (final Exception e) {}
+		} catch (final Exception e) {
+			CompletionListener.LOGGER.log(Level.WARNING, e.getMessage());
+		}
 	}
 
 	private void remove() {
