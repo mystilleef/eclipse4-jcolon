@@ -55,7 +55,7 @@ final class ErrorChecker extends AbstractEventBusInstance {
 			}
 
 			private void postEvent() {
-				ErrorChecker.this.eventBus.post(new SyncFilesEvent());
+				ErrorChecker.this.getEventBus().post(new SyncFilesEvent());
 			}
 		}.begin();
 	}

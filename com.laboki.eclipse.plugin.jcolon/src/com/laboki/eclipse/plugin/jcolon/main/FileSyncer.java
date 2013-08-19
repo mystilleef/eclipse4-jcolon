@@ -24,23 +24,23 @@ final class FileSyncer extends AbstractEventBusInstance {
 	@AllowConcurrentEvents
 	public void syncFilesEventHandler(@SuppressWarnings("unused") final SyncFilesEvent event) {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
-	
+
 			@Override
 			public boolean shouldSchedule() {
 				if (FileSyncer.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
-	
+
 			@Override
 			public boolean shouldRun() {
 				if (FileSyncer.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
-	
+
 			@Override
 			public void execute() {
 				EditorContext.syncFile(FileSyncer.this.editor);
-				FileSyncer.this.eventBus.post(new LocateSemiColonErrorEvent());
+				FileSyncer.this.getEventBus().post(new LocateSemiColonErrorEvent());
 			}
 		}.begin();
 	}

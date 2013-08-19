@@ -36,7 +36,7 @@ public final class Scheduler extends AbstractEventBusInstance {
 
 			@Override
 			public void execute() {
-				Scheduler.this.eventBus.post(new CheckErrorEvent());
+				Scheduler.this.getEventBus().post(new CheckErrorEvent());
 			}
 		}.begin();
 	}

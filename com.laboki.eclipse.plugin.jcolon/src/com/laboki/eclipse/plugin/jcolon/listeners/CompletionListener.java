@@ -35,7 +35,7 @@ public final class CompletionListener extends AbstractEventBusInstance implement
 
 			@Override
 			public void execute() {
-				CompletionListener.this.eventBus.post(new AssistSessionEndedEvent());
+				CompletionListener.this.getEventBus().post(new AssistSessionEndedEvent());
 			}
 		}.begin();
 	}
@@ -46,7 +46,7 @@ public final class CompletionListener extends AbstractEventBusInstance implement
 
 			@Override
 			public void execute() {
-				CompletionListener.this.eventBus.post(new AssistSessionStartedEvent());
+				CompletionListener.this.getEventBus().post(new AssistSessionStartedEvent());
 			}
 		}.begin();
 	}

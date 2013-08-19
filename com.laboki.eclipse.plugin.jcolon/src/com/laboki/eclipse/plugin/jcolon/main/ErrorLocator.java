@@ -65,7 +65,7 @@ final class ErrorLocator extends AbstractEventBusInstance {
 			}
 
 			private void postEvent(final int location) {
-				ErrorLocator.this.eventBus.post(new SemiColonErrorLocationEvent(location));
+				ErrorLocator.this.getEventBus().post(new SemiColonErrorLocationEvent(location));
 			}
 		}.begin();
 	}

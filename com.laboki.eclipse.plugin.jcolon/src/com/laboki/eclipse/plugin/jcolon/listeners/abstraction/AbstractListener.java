@@ -66,7 +66,7 @@ public abstract class AbstractListener extends AbstractEventBusInstance implemen
 
 			@Override
 			public void execute() {
-				EditorContext.scheduleErrorChecking(AbstractListener.this.eventBus);
+				EditorContext.scheduleErrorChecking(AbstractListener.this.getEventBus());
 			}
 		}.begin();
 	}
