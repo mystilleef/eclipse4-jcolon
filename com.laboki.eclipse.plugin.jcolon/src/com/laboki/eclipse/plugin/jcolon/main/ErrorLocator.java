@@ -9,10 +9,10 @@ import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SemiColonErrorLocationEvent;
-import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
+import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-final class ErrorLocator extends AbstractEventBusInstance {
+final class ErrorLocator extends EventBusInstance {
 
 	private static final Logger LOGGER = Logger.getLogger(ErrorLocator.class.getName());
 	private final Problem problem = new Problem();

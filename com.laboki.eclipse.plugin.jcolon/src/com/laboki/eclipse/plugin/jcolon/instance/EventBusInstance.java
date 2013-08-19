@@ -2,12 +2,16 @@ package com.laboki.eclipse.plugin.jcolon.instance;
 
 import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 
-public abstract class AbstractEventBusInstance implements Instance {
+public class EventBusInstance extends InstanceObject {
 
 	private final EventBus eventBus;
 
-	protected AbstractEventBusInstance(final EventBus eventBus) {
+	protected EventBusInstance(final EventBus eventBus) {
 		this.eventBus = eventBus;
+	}
+
+	public final EventBus getEventBus() {
+		return this.eventBus;
 	}
 
 	@Override
@@ -20,9 +24,5 @@ public abstract class AbstractEventBusInstance implements Instance {
 	public Instance end() {
 		this.eventBus.unregister(this);
 		return this;
-	}
-
-	public final EventBus getEventBus() {
-		return this.eventBus;
 	}
 }

@@ -8,10 +8,10 @@ import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SyncFilesEvent;
-import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
+import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-final class FileSyncer extends AbstractEventBusInstance {
+final class FileSyncer extends EventBusInstance {
 
 	private final IEditorPart editor = EditorContext.getEditor();
 	private boolean completionAssistantIsActive;

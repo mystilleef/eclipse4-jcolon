@@ -11,10 +11,10 @@ import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SemiColonErrorLocationEvent;
-import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
+import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
-final class Inserter extends AbstractEventBusInstance {
+final class Inserter extends EventBusInstance {
 
 	private static final Logger LOGGER = Logger.getLogger(Inserter.class.getName());
 	private static final String SEMICOLON = ";";

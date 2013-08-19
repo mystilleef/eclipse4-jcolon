@@ -3,13 +3,13 @@ package com.laboki.eclipse.plugin.jcolon.listeners.abstraction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
+import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-public abstract class AbstractListener extends AbstractEventBusInstance implements IListener {
+public abstract class AbstractListener extends EventBusInstance implements IListener {
 
 	private static final Logger LOGGER = Logger.getLogger(AbstractListener.class.getName());
 

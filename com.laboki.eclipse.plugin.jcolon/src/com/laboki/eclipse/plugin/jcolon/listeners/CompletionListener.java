@@ -12,13 +12,13 @@ import org.eclipse.ui.IEditorPart;
 
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
-import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
+import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-public final class CompletionListener extends AbstractEventBusInstance implements ICompletionListener {
+public final class CompletionListener extends EventBusInstance implements ICompletionListener {
 
 	private static final Logger LOGGER = Logger.getLogger(CompletionListener.class.getName());
 	private final IEditorPart editor = EditorContext.getEditor();

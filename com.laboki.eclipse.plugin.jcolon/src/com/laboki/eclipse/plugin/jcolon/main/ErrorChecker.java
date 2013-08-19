@@ -8,10 +8,10 @@ import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.CheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SyncFilesEvent;
-import com.laboki.eclipse.plugin.jcolon.instance.AbstractEventBusInstance;
+import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
-final class ErrorChecker extends AbstractEventBusInstance {
+final class ErrorChecker extends EventBusInstance {
 
 	private final IEditorPart editor = EditorContext.getEditor();
 	private boolean completionAssistantIsActive;
