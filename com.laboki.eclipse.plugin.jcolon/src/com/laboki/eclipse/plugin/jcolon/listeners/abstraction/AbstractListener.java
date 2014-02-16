@@ -44,7 +44,7 @@ public abstract class AbstractListener extends EventBusInstance implements IList
 		try {
 			this.remove();
 		} catch (final Exception e) {
-			AbstractListener.LOGGER.log(Level.WARNING, e.getMessage());
+			AbstractListener.LOGGER.log(Level.FINEST, e.getMessage());
 		}
 	}
 
