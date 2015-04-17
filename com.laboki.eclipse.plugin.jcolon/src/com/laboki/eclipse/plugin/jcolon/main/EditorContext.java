@@ -65,24 +65,6 @@ public enum EditorContext {
 		return EditorContext.DISPLAY;
 	}
 
-	public static void
-	asyncExec(final Runnable runnable) {
-		if (EditorContext.isInvalidDisplay()) return;
-		EditorContext.DISPLAY.asyncExec(runnable);
-	}
-
-	public static void
-	syncExec(final Runnable runnable) {
-		if (EditorContext.isInvalidDisplay()) return;
-		EditorContext.DISPLAY.syncExec(runnable);
-	}
-
-	private static boolean
-	isInvalidDisplay() {
-		return (EditorContext.DISPLAY == null)
-			|| EditorContext.DISPLAY.isDisposed();
-	}
-
 	public static Shell
 	getShell() {
 		return EditorContext.WORKBENCH.getModalDialogShellProvider().getShell();
@@ -287,5 +269,33 @@ public enum EditorContext {
 	public static boolean
 	taskDoesNotExist(final String name) {
 		return EditorContext.JOB_MANAGER.find(name).length == 0;
+	}
+
+	public static void
+	asyncExec(final Runnable runnable) {
+		if (EditorContext.displayDoesNotExist()) return;
+		EditorContext.DISPLAY.asyncExec(runnable);
+	}
+
+	public static void
+	syncExec(final Runnable runnable) {
+		if (EditorContext.displayDoesNotExist()) return;
+		EditorContext.DISPLAY.syncExec(runnable);
+	}
+
+	private static boolean
+	displayDoesNotExist() {
+		return !EditorContext.displayExists();
+	}
+
+	private static boolean
+	displayExists() {
+		return !EditorContext.displayIsDisposed();
+	}
+
+	private static boolean
+	displayIsDisposed() {
+		if (EditorContext.DISPLAY == null) return true;
+		return EditorContext.DISPLAY.isDisposed();
 	}
 }
