@@ -16,15 +16,15 @@ final class FileSyncer extends EventBusInstance {
 	protected final IEditorPart editor = EditorContext.getEditor();
 	protected boolean completionAssistantIsActive;
 
-	public FileSyncer(final EventBus eventBus) {
-		super(eventBus);
+	public FileSyncer() {
+		super();
 	}
 
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
 	syncFilesEventHandler(final SyncFilesEvent event) {
-		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task() {
 
 			@Override
 			public boolean
@@ -34,19 +34,14 @@ final class FileSyncer extends EventBusInstance {
 			}
 
 			@Override
-			public boolean
-			shouldRun() {
-				if (FileSyncer.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
-			}
-
-			@Override
 			public void
 			execute() {
 				EditorContext.syncFile(FileSyncer.this.editor);
-				FileSyncer.this.getEventBus().post(new LocateSemiColonErrorEvent());
+				EventBus.post(new LocateSemiColonErrorEvent());
 			}
-		}.start();
+		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.start();
 	}
 
 	@Subscribe

@@ -56,7 +56,7 @@ public enum Factory implements Instance {
 
 				@Override
 				public void
-				asyncExecute() {
+				execute() {
 					Factory.enableAutomaticInserterFor(part);
 				}
 			}.start();
@@ -68,7 +68,7 @@ public enum Factory implements Instance {
 
 				@Override
 				public void
-				asyncExecute() {
+				execute() {
 					Factory.stopInserterServiceFor(part);
 				}
 			}.start();

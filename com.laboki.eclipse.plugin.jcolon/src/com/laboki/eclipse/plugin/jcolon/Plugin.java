@@ -14,7 +14,7 @@ public enum Plugin implements Instance {
 
 			@Override
 			public void
-			asyncExecute() {
+			execute() {
 				Factory.INSTANCE.start();
 			}
 		}.start();
@@ -24,14 +24,7 @@ public enum Plugin implements Instance {
 	@Override
 	public Instance
 	stop() {
-		new AsyncTask() {
-
-			@Override
-			public void
-			asyncExecute() {
-				Factory.INSTANCE.stop();
-			}
-		}.start();
+		Factory.INSTANCE.stop();
 		return this;
 	}
 }

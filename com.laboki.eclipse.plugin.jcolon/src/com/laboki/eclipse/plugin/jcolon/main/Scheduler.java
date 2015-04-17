@@ -10,21 +10,21 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public final class Scheduler extends EventBusInstance {
 
-	public Scheduler(final EventBus eventBus) {
-		super(eventBus);
+	public Scheduler() {
+		super();
 	}
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public void
+	public static void
 	scheduleCheckErrorEventHandler(final ScheduleCheckErrorEvent event) {
 		EditorContext.cancelErrorCheckingJobs();
-		this.scheduleErrorChecking();
+		Scheduler.scheduleErrorChecking();
 	}
 
-	private void
+	private static void
 	scheduleErrorChecking() {
-		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task() {
 
 			@Override
 			public boolean
@@ -33,17 +33,13 @@ public final class Scheduler extends EventBusInstance {
 			}
 
 			@Override
-			public boolean
-			shouldRun() {
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
-			}
-
-			@Override
 			public void
 			execute() {
-				Scheduler.this.getEventBus().post(new CheckErrorEvent());
+				EventBus.post(new CheckErrorEvent());
 			}
-		}.start();
+		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.start();
 	}
 
 	@Override

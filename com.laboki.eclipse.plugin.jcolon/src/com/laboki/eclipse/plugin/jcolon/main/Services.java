@@ -13,7 +13,6 @@ import com.laboki.eclipse.plugin.jcolon.listeners.TextInsertionListener;
 public final class Services implements Instance {
 
 	private final List<Instance> instances = Lists.newArrayList();
-	private final EventBus eventBus = new EventBus();
 
 	@Override
 	public Instance
@@ -24,15 +23,15 @@ public final class Services implements Instance {
 
 	private void
 	startServices() {
-		this.startService(new Inserter(this.eventBus));
-		this.startService(new ErrorLocator(this.eventBus));
-		this.startService(new FileSyncer(this.eventBus));
-		this.startService(new ErrorChecker(this.eventBus));
-		this.startService(new Scheduler(this.eventBus));
-		this.startService(new KeyEventListener(this.eventBus));
-		this.startService(new TextInsertionListener(this.eventBus));
-		this.startService(new AnnotationsListener(this.eventBus));
-		this.startService(new CompletionListener(this.eventBus));
+		this.startService(new Inserter());
+		this.startService(new ErrorLocator());
+		this.startService(new FileSyncer());
+		this.startService(new ErrorChecker());
+		this.startService(new Scheduler());
+		this.startService(new KeyEventListener());
+		this.startService(new TextInsertionListener());
+		this.startService(new AnnotationsListener());
+		this.startService(new CompletionListener());
 	}
 
 	private void

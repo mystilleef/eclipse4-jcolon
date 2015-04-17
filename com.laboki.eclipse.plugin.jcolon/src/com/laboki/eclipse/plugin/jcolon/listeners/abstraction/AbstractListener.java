@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
-import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 public abstract class AbstractListener extends EventBusInstance
@@ -16,8 +15,8 @@ public abstract class AbstractListener extends EventBusInstance
 	private static final Logger LOGGER =
 		Logger.getLogger(AbstractListener.class.getName());
 
-	public AbstractListener(final EventBus eventbus) {
-		super(eventbus);
+	public AbstractListener() {
+		super();
 	}
 
 	@Override
@@ -62,15 +61,15 @@ public abstract class AbstractListener extends EventBusInstance
 	public void
 	remove() {}
 
-	protected final void
+	protected final static void
 	scheduleErrorChecking() {
 		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK);
-		this.scheduleTask();
+		AbstractListener.scheduleTask();
 	}
 
-	private void
+	private static void
 	scheduleTask() {
-		new Task(EditorContext.LISTENER_TASK, EditorContext.LONG_DELAY_TIME) {
+		new Task() {
 
 			@Override
 			public boolean
@@ -81,8 +80,10 @@ public abstract class AbstractListener extends EventBusInstance
 			@Override
 			public void
 			execute() {
-				EditorContext.scheduleErrorChecking(AbstractListener.this.getEventBus());
+				EditorContext.scheduleErrorChecking();
 			}
-		}.start();
+		}.setName(EditorContext.LISTENER_TASK)
+			.setDelay(EditorContext.LONG_DELAY_TIME)
+			.start();
 	}
 }

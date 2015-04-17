@@ -6,7 +6,6 @@ import org.eclipse.swt.events.VerifyListener;
 
 import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
-import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 
 public final class TextInsertionListener extends AbstractListener
 	implements
@@ -15,14 +14,14 @@ public final class TextInsertionListener extends AbstractListener
 	private final StyledText buffer =
 		EditorContext.getBuffer(EditorContext.getEditor());
 
-	public TextInsertionListener(final EventBus eventbus) {
-		super(eventbus);
+	public TextInsertionListener() {
+		super();
 	}
 
 	@Override
 	public void
 	verifyText(final VerifyEvent arg0) {
-		this.scheduleErrorChecking();
+		AbstractListener.scheduleErrorChecking();
 	}
 
 	@Override

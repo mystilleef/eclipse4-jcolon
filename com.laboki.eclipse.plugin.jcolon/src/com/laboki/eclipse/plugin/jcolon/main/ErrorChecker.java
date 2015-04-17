@@ -16,16 +16,15 @@ final class ErrorChecker extends EventBusInstance {
 	protected final IEditorPart editor = EditorContext.getEditor();
 	protected boolean completionAssistantIsActive;
 
-	public ErrorChecker(final EventBus eventBus) {
-		super(eventBus);
+	public ErrorChecker() {
+		super();
 	}
 
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
 	checkErrorEventHandler(final CheckErrorEvent event) {
-		new AsyncTask(EditorContext.ERROR_CHECKING_TASK,
-			EditorContext.SHORT_DELAY_TIME) {
+		new AsyncTask() {
 
 			@Override
 			public boolean
@@ -35,15 +34,8 @@ final class ErrorChecker extends EventBusInstance {
 			}
 
 			@Override
-			public boolean
-			shouldRun() {
-				if (ErrorChecker.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
-			}
-
-			@Override
 			public void
-			asyncExecute() {
+			execute() {
 				if (this.canPostEvent()) this.postEvent();
 			}
 
@@ -64,9 +56,11 @@ final class ErrorChecker extends EventBusInstance {
 
 			private void
 			postEvent() {
-				ErrorChecker.this.getEventBus().post(new SyncFilesEvent());
+				EventBus.post(new SyncFilesEvent());
 			}
-		}.start();
+		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.start();
 	}
 
 	@Subscribe

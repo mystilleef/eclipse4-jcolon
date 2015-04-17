@@ -237,14 +237,14 @@ public enum EditorContext {
 	}
 
 	public static void
-	scheduleErrorChecking(final EventBus eventBus) {
+	scheduleErrorChecking() {
 		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_TASK);
-		EditorContext.scheduleErrorCheckingTask(eventBus);
+		EditorContext.scheduleErrorCheckingTask();
 	}
 
 	private static void
-	scheduleErrorCheckingTask(final EventBus eventBus) {
-		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+	scheduleErrorCheckingTask() {
+		new Task() {
 
 			@Override
 			public boolean
@@ -253,17 +253,13 @@ public enum EditorContext {
 			}
 
 			@Override
-			public boolean
-			shouldRun() {
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
-			}
-
-			@Override
 			public void
 			execute() {
-				eventBus.post(new ScheduleCheckErrorEvent());
+				EventBus.post(new ScheduleCheckErrorEvent());
 			}
-		}.start();
+		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.start();
 	}
 
 	public static boolean

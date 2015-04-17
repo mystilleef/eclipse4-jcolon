@@ -19,8 +19,8 @@ final class ErrorLocator extends EventBusInstance {
 	protected final Problem problem = new Problem();
 	protected boolean completionAssistantIsActive;
 
-	public ErrorLocator(final EventBus eventBus) {
-		super(eventBus);
+	public ErrorLocator() {
+		super();
 	}
 
 	@Subscribe
@@ -32,18 +32,11 @@ final class ErrorLocator extends EventBusInstance {
 
 	private void
 	locateSemiColonError() {
-		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+		new Task() {
 
 			@Override
 			public boolean
 			shouldSchedule() {
-				if (ErrorLocator.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
-			}
-
-			@Override
-			public boolean
-			shouldRun() {
 				if (ErrorLocator.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
@@ -76,10 +69,11 @@ final class ErrorLocator extends EventBusInstance {
 
 			private void
 			postEvent(final int location) {
-				ErrorLocator.this.getEventBus()
-					.post(new SemiColonErrorLocationEvent(location));
+				EventBus.post(new SemiColonErrorLocationEvent(location));
 			}
-		}.start();
+		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.start();
 	}
 
 	@Subscribe

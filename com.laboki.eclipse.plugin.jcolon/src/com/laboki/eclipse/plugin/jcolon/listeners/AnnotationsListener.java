@@ -5,7 +5,6 @@ import org.eclipse.jface.text.source.IAnnotationModelListener;
 
 import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
-import com.laboki.eclipse.plugin.jcolon.main.EventBus;
 
 public final class AnnotationsListener extends AbstractListener
 	implements
@@ -14,14 +13,14 @@ public final class AnnotationsListener extends AbstractListener
 	private final IAnnotationModel annotationModel =
 		AnnotationsListener.getAnnotationModel();
 
-	public AnnotationsListener(final EventBus eventbus) {
-		super(eventbus);
+	public AnnotationsListener() {
+		super();
 	}
 
 	@Override
 	public void
 	modelChanged(final IAnnotationModel arg0) {
-		this.scheduleErrorChecking();
+		AbstractListener.scheduleErrorChecking();
 	}
 
 	@Override

@@ -30,8 +30,8 @@ public final class CompletionListener extends EventBusInstance
 	private final IQuickAssistAssistant quickAssistAssistant =
 		this.getQuickAssistAssistant();
 
-	public CompletionListener(final EventBus eventbus) {
-		super(eventbus);
+	public CompletionListener() {
+		super();
 	}
 
 	@Override
@@ -42,8 +42,7 @@ public final class CompletionListener extends EventBusInstance
 			@Override
 			public void
 			execute() {
-				CompletionListener.this.getEventBus()
-					.post(new AssistSessionEndedEvent());
+				EventBus.post(new AssistSessionEndedEvent());
 			}
 		}.start();
 	}
@@ -56,8 +55,7 @@ public final class CompletionListener extends EventBusInstance
 			@Override
 			public void
 			execute() {
-				CompletionListener.this.getEventBus()
-					.post(new AssistSessionStartedEvent());
+				EventBus.post(new AssistSessionStartedEvent());
 			}
 		}.start();
 	}

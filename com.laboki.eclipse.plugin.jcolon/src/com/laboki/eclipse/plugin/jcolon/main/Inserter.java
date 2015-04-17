@@ -24,16 +24,15 @@ final class Inserter extends EventBusInstance {
 	protected final IDocument document = EditorContext.getDocument(this.editor);
 	protected boolean completionAssistantIsActive;
 
-	public Inserter(final EventBus eventBus) {
-		super(eventBus);
+	public Inserter() {
+		super();
 	}
 
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
 	semiColonErrorLocationEventHandler(final SemiColonErrorLocationEvent event) {
-		new AsyncTask(EditorContext.ERROR_CHECKING_TASK,
-			EditorContext.SHORT_DELAY_TIME) {
+		new AsyncTask() {
 
 			@Override
 			public boolean
@@ -43,15 +42,8 @@ final class Inserter extends EventBusInstance {
 			}
 
 			@Override
-			public boolean
-			shouldRun() {
-				if (Inserter.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
-			}
-
-			@Override
 			public void
-			asyncExecute() {
+			execute() {
 				this.insertSemiColon(event.getLocation());
 			}
 
@@ -93,7 +85,9 @@ final class Inserter extends EventBusInstance {
 					return false;
 				}
 			}
-		}.start();
+		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.start();
 	}
 
 	@Subscribe
