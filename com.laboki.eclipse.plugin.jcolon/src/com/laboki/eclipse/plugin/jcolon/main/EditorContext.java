@@ -66,22 +66,6 @@ public enum EditorContext {
 	}
 
 	public static void
-	flushEvents() {
-		try {
-			EditorContext.tryToFlushEvent();
-		}
-		catch (final Exception e) {
-			EditorContext.LOGGER.log(Level.WARNING, e.getMessage());
-		}
-	}
-
-	private static void
-	tryToFlushEvent() {
-		while (EditorContext.DISPLAY.readAndDispatch())
-			EditorContext.DISPLAY.update();
-	}
-
-	public static void
 	asyncExec(final Runnable runnable) {
 		if (EditorContext.isInvalidDisplay()) return;
 		EditorContext.DISPLAY.asyncExec(runnable);
