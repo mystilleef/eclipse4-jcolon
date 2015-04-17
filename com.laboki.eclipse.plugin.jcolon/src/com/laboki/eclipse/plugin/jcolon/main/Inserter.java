@@ -93,7 +93,7 @@ final class Inserter extends EventBusInstance {
 					return false;
 				}
 			}
-		}.begin();
+		}.start();
 	}
 
 	@Subscribe

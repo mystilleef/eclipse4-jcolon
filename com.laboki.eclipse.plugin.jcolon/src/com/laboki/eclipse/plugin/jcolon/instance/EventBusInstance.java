@@ -17,14 +17,14 @@ public class EventBusInstance extends InstanceObject {
 
 	@Override
 	public Instance
-	begin() {
+	start() {
 		this.eventBus.register(this);
 		return this;
 	}
 
 	@Override
 	public Instance
-	end() {
+	stop() {
 		this.eventBus.unregister(this);
 		return this;
 	}

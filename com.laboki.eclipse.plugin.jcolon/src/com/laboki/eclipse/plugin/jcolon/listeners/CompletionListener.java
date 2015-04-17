@@ -45,7 +45,7 @@ public final class CompletionListener extends EventBusInstance
 				CompletionListener.this.getEventBus()
 					.post(new AssistSessionEndedEvent());
 			}
-		}.begin();
+		}.start();
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public final class CompletionListener extends EventBusInstance
 				CompletionListener.this.getEventBus()
 					.post(new AssistSessionStartedEvent());
 			}
-		}.begin();
+		}.start();
 	}
 
 	@Override
@@ -68,9 +68,9 @@ public final class CompletionListener extends EventBusInstance
 
 	@Override
 	public Instance
-	begin() {
+	start() {
 		this.tryToAdd();
-		return super.begin();
+		return super.start();
 	}
 
 	private void
@@ -91,9 +91,9 @@ public final class CompletionListener extends EventBusInstance
 
 	@Override
 	public Instance
-	end() {
+	stop() {
 		this.tryToRemove();
-		return super.end();
+		return super.stop();
 	}
 
 	private void

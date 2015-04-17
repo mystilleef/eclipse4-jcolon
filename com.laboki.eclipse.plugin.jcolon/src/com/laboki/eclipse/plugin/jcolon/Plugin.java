@@ -9,29 +9,29 @@ public enum Plugin implements Instance {
 
 	@Override
 	public Instance
-	begin() {
+	start() {
 		new AsyncTask() {
 
 			@Override
 			public void
 			asyncExecute() {
-				Factory.INSTANCE.begin();
+				Factory.INSTANCE.start();
 			}
-		}.begin();
+		}.start();
 		return this;
 	}
 
 	@Override
 	public Instance
-	end() {
+	stop() {
 		new AsyncTask() {
 
 			@Override
 			public void
 			asyncExecute() {
-				Factory.INSTANCE.end();
+				Factory.INSTANCE.stop();
 			}
-		}.begin();
+		}.start();
 		return this;
 	}
 }

@@ -79,7 +79,7 @@ final class ErrorLocator extends EventBusInstance {
 				ErrorLocator.this.getEventBus()
 					.post(new SemiColonErrorLocationEvent(location));
 			}
-		}.begin();
+		}.start();
 	}
 
 	@Subscribe

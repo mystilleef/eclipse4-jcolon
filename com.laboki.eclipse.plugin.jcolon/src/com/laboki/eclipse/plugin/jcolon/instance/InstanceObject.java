@@ -6,13 +6,13 @@ public class InstanceObject implements Instance {
 
 	@Override
 	public Instance
-	begin() {
+	start() {
 		return this;
 	}
 
 	@Override
 	public Instance
-	end() {
+	stop() {
 		return this;
 	}
 }

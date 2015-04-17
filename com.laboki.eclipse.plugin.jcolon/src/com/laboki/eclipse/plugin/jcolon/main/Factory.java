@@ -59,7 +59,7 @@ public enum Factory implements Instance {
 				asyncExecute() {
 					Factory.enableAutomaticInserterFor(part);
 				}
-			}.begin();
+			}.start();
 		}
 
 		private static void
@@ -71,7 +71,7 @@ public enum Factory implements Instance {
 				asyncExecute() {
 					Factory.stopInserterServiceFor(part);
 				}
-			}.begin();
+			}.start();
 		}
 	}
 
@@ -106,7 +106,7 @@ public enum Factory implements Instance {
 	private static void
 	startInserterServiceFor(final IWorkbenchPart part) {
 		Factory.stopAllInserterServices();
-		Factory.SERVICES_MAP.put((IEditorPart) part, new Services().begin());
+		Factory.SERVICES_MAP.put((IEditorPart) part, new Services().start());
 	}
 
 	private static void
@@ -118,7 +118,7 @@ public enum Factory implements Instance {
 	protected static void
 	stopInserterServiceFor(final IWorkbenchPart part) {
 		if (Factory.servicesMapDoesNotContain(part)) return;
-		Factory.SERVICES_MAP.get(part).end();
+		Factory.SERVICES_MAP.get(part).stop();
 		Factory.SERVICES_MAP.remove(part);
 	}
 
@@ -129,7 +129,7 @@ public enum Factory implements Instance {
 
 	@Override
 	public Instance
-	begin() {
+	start() {
 		Factory.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
 		Factory.PART_SERVICE.addPartListener(Factory.PART_LISTENER);
 		return this;
@@ -137,7 +137,7 @@ public enum Factory implements Instance {
 
 	@Override
 	public Instance
-	end() {
+	stop() {
 		Factory.PART_SERVICE.removePartListener(Factory.PART_LISTENER);
 		Factory.stopAllInserterServices();
 		return this;

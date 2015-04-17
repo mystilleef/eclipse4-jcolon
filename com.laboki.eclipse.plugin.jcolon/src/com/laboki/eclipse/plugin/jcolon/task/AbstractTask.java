@@ -31,14 +31,14 @@ abstract class AbstractTask extends Job implements Runnable, Instance {
 
 	@Override
 	public Instance
-	end() {
+	stop() {
 		this.cancel();
 		return this;
 	}
 
 	@Override
 	public Instance
-	begin() {
+	start() {
 		this.setUser(false);
 		this.setSystem(true);
 		this.schedule(this.delayTime);
@@ -48,7 +48,7 @@ abstract class AbstractTask extends Job implements Runnable, Instance {
 	@Override
 	public void
 	run() {
-		this.begin();
+		this.start();
 	}
 
 	@Override

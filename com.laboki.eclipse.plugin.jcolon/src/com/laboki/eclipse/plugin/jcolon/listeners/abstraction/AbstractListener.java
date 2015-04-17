@@ -22,9 +22,9 @@ public abstract class AbstractListener extends EventBusInstance
 
 	@Override
 	public final Instance
-	begin() {
+	start() {
 		this.tryToAdd();
-		return super.begin();
+		return super.start();
 	}
 
 	private void
@@ -43,9 +43,9 @@ public abstract class AbstractListener extends EventBusInstance
 
 	@Override
 	public final Instance
-	end() {
+	stop() {
 		this.tryToRemove();
-		return super.end();
+		return super.stop();
 	}
 
 	private void
@@ -83,6 +83,6 @@ public abstract class AbstractListener extends EventBusInstance
 			execute() {
 				EditorContext.scheduleErrorChecking(AbstractListener.this.getEventBus());
 			}
-		}.begin();
+		}.start();
 	}
 }

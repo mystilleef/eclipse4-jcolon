@@ -43,13 +43,13 @@ public final class Scheduler extends EventBusInstance {
 			execute() {
 				Scheduler.this.getEventBus().post(new CheckErrorEvent());
 			}
-		}.begin();
+		}.start();
 	}
 
 	@Override
 	public Instance
-	end() {
+	stop() {
 		EditorContext.cancelErrorCheckingJobs();
-		return super.end();
+		return super.stop();
 	}
 }

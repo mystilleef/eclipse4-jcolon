@@ -32,6 +32,6 @@ public final class EventBus {
 			execute() {
 				EventBus.this.bus.post(object);
 			}
-		}.begin();
+		}.start();
 	}
 }

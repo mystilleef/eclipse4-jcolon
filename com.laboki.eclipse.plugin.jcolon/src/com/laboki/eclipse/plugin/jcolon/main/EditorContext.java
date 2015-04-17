@@ -263,7 +263,7 @@ public enum EditorContext {
 			execute() {
 				eventBus.post(new ScheduleCheckErrorEvent());
 			}
-		}.begin();
+		}.start();
 	}
 
 	public static boolean

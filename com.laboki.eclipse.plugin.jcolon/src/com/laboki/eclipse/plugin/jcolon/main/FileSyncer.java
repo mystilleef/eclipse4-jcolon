@@ -46,7 +46,7 @@ final class FileSyncer extends EventBusInstance {
 				EditorContext.syncFile(FileSyncer.this.editor);
 				FileSyncer.this.getEventBus().post(new LocateSemiColonErrorEvent());
 			}
-		}.begin();
+		}.start();
 	}
 
 	@Subscribe

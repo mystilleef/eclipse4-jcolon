@@ -66,7 +66,7 @@ final class ErrorChecker extends EventBusInstance {
 			postEvent() {
 				ErrorChecker.this.getEventBus().post(new SyncFilesEvent());
 			}
-		}.begin();
+		}.start();
 	}
 
 	@Subscribe
