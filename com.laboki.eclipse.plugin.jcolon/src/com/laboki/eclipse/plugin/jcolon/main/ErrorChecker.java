@@ -7,7 +7,7 @@ import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.CheckErrorEvent;
-import com.laboki.eclipse.plugin.jcolon.events.SyncFilesEvent;
+import com.laboki.eclipse.plugin.jcolon.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
@@ -56,7 +56,7 @@ final class ErrorChecker extends EventBusInstance {
 
 			private void
 			postEvent() {
-				EventBus.post(new SyncFilesEvent());
+				EventBus.post(new LocateSemiColonErrorEvent());
 			}
 		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
 			.setDelay(EditorContext.SHORT_DELAY_TIME)

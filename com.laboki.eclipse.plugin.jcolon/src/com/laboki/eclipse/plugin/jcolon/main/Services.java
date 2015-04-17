@@ -25,7 +25,6 @@ public final class Services implements Instance {
 	startServices() {
 		this.startService(new Inserter());
 		this.startService(new ErrorLocator());
-		this.startService(new FileSyncer());
 		this.startService(new ErrorChecker());
 		this.startService(new Scheduler());
 		this.startService(new KeyEventListener());

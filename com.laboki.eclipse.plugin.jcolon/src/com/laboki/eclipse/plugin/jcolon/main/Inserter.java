@@ -74,9 +74,14 @@ final class Inserter extends EventBusInstance {
 
 			private boolean
 			semiColonIsAlreadyInserted(final int location) throws Exception {
-				if (Inserter.this.document.getLength() == location) return false;
+				if (this.isEndOfDocument(location)) return false;
 				return String.valueOf(Inserter.this.document.getChar(location))
 					.equals(Inserter.SEMICOLON);
+			}
+
+			private boolean
+			isEndOfDocument(final int location) {
+				return Inserter.this.document.getLength() == location;
 			}
 
 			private boolean
