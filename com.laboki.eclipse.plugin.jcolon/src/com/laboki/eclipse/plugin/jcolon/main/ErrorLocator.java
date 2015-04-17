@@ -11,9 +11,11 @@ import com.laboki.eclipse.plugin.jcolon.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SemiColonErrorLocationEvent;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
+import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
 final class ErrorLocator extends EventBusInstance {
 
+	private static final TaskMutexRule RULE = new TaskMutexRule();
 	protected static final Logger LOGGER =
 		Logger.getLogger(ErrorLocator.class.getName());
 	protected final Problem problem = new Problem();
@@ -71,7 +73,8 @@ final class ErrorLocator extends EventBusInstance {
 			postEvent(final int location) {
 				EventBus.post(new SemiColonErrorLocationEvent(location));
 			}
-		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+		}.setRule(ErrorLocator.RULE)
+			.setFamily(EditorContext.ERROR_CHECKING_TASK)
 			.setDelay(EditorContext.SHORT_DELAY_TIME)
 			.start();
 	}

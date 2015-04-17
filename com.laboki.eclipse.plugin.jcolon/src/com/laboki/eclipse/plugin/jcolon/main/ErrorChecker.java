@@ -10,9 +10,11 @@ import com.laboki.eclipse.plugin.jcolon.events.CheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.LocateSemiColonErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
+import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
 final class ErrorChecker extends EventBusInstance {
 
+	private static final TaskMutexRule RULE = new TaskMutexRule();
 	protected final IEditorPart editor = EditorContext.getEditor();
 	protected boolean completionAssistantIsActive;
 
@@ -58,7 +60,8 @@ final class ErrorChecker extends EventBusInstance {
 			postEvent() {
 				EventBus.post(new LocateSemiColonErrorEvent());
 			}
-		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+		}.setRule(ErrorChecker.RULE)
+			.setFamily(EditorContext.ERROR_CHECKING_TASK)
 			.setDelay(EditorContext.SHORT_DELAY_TIME)
 			.start();
 	}

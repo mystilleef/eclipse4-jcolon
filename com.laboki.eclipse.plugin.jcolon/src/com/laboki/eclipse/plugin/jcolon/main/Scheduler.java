@@ -7,8 +7,11 @@ import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
+import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
 public final class Scheduler extends EventBusInstance {
+
+	private static final TaskMutexRule RULE = new TaskMutexRule();
 
 	public Scheduler() {
 		super();
@@ -37,7 +40,8 @@ public final class Scheduler extends EventBusInstance {
 			execute() {
 				EventBus.post(new CheckErrorEvent());
 			}
-		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+		}.setRule(Scheduler.RULE)
+			.setFamily(EditorContext.ERROR_CHECKING_TASK)
 			.setDelay(EditorContext.SHORT_DELAY_TIME)
 			.start();
 	}
