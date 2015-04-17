@@ -38,7 +38,7 @@ final class ErrorLocator extends EventBusInstance {
 			public boolean
 			shouldSchedule() {
 				if (ErrorLocator.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_TASK);
+				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_FAMILY);
 			}
 
 			@Override
@@ -72,8 +72,8 @@ final class ErrorLocator extends EventBusInstance {
 				EventBus.post(new SemiColonErrorLocationEvent(location));
 			}
 		}.setRule(EditorContext.ERROR_CHECKER_RULE)
-			.setFamily(EditorContext.ERROR_CHECKING_TASK)
-			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.setFamily(EditorContext.ERROR_CHECKING_FAMILY)
+			.setDelay(EditorContext.SHORT_DELAY)
 			.start();
 	}
 

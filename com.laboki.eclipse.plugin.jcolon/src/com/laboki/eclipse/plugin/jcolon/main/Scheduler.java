@@ -42,7 +42,7 @@ public final class Scheduler extends EventBusInstance {
 			}
 		}.setRule(Scheduler.RULE)
 			.setFamily(Scheduler.FAMILY)
-			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.setDelay(EditorContext.SHORT_DELAY)
 			.start();
 	}
 

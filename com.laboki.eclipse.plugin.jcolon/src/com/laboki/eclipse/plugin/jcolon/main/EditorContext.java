@@ -42,14 +42,12 @@ public enum EditorContext {
 	INSTANCE;
 
 	public static final TaskMutexRule ERROR_CHECKER_RULE = new TaskMutexRule();
-	public static final String LISTENER_TASK =
-		"jcolon eclipse listener handler task";
-	public static final String ERROR_CHECKING_TASK =
+	public static final String ERROR_CHECKING_FAMILY =
 		"jcolon semicolon error checking task";
 	public static final IWorkbench WORKBENCH = PlatformUI.getWorkbench();
 	public static final Display DISPLAY = EditorContext.WORKBENCH.getDisplay();
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
-	public static final int SHORT_DELAY_TIME = 60;
+	public static final int SHORT_DELAY = 60;
 	public static final int LONG_DELAY_TIME = 1000;
 	private static final Logger LOGGER =
 		Logger.getLogger(EditorContext.class.getName());
@@ -188,15 +186,14 @@ public enum EditorContext {
 
 	public static void
 	cancelAllJobs() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK,
-			EditorContext.ERROR_CHECKING_TASK,
+		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_FAMILY,
 			AbstractListener.FAMILY,
 			Scheduler.FAMILY);
 	}
 
 	public static void
 	cancelErrorCheckingJobs() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_TASK);
+		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_FAMILY);
 	}
 
 	public static void
@@ -266,7 +263,7 @@ public enum EditorContext {
 			}
 		}.setRule(Scheduler.RULE)
 			.setFamily(Scheduler.FAMILY)
-			.setDelay(EditorContext.SHORT_DELAY_TIME)
+			.setDelay(EditorContext.SHORT_DELAY)
 			.start();
 	}
 
