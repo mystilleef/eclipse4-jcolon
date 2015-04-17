@@ -9,23 +9,27 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 public final class EventBus {
 
 	private static final Executor EXECUTOR = Executors.newCachedThreadPool();
-	private final AsyncEventBus bus = new AsyncEventBus(EventBus.EXECUTOR);
+	protected final AsyncEventBus bus = new AsyncEventBus(EventBus.EXECUTOR);
 
 	public EventBus() {}
 
-	public void register(final Object object) {
+	public void
+	register(final Object object) {
 		this.bus.register(object);
 	}
 
-	public void unregister(final Object object) {
+	public void
+	unregister(final Object object) {
 		this.bus.unregister(object);
 	}
 
-	public void post(final Object object) {
+	public void
+	post(final Object object) {
 		new Task() {
 
 			@Override
-			public void execute() {
+			public void
+			execute() {
 				EventBus.this.bus.post(object);
 			}
 		}.begin();

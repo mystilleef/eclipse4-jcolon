@@ -16,33 +16,39 @@ public final class Scheduler extends EventBusInstance {
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public void scheduleCheckErrorEventHandler(@SuppressWarnings("unused") final ScheduleCheckErrorEvent event) {
+	public void
+	scheduleCheckErrorEventHandler(final ScheduleCheckErrorEvent event) {
 		EditorContext.cancelErrorCheckingJobs();
 		this.scheduleErrorChecking();
 	}
 
-	private void scheduleErrorChecking() {
+	private void
+	scheduleErrorChecking() {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
-			public boolean shouldSchedule() {
+			public boolean
+			shouldSchedule() {
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
-			public boolean shouldRun() {
+			public boolean
+			shouldRun() {
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
-			public void execute() {
+			public void
+			execute() {
 				Scheduler.this.getEventBus().post(new CheckErrorEvent());
 			}
 		}.begin();
 	}
 
 	@Override
-	public Instance end() {
+	public Instance
+	end() {
 		EditorContext.cancelErrorCheckingJobs();
 		return super.end();
 	}

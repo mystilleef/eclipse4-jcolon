@@ -13,8 +13,8 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 
 final class FileSyncer extends EventBusInstance {
 
-	private final IEditorPart editor = EditorContext.getEditor();
-	private boolean completionAssistantIsActive;
+	protected final IEditorPart editor = EditorContext.getEditor();
+	protected boolean completionAssistantIsActive;
 
 	public FileSyncer(final EventBus eventBus) {
 		super(eventBus);
@@ -22,23 +22,27 @@ final class FileSyncer extends EventBusInstance {
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public void syncFilesEventHandler(@SuppressWarnings("unused") final SyncFilesEvent event) {
+	public void
+	syncFilesEventHandler(final SyncFilesEvent event) {
 		new Task(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
-			public boolean shouldSchedule() {
+			public boolean
+			shouldSchedule() {
 				if (FileSyncer.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
-			public boolean shouldRun() {
+			public boolean
+			shouldRun() {
 				if (FileSyncer.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
-			public void execute() {
+			public void
+			execute() {
 				EditorContext.syncFile(FileSyncer.this.editor);
 				FileSyncer.this.getEventBus().post(new LocateSemiColonErrorEvent());
 			}
@@ -46,12 +50,14 @@ final class FileSyncer extends EventBusInstance {
 	}
 
 	@Subscribe
-	public void assistSessionStartedEventHandler(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
+	public void
+	assistSessionStartedEventHandler(final AssistSessionStartedEvent event) {
 		this.completionAssistantIsActive = true;
 	}
 
 	@Subscribe
-	public void assistSessionEndedEventHandler(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
+	public void
+	assistSessionEndedEventHandler(final AssistSessionEndedEvent event) {
 		this.completionAssistantIsActive = false;
 	}
 }

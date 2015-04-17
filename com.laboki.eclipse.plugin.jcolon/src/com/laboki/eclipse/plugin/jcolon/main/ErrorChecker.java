@@ -13,8 +13,8 @@ import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 final class ErrorChecker extends EventBusInstance {
 
-	private final IEditorPart editor = EditorContext.getEditor();
-	private boolean completionAssistantIsActive;
+	protected final IEditorPart editor = EditorContext.getEditor();
+	protected boolean completionAssistantIsActive;
 
 	public ErrorChecker(final EventBus eventBus) {
 		super(eventBus);
@@ -22,51 +22,62 @@ final class ErrorChecker extends EventBusInstance {
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public void checkErrorEventHandler(@SuppressWarnings("unused") final CheckErrorEvent event) {
-		new AsyncTask(EditorContext.ERROR_CHECKING_TASK, EditorContext.SHORT_DELAY_TIME) {
+	public void
+	checkErrorEventHandler(final CheckErrorEvent event) {
+		new AsyncTask(EditorContext.ERROR_CHECKING_TASK,
+			EditorContext.SHORT_DELAY_TIME) {
 
 			@Override
-			public boolean shouldSchedule() {
+			public boolean
+			shouldSchedule() {
 				if (ErrorChecker.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
-			public boolean shouldRun() {
+			public boolean
+			shouldRun() {
 				if (ErrorChecker.this.completionAssistantIsActive) return false;
 				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
 			}
 
 			@Override
-			public void asyncExecute() {
+			public void
+			asyncExecute() {
 				if (this.canPostEvent()) this.postEvent();
 			}
 
-			private boolean canPostEvent() {
+			private boolean
+			canPostEvent() {
 				return this.isNotInEditMode() || this.hasJDTErrors();
 			}
 
-			private boolean isNotInEditMode() {
+			private boolean
+			isNotInEditMode() {
 				return !EditorContext.isInEditMode(ErrorChecker.this.editor);
 			}
 
-			private boolean hasJDTErrors() {
+			private boolean
+			hasJDTErrors() {
 				return EditorContext.hasJDTErrors(ErrorChecker.this.editor);
 			}
 
-			private void postEvent() {
+			private void
+			postEvent() {
 				ErrorChecker.this.getEventBus().post(new SyncFilesEvent());
 			}
 		}.begin();
 	}
 
 	@Subscribe
-	public void assistSessionStartedEventHandler(@SuppressWarnings("unused") final AssistSessionStartedEvent event) {
+	public void
+	assistSessionStartedEventHandler(final AssistSessionStartedEvent event) {
 		this.completionAssistantIsActive = true;
 	}
 
 	@Subscribe
-	public void assistSessionEndedEventHandler(@SuppressWarnings("unused") final AssistSessionEndedEvent event) {
+	public void
+	assistSessionEndedEventHandler(final AssistSessionEndedEvent event) {
 		this.completionAssistantIsActive = false;
 	}
 }

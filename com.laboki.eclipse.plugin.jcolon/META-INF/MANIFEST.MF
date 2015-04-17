@@ -4,7 +4,6 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.laboki.eclipse.plugin.jcolon;singleton:=true
 Bundle-Version: 20131214
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .,
  guava-14.0.1.jar
 Require-Bundle: org.eclipse.ui;bundle-version="3.104.0",
@@ -45,4 +44,5 @@ Export-Package: com.google.common.annotations,
 Plugin-Class: com.laboki.eclipse.plugin.jcolon.Activator
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.laboki.eclipse.plugin.jcolon.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 
