@@ -13,11 +13,9 @@ import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.SemiColonErrorLocationEvent;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
-import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
 final class Inserter extends EventBusInstance {
 
-	private static final TaskMutexRule RULE = new TaskMutexRule();
 	protected static final Logger LOGGER =
 		Logger.getLogger(Inserter.class.getName());
 	private static final String SEMICOLON = ";";
@@ -40,7 +38,7 @@ final class Inserter extends EventBusInstance {
 			public boolean
 			shouldSchedule() {
 				if (Inserter.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
+				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_TASK);
 			}
 
 			@Override
@@ -93,7 +91,7 @@ final class Inserter extends EventBusInstance {
 					return false;
 				}
 			}
-		}.setRule(Inserter.RULE)
+		}.setRule(EditorContext.ERROR_CHECKER_RULE)
 			.setFamily(EditorContext.ERROR_CHECKING_TASK)
 			.setDelay(EditorContext.SHORT_DELAY_TIME)
 			.start();

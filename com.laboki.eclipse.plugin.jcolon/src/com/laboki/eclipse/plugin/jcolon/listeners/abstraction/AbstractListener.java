@@ -7,11 +7,15 @@ import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
+import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
 public abstract class AbstractListener extends EventBusInstance
 	implements
 		IListener {
 
+	private static final int ONE_SECOND = 1000;
+	public static final String FAMILY = "ABSTRACT_LISTENER_FAMILY";
+	private static final TaskMutexRule RULE = new TaskMutexRule();
 	private static final Logger LOGGER =
 		Logger.getLogger(AbstractListener.class.getName());
 
@@ -63,18 +67,18 @@ public abstract class AbstractListener extends EventBusInstance
 
 	protected final static void
 	scheduleErrorChecking() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK);
+		EditorContext.cancelAllJobs();
 		AbstractListener.scheduleTask();
 	}
 
-	private static void
+	protected static void
 	scheduleTask() {
 		new Task() {
 
 			@Override
 			public boolean
 			shouldSchedule() {
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
+				return EditorContext.taskDoesNotExist(AbstractListener.FAMILY);
 			}
 
 			@Override
@@ -82,8 +86,9 @@ public abstract class AbstractListener extends EventBusInstance
 			execute() {
 				EditorContext.scheduleErrorChecking();
 			}
-		}.setName(EditorContext.LISTENER_TASK)
-			.setDelay(EditorContext.LONG_DELAY_TIME)
+		}.setRule(AbstractListener.RULE)
+			.setFamily(AbstractListener.FAMILY)
+			.setDelay(AbstractListener.ONE_SECOND)
 			.start();
 	}
 }

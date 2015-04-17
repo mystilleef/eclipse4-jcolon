@@ -34,11 +34,14 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
+import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
+import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
 public enum EditorContext {
 	INSTANCE;
 
+	public static final TaskMutexRule ERROR_CHECKER_RULE = new TaskMutexRule();
 	public static final String LISTENER_TASK =
 		"jcolon eclipse listener handler task";
 	public static final String ERROR_CHECKING_TASK =
@@ -186,7 +189,9 @@ public enum EditorContext {
 	public static void
 	cancelAllJobs() {
 		EditorContext.cancelJobsBelongingTo(EditorContext.LISTENER_TASK,
-			EditorContext.ERROR_CHECKING_TASK);
+			EditorContext.ERROR_CHECKING_TASK,
+			AbstractListener.FAMILY,
+			Scheduler.FAMILY);
 	}
 
 	public static void
@@ -246,18 +251,12 @@ public enum EditorContext {
 
 	public static void
 	scheduleErrorChecking() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_TASK);
-		EditorContext.scheduleErrorCheckingTask();
-	}
-
-	private static void
-	scheduleErrorCheckingTask() {
 		new Task() {
 
 			@Override
 			public boolean
 			shouldSchedule() {
-				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_TASK);
+				return EditorContext.taskDoesNotExist(Scheduler.FAMILY);
 			}
 
 			@Override
@@ -265,7 +264,8 @@ public enum EditorContext {
 			execute() {
 				EventBus.post(new ScheduleCheckErrorEvent());
 			}
-		}.setFamily(EditorContext.ERROR_CHECKING_TASK)
+		}.setRule(Scheduler.RULE)
+			.setFamily(Scheduler.FAMILY)
 			.setDelay(EditorContext.SHORT_DELAY_TIME)
 			.start();
 	}

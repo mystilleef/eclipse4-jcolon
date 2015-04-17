@@ -2,6 +2,8 @@ package com.laboki.eclipse.plugin.jcolon.main;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
+import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
+import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.CheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
@@ -11,7 +13,9 @@ import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
 public final class Scheduler extends EventBusInstance {
 
-	private static final TaskMutexRule RULE = new TaskMutexRule();
+	static final String FAMILY = "JCOLON_SCHEDULER_FAMILY";
+	static final TaskMutexRule RULE = new TaskMutexRule();
+	protected boolean completionAssistantIsActive;
 
 	public Scheduler() {
 		super();
@@ -19,37 +23,46 @@ public final class Scheduler extends EventBusInstance {
 
 	@Subscribe
 	@AllowConcurrentEvents
-	public static void
+	public void
 	scheduleCheckErrorEventHandler(final ScheduleCheckErrorEvent event) {
-		EditorContext.cancelErrorCheckingJobs();
-		Scheduler.scheduleErrorChecking();
-	}
-
-	private static void
-	scheduleErrorChecking() {
 		new Task() {
 
 			@Override
 			public boolean
 			shouldSchedule() {
-				return EditorContext.taskDoesNotExist(EditorContext.LISTENER_TASK);
+				if (Scheduler.this.completionAssistantIsActive) return false;
+				return EditorContext.taskDoesNotExist(Scheduler.FAMILY);
 			}
 
 			@Override
 			public void
 			execute() {
+				EditorContext.cancelErrorCheckingJobs();
 				EventBus.post(new CheckErrorEvent());
 			}
 		}.setRule(Scheduler.RULE)
-			.setFamily(EditorContext.ERROR_CHECKING_TASK)
+			.setFamily(Scheduler.FAMILY)
 			.setDelay(EditorContext.SHORT_DELAY_TIME)
 			.start();
+	}
+
+	@Subscribe
+	public void
+	assistSessionStartedEventHandler(final AssistSessionStartedEvent event) {
+		this.completionAssistantIsActive = true;
+		EditorContext.cancelAllJobs();
+	}
+
+	@Subscribe
+	public void
+	assistSessionEndedEventHandler(final AssistSessionEndedEvent event) {
+		this.completionAssistantIsActive = false;
 	}
 
 	@Override
 	public Instance
 	stop() {
-		EditorContext.cancelErrorCheckingJobs();
+		EditorContext.cancelAllJobs();
 		return super.stop();
 	}
 }
