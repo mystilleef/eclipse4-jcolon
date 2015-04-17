@@ -30,7 +30,7 @@ final class ErrorChecker extends EventBusInstance {
 			public boolean
 			shouldSchedule() {
 				if (ErrorChecker.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_FAMILY);
+				return true;
 			}
 
 			@Override

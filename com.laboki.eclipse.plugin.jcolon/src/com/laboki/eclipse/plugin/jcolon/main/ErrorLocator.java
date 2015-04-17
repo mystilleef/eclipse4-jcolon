@@ -38,7 +38,7 @@ final class ErrorLocator extends EventBusInstance {
 			public boolean
 			shouldSchedule() {
 				if (ErrorLocator.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_FAMILY);
+				return true;
 			}
 
 			@Override

@@ -38,7 +38,7 @@ final class Inserter extends EventBusInstance {
 			public boolean
 			shouldSchedule() {
 				if (Inserter.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(EditorContext.ERROR_CHECKING_FAMILY);
+				return true;
 			}
 
 			@Override
