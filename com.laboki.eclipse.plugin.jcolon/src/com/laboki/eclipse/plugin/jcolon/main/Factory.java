@@ -32,9 +32,7 @@ public enum Factory implements Instance {
 
 		@Override
 		public void
-		partClosed(final IWorkbenchPart part) {
-			PartListener.disableInserterServiceFor(part);
-		}
+		partClosed(final IWorkbenchPart part) {}
 
 		@Override
 		public void
