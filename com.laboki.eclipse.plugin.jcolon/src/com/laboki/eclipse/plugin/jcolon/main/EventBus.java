@@ -1,37 +1,37 @@
 package com.laboki.eclipse.plugin.jcolon.main;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import org.eclipse.core.runtime.jobs.Job;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 
-public final class EventBus {
+public enum EventBus {
+	INSTANCE;
 
-	private static final Executor EXECUTOR = Executors.newCachedThreadPool();
-	protected final AsyncEventBus bus = new AsyncEventBus(EventBus.EXECUTOR);
+	protected static final AsyncEventBus BUS =
+		new AsyncEventBus(Executors.newCachedThreadPool());
 
-	public EventBus() {}
-
-	public void
+	public static void
 	register(final Object object) {
-		this.bus.register(object);
+		EventBus.BUS.register(object);
 	}
 
-	public void
+	public static void
 	unregister(final Object object) {
-		this.bus.unregister(object);
+		EventBus.BUS.unregister(object);
 	}
 
-	public void
+	public static void
 	post(final Object object) {
 		new Task() {
 
 			@Override
 			public void
 			execute() {
-				EventBus.this.bus.post(object);
+				EventBus.BUS.post(object);
 			}
-		}.start();
+		}.setPriority(Job.INTERACTIVE).start();
 	}
 }
