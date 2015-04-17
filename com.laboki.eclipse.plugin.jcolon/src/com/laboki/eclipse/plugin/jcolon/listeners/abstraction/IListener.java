@@ -2,7 +2,9 @@ package com.laboki.eclipse.plugin.jcolon.listeners.abstraction;
 
 public interface IListener {
 
-	void add();
+	void
+	add();
 
-	void remove();
+	void
+	remove();
 }

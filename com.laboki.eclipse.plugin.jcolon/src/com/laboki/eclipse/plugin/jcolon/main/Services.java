@@ -16,12 +16,14 @@ public final class Services implements Instance {
 	private final EventBus eventBus = new EventBus();
 
 	@Override
-	public Instance begin() {
+	public Instance
+	begin() {
 		this.startServices();
 		return this;
 	}
 
-	private void startServices() {
+	private void
+	startServices() {
 		this.startService(new Inserter(this.eventBus));
 		this.startService(new ErrorLocator(this.eventBus));
 		this.startService(new FileSyncer(this.eventBus));
@@ -33,23 +35,27 @@ public final class Services implements Instance {
 		this.startService(new CompletionListener(this.eventBus));
 	}
 
-	private void startService(final Instance instance) {
+	private void
+	startService(final Instance instance) {
 		instance.begin();
 		this.instances.add(instance);
 	}
 
 	@Override
-	public Instance end() {
+	public Instance
+	end() {
 		this.stopServices();
 		return this;
 	}
 
-	private void stopServices() {
+	private void
+	stopServices() {
 		for (final Instance instance : ImmutableList.copyOf(this.instances))
 			this.stopService(instance);
 	}
 
-	private void stopService(final Instance instance) {
+	private void
+	stopService(final Instance instance) {
 		instance.end();
 		this.instances.remove(instance);
 	}

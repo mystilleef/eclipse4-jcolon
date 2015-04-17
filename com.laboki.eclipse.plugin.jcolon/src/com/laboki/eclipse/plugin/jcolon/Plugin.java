@@ -8,11 +8,13 @@ public enum Plugin implements Instance {
 	INSTANCE;
 
 	@Override
-	public Instance begin() {
+	public Instance
+	begin() {
 		new AsyncTask() {
 
 			@Override
-			public void asyncExecute() {
+			public void
+			asyncExecute() {
 				Factory.INSTANCE.begin();
 			}
 		}.begin();
@@ -20,11 +22,13 @@ public enum Plugin implements Instance {
 	}
 
 	@Override
-	public Instance end() {
+	public Instance
+	end() {
 		new AsyncTask() {
 
 			@Override
-			public void asyncExecute() {
+			public void
+			asyncExecute() {
 				Factory.INSTANCE.end();
 			}
 		}.begin();

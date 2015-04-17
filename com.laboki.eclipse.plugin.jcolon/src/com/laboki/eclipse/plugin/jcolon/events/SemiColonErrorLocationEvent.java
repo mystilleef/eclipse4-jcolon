@@ -8,7 +8,8 @@ public final class SemiColonErrorLocationEvent {
 		this.location = location;
 	}
 
-	public int getLocation() {
+	public int
+	getLocation() {
 		return this.location;
 	}
 }

@@ -5,12 +5,14 @@ public class InstanceObject implements Instance {
 	protected InstanceObject() {}
 
 	@Override
-	public Instance begin() {
+	public Instance
+	begin() {
 		return this;
 	}
 
 	@Override
-	public Instance end() {
+	public Instance
+	end() {
 		return this;
 	}
 }
