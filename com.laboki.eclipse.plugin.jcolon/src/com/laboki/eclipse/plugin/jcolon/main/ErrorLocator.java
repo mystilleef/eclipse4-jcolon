@@ -72,7 +72,7 @@ final class ErrorLocator extends EventBusInstance {
 				EventBus.post(new SemiColonErrorLocationEvent(location));
 			}
 		}.setRule(EditorContext.ERROR_CHECKER_RULE)
-			.setFamily(EditorContext.ERROR_CHECKING_FAMILY)
+			.setFamily(EditorContext.ERROR_CHECKER_FAMILY)
 			.setDelay(EditorContext.SHORT_DELAY)
 			.start();
 	}

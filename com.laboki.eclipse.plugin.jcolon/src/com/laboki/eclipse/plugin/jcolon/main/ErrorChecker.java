@@ -59,7 +59,7 @@ final class ErrorChecker extends EventBusInstance {
 				EventBus.post(new LocateSemiColonErrorEvent());
 			}
 		}.setRule(EditorContext.ERROR_CHECKER_RULE)
-			.setFamily(EditorContext.ERROR_CHECKING_FAMILY)
+			.setFamily(EditorContext.ERROR_CHECKER_FAMILY)
 			.setDelay(EditorContext.SHORT_DELAY)
 			.start();
 	}
