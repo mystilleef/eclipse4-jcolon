@@ -109,7 +109,7 @@ public abstract class BaseTask implements Runnable, Instance {
 	}
 
 	protected static boolean
-	taskFamilyDoesNotExists(final Object family) {
+	noTaskFamilyExists(final Object family) {
 		return !BaseTask.taskFamilyExists(family);
 	}
 }

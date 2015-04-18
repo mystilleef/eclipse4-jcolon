@@ -8,6 +8,7 @@ import com.laboki.eclipse.plugin.jcolon.events.CheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
+import com.laboki.eclipse.plugin.jcolon.task.BaseTask;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
@@ -31,7 +32,7 @@ public final class Scheduler extends EventBusInstance {
 			public boolean
 			shouldSchedule() {
 				if (Scheduler.this.completionAssistantIsActive) return false;
-				return EditorContext.taskDoesNotExist(Scheduler.FAMILY);
+				return BaseTask.noTaskFamilyExists(Scheduler.FAMILY);
 			}
 
 			@Override

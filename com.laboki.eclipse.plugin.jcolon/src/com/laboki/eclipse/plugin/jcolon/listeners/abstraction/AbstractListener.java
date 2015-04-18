@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
+import com.laboki.eclipse.plugin.jcolon.task.BaseTask;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
@@ -78,7 +79,7 @@ public abstract class AbstractListener extends EventBusInstance
 			@Override
 			public boolean
 			shouldSchedule() {
-				return EditorContext.taskDoesNotExist(AbstractListener.FAMILY);
+				return BaseTask.noTaskFamilyExists(AbstractListener.FAMILY);
 			}
 
 			@Override

@@ -35,6 +35,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
+import com.laboki.eclipse.plugin.jcolon.task.BaseTask;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
@@ -42,7 +43,7 @@ public enum EditorContext {
 	INSTANCE;
 
 	public static final TaskMutexRule ERROR_CHECKER_RULE = new TaskMutexRule();
-	public static final String ERROR_CHECKING_FAMILY =
+	public static final String ERROR_CHECKER_FAMILY =
 		"jcolon semicolon error checking task";
 	public static final IWorkbench WORKBENCH = PlatformUI.getWorkbench();
 	public static final Display DISPLAY = EditorContext.WORKBENCH.getDisplay();
@@ -186,14 +187,14 @@ public enum EditorContext {
 
 	public static void
 	cancelAllJobs() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_FAMILY,
+		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKER_FAMILY,
 			AbstractListener.FAMILY,
 			Scheduler.FAMILY);
 	}
 
 	public static void
 	cancelErrorCheckingJobs() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKING_FAMILY);
+		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKER_FAMILY);
 	}
 
 	public static void
@@ -253,7 +254,7 @@ public enum EditorContext {
 			@Override
 			public boolean
 			shouldSchedule() {
-				return EditorContext.taskDoesNotExist(Scheduler.FAMILY);
+				return BaseTask.noTaskFamilyExists(Scheduler.FAMILY);
 			}
 
 			@Override
