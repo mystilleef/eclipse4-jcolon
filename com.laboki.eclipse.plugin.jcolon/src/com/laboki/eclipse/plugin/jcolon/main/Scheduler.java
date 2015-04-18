@@ -25,7 +25,7 @@ public final class Scheduler extends EventBusInstance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
-	scheduleCheckErrorEventHandler(final ScheduleCheckErrorEvent event) {
+	eventHandler(final ScheduleCheckErrorEvent event) {
 		new Task() {
 
 			@Override
@@ -49,14 +49,14 @@ public final class Scheduler extends EventBusInstance {
 
 	@Subscribe
 	public void
-	assistSessionStartedEventHandler(final AssistSessionStartedEvent event) {
+	eventHandler(final AssistSessionStartedEvent event) {
 		this.completionAssistantIsActive = true;
 		EditorContext.cancelAllJobs();
 	}
 
 	@Subscribe
 	public void
-	assistSessionEndedEventHandler(final AssistSessionEndedEvent event) {
+	eventHandler(final AssistSessionEndedEvent event) {
 		this.completionAssistantIsActive = false;
 	}
 

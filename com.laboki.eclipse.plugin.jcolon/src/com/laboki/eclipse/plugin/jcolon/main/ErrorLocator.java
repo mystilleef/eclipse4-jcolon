@@ -26,7 +26,7 @@ final class ErrorLocator extends EventBusInstance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
-	locateSemiColonErrorEventHandler(final LocateSemiColonErrorEvent event) {
+	eventHandler(final LocateSemiColonErrorEvent event) {
 		this.locateSemiColonError();
 	}
 
@@ -79,13 +79,13 @@ final class ErrorLocator extends EventBusInstance {
 
 	@Subscribe
 	public void
-	assistSessionStartedEventHandler(final AssistSessionStartedEvent event) {
+	eventHandler(final AssistSessionStartedEvent event) {
 		this.completionAssistantIsActive = true;
 	}
 
 	@Subscribe
 	public void
-	assistSessionEndedEventHandler(final AssistSessionEndedEvent event) {
+	eventHandler(final AssistSessionEndedEvent event) {
 		this.completionAssistantIsActive = false;
 	}
 }

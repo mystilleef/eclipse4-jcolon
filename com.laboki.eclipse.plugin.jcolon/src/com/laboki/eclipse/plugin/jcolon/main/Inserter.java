@@ -31,7 +31,7 @@ final class Inserter extends EventBusInstance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
-	semiColonErrorLocationEventHandler(final SemiColonErrorLocationEvent event) {
+	eventHandler(final SemiColonErrorLocationEvent event) {
 		new AsyncTask() {
 
 			@Override
@@ -99,13 +99,13 @@ final class Inserter extends EventBusInstance {
 
 	@Subscribe
 	public void
-	assistSessionStartedEventHandler(final AssistSessionStartedEvent event) {
+	eventHandler(final AssistSessionStartedEvent event) {
 		this.completionAssistantIsActive = true;
 	}
 
 	@Subscribe
 	public void
-	assistSessionEndedEventHandler(final AssistSessionEndedEvent event) {
+	eventHandler(final AssistSessionEndedEvent event) {
 		this.completionAssistantIsActive = false;
 	}
 }

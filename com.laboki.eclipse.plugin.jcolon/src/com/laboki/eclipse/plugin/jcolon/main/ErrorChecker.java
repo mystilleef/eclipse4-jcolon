@@ -23,7 +23,7 @@ final class ErrorChecker extends EventBusInstance {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
-	checkErrorEventHandler(final CheckErrorEvent event) {
+	eventHandler(final CheckErrorEvent event) {
 		new AsyncTask() {
 
 			@Override
@@ -66,13 +66,13 @@ final class ErrorChecker extends EventBusInstance {
 
 	@Subscribe
 	public void
-	assistSessionStartedEventHandler(final AssistSessionStartedEvent event) {
+	eventHandler(final AssistSessionStartedEvent event) {
 		this.completionAssistantIsActive = true;
 	}
 
 	@Subscribe
 	public void
-	assistSessionEndedEventHandler(final AssistSessionEndedEvent event) {
+	eventHandler(final AssistSessionEndedEvent event) {
 		this.completionAssistantIsActive = false;
 	}
 }
