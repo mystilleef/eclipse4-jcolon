@@ -10,6 +10,7 @@ import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.source.ContentAssistantFacade;
 import org.eclipse.ui.IEditorPart;
 
+import com.google.common.base.Optional;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
@@ -25,9 +26,9 @@ public final class CompletionListener extends EventBusInstance
 	private static final Logger LOGGER =
 		Logger.getLogger(CompletionListener.class.getName());
 	private final IEditorPart editor = EditorContext.getEditor();
-	private final ContentAssistantFacade contentAssistantFacade =
+	private final Optional<ContentAssistantFacade> contentAssistant =
 		this.getContentAssistantFacade();
-	private final IQuickAssistAssistant quickAssistAssistant =
+	private final Optional<IQuickAssistAssistant> quickAssistant =
 		this.getQuickAssistAssistant();
 
 	public CompletionListener() {
@@ -83,8 +84,10 @@ public final class CompletionListener extends EventBusInstance
 
 	private void
 	add() {
-		if (this.contentAssistantFacade != null) this.contentAssistantFacade.addCompletionListener(this);
-		if (this.quickAssistAssistant != null) this.quickAssistAssistant.addCompletionListener(this);
+		if (this.contentAssistant.isPresent()) this.contentAssistant.get()
+			.addCompletionListener(this);
+		if (this.quickAssistant.isPresent()) this.quickAssistant.get()
+			.addCompletionListener(this);
 	}
 
 	@Override
@@ -106,27 +109,21 @@ public final class CompletionListener extends EventBusInstance
 
 	private void
 	remove() {
-		if (this.contentAssistantFacade != null) this.contentAssistantFacade.removeCompletionListener(this);
-		if (this.quickAssistAssistant != null) this.quickAssistAssistant.removeCompletionListener(this);
+		if (this.contentAssistant.isPresent()) this.contentAssistant.get()
+			.removeCompletionListener(this);
+		if (this.quickAssistant.isPresent()) this.quickAssistant.get()
+			.removeCompletionListener(this);
 	}
 
-	private ContentAssistantFacade
+	private Optional<ContentAssistantFacade>
 	getContentAssistantFacade() {
-		try {
-			return EditorContext.getView(this.editor).getContentAssistantFacade();
-		}
-		catch (final Exception e) {
-			return null;
-		}
+		return Optional.fromNullable(EditorContext.getView(this.editor)
+			.getContentAssistantFacade());
 	}
 
-	private IQuickAssistAssistant
+	private Optional<IQuickAssistAssistant>
 	getQuickAssistAssistant() {
-		try {
-			return EditorContext.getView(this.editor).getQuickAssistAssistant();
-		}
-		catch (final Exception e) {
-			return null;
-		}
+		return Optional.fromNullable(EditorContext.getView(this.editor)
+			.getQuickAssistAssistant());
 	}
 }
