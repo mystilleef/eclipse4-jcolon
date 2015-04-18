@@ -34,7 +34,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
-import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
+import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.BaseListener;
 import com.laboki.eclipse.plugin.jcolon.task.BaseTask;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
@@ -188,7 +188,7 @@ public enum EditorContext {
 	public static void
 	cancelAllJobs() {
 		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKER_FAMILY,
-			AbstractListener.FAMILY,
+			BaseListener.FAMILY,
 			Scheduler.FAMILY);
 	}
 

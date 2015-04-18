@@ -10,7 +10,7 @@ import com.laboki.eclipse.plugin.jcolon.task.BaseTask;
 import com.laboki.eclipse.plugin.jcolon.task.Task;
 import com.laboki.eclipse.plugin.jcolon.task.TaskMutexRule;
 
-public abstract class AbstractListener extends EventBusInstance
+public abstract class BaseListener extends EventBusInstance
 	implements
 		IListener {
 
@@ -18,9 +18,9 @@ public abstract class AbstractListener extends EventBusInstance
 	public static final String FAMILY = "ABSTRACT_LISTENER_FAMILY";
 	private static final TaskMutexRule RULE = new TaskMutexRule();
 	private static final Logger LOGGER =
-		Logger.getLogger(AbstractListener.class.getName());
+		Logger.getLogger(BaseListener.class.getName());
 
-	public AbstractListener() {
+	public BaseListener() {
 		super();
 	}
 
@@ -37,7 +37,7 @@ public abstract class AbstractListener extends EventBusInstance
 			this.add();
 		}
 		catch (final Exception e) {
-			AbstractListener.LOGGER.log(Level.WARNING, e.getMessage());
+			BaseListener.LOGGER.log(Level.WARNING, e.getMessage());
 		}
 	}
 
@@ -58,7 +58,7 @@ public abstract class AbstractListener extends EventBusInstance
 			this.remove();
 		}
 		catch (final Exception e) {
-			AbstractListener.LOGGER.log(Level.FINEST, e.getMessage());
+			BaseListener.LOGGER.log(Level.FINEST, e.getMessage());
 		}
 	}
 
@@ -69,7 +69,7 @@ public abstract class AbstractListener extends EventBusInstance
 	protected final static void
 	scheduleErrorChecking() {
 		EditorContext.cancelAllJobs();
-		AbstractListener.scheduleTask();
+		BaseListener.scheduleTask();
 	}
 
 	protected static void
@@ -79,7 +79,7 @@ public abstract class AbstractListener extends EventBusInstance
 			@Override
 			public boolean
 			shouldSchedule() {
-				return BaseTask.noTaskFamilyExists(AbstractListener.FAMILY);
+				return BaseTask.noTaskFamilyExists(BaseListener.FAMILY);
 			}
 
 			@Override
@@ -87,9 +87,9 @@ public abstract class AbstractListener extends EventBusInstance
 			execute() {
 				EditorContext.scheduleErrorChecking();
 			}
-		}.setRule(AbstractListener.RULE)
-			.setFamily(AbstractListener.FAMILY)
-			.setDelay(AbstractListener.ONE_SECOND)
+		}.setRule(BaseListener.RULE)
+			.setFamily(BaseListener.FAMILY)
+			.setDelay(BaseListener.ONE_SECOND)
 			.start();
 	}
 }

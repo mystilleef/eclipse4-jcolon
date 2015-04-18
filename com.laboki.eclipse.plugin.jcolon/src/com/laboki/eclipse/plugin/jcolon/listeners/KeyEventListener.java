@@ -4,10 +4,10 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Control;
 
-import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
+import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.BaseListener;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 
-public final class KeyEventListener extends AbstractListener
+public final class KeyEventListener extends BaseListener
 	implements
 		KeyListener {
 
@@ -27,7 +27,7 @@ public final class KeyEventListener extends AbstractListener
 	@Override
 	public void
 	keyReleased(final KeyEvent arg0) {
-		AbstractListener.scheduleErrorChecking();
+		BaseListener.scheduleErrorChecking();
 	}
 
 	@Override

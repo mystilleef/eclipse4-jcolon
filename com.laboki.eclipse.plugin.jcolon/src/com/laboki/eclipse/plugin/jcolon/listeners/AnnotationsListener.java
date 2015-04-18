@@ -3,10 +3,10 @@ package com.laboki.eclipse.plugin.jcolon.listeners;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelListener;
 
-import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.AbstractListener;
+import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.BaseListener;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 
-public final class AnnotationsListener extends AbstractListener
+public final class AnnotationsListener extends BaseListener
 	implements
 		IAnnotationModelListener {
 
@@ -20,7 +20,7 @@ public final class AnnotationsListener extends AbstractListener
 	@Override
 	public void
 	modelChanged(final IAnnotationModel arg0) {
-		AbstractListener.scheduleErrorChecking();
+		BaseListener.scheduleErrorChecking();
 	}
 
 	@Override
