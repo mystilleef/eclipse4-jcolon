@@ -59,7 +59,7 @@ final class ErrorLocator extends EventBusInstance {
 
 			private void
 			tryToFindErrorLocation() throws Exception {
-				if (this.hasMissingSemiColonError()) this.postEvent(ErrorLocator.this.problem.location());
+				if (this.hasMissingSemiColonError()) this.postEvent();
 			}
 
 			private boolean
@@ -68,8 +68,23 @@ final class ErrorLocator extends EventBusInstance {
 			}
 
 			private void
-			postEvent(final int location) {
-				EventBus.post(new SemiColonErrorLocationEvent(location));
+			postEvent() {
+				try {
+					EventBus.post(this.newErrorEvent());
+				}
+				catch (final Exception e) {
+					ErrorLocator.LOGGER.log(Level.WARNING, e.getMessage(), e);
+				}
+			}
+
+			private SemiColonErrorLocationEvent
+			newErrorEvent() throws Exception {
+				return new SemiColonErrorLocationEvent(this.getErrorLocation());
+			}
+
+			private int
+			getErrorLocation() throws Exception {
+				return ErrorLocator.this.problem.location();
 			}
 		}.setRule(EditorContext.ERROR_CHECKER_RULE)
 			.setFamily(EditorContext.ERROR_CHECKER_FAMILY)
