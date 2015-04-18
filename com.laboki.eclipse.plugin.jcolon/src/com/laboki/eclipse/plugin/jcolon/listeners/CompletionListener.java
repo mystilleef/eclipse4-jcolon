@@ -27,9 +27,9 @@ public final class CompletionListener extends EventBusInstance
 		Logger.getLogger(CompletionListener.class.getName());
 	private final IEditorPart editor = EditorContext.getEditor();
 	private final Optional<ContentAssistantFacade> contentAssistant =
-		this.getContentAssistantFacade();
+		this.getContentAssistant();
 	private final Optional<IQuickAssistAssistant> quickAssistant =
-		this.getQuickAssistAssistant();
+		this.getQuickAssistant();
 
 	public CompletionListener() {
 		super();
@@ -116,13 +116,13 @@ public final class CompletionListener extends EventBusInstance
 	}
 
 	private Optional<ContentAssistantFacade>
-	getContentAssistantFacade() {
+	getContentAssistant() {
 		return Optional.fromNullable(EditorContext.getView(this.editor)
 			.getContentAssistantFacade());
 	}
 
 	private Optional<IQuickAssistAssistant>
-	getQuickAssistAssistant() {
+	getQuickAssistant() {
 		return Optional.fromNullable(EditorContext.getView(this.editor)
 			.getQuickAssistAssistant());
 	}
