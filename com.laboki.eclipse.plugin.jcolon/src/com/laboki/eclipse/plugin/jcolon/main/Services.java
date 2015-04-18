@@ -48,6 +48,7 @@ public final class Services implements Instance {
 
 	private void
 	stopServices() {
+		EditorContext.cancelAllJobs();
 		for (final Instance instance : ImmutableList.copyOf(this.instances))
 			this.stopService(instance);
 	}
