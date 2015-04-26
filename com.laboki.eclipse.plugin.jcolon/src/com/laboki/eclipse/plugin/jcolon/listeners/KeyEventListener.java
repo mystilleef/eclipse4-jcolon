@@ -13,7 +13,7 @@ public final class KeyEventListener extends BaseListener
 		KeyListener {
 
 	private final Optional<Control> control =
-		Optional.fromNullable(EditorContext.getControl(EditorContext.getEditor()));
+		EditorContext.getControl(EditorContext.getEditor());
 
 	public KeyEventListener() {
 		super();

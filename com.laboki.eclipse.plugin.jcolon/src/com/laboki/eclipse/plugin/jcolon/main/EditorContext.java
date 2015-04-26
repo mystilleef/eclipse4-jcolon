@@ -19,13 +19,19 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.laboki.eclipse.plugin.jcolon.events.ScheduleCheckErrorEvent;
 import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.BaseListener;
@@ -67,52 +73,78 @@ public enum EditorContext {
 		return EditorContext.DISPLAY;
 	}
 
-	public static Shell
+	public static Optional<Shell>
 	getShell() {
-		return EditorContext.WORKBENCH.getModalDialogShellProvider().getShell();
+		return Optional.fromNullable(EditorContext.WORKBENCH.getModalDialogShellProvider()
+			.getShell());
 	}
 
-	public static IEditorPart
+	public static Optional<IEditorPart>
 	getEditor() {
-		return EditorContext.WORKBENCH.getActiveWorkbenchWindow()
-			.getActivePage()
-			.getActiveEditor();
+		final Optional<IWorkbenchWindow> window =
+			EditorContext.getActiveWorkbenchWindow();
+		if (!window.isPresent()) return Optional.absent();
+		final Optional<IWorkbenchPage> page = EditorContext.getActivePage(window);
+		if (!page.isPresent()) return Optional.absent();
+		return Optional.fromNullable(page.get().getActiveEditor());
 	}
 
-	public static IPartService
+	private static Optional<IWorkbenchWindow>
+	getActiveWorkbenchWindow() {
+		return Optional.fromNullable(EditorContext.WORKBENCH.getActiveWorkbenchWindow());
+	}
+
+	private static Optional<IWorkbenchPage>
+	getActivePage(final Optional<IWorkbenchWindow> window) {
+		if (!window.isPresent()) return Optional.absent();
+		return Optional.fromNullable(window.get().getActivePage());
+	}
+
+	public static Optional<IPartService>
 	getPartService() {
-		return (IPartService) EditorContext.WORKBENCH.getActiveWorkbenchWindow()
-			.getService(IPartService.class);
+		final Optional<IWorkbenchWindow> window =
+			EditorContext.getActiveWorkbenchWindow();
+		if (!window.isPresent()) return Optional.absent();
+		return Optional.fromNullable((IPartService) window.get()
+			.getService(IPartService.class));
 	}
 
-	public static Control
-	getControl(final IEditorPart editor) {
-		return (Control) editor.getAdapter(Control.class);
+	public static Optional<Control>
+	getControl(final Optional<IEditorPart> editor) {
+		if (!editor.isPresent()) return Optional.absent();
+		return Optional.fromNullable((Control) editor.get()
+			.getAdapter(Control.class));
 	}
 
-	public static StyledText
-	getBuffer(final IEditorPart editor) {
-		return (StyledText) editor.getAdapter(Control.class);
+	public static Optional<StyledText>
+	getBuffer(final Optional<IEditorPart> editor) {
+		if (!editor.isPresent()) return Optional.absent();
+		return Optional.fromNullable((StyledText) editor.get()
+			.getAdapter(Control.class));
 	}
 
-	public static SourceViewer
-	getView(final IEditorPart editor) {
-		return (SourceViewer) editor.getAdapter(ITextOperationTarget.class);
+	public static Optional<SourceViewer>
+	getView(final Optional<IEditorPart> editor) {
+		if (!editor.isPresent()) return Optional.absent();
+		return Optional.fromNullable((SourceViewer) editor.get()
+			.getAdapter(ITextOperationTarget.class));
 	}
 
-	public static IAnnotationModel
-	getAnnotationModel() throws Exception {
-		return EditorContext.getView(EditorContext.getEditor())
-			.getAnnotationModel();
+	public static Optional<IAnnotationModel>
+	getAnnotationModel(final Optional<IEditorPart> editor) {
+		if (!editor.isPresent()) return Optional.absent();
+		final Optional<SourceViewer> view = EditorContext.getView(editor);
+		if (!view.isPresent()) return Optional.absent();
+		return Optional.fromNullable(view.get().getAnnotationModel());
 	}
 
 	public static boolean
-	hasJDTErrors(final IEditorPart editor) {
+	hasJDTErrors(final Optional<IEditorPart> editor) {
 		return EditorContext.hasJDTAnnotationError(editor);
 	}
 
 	private static boolean
-	hasJDTAnnotationError(final IEditorPart editor) {
+	hasJDTAnnotationError(final Optional<IEditorPart> editor) {
 		try {
 			return EditorContext.tryHasJDTAnnotationError(editor);
 		}
@@ -123,11 +155,11 @@ public enum EditorContext {
 	}
 
 	private static boolean
-	tryHasJDTAnnotationError(final IEditorPart editor) {
-		final Iterator<Annotation> iterator =
-			EditorContext.getView(editor)
-				.getAnnotationModel()
-				.getAnnotationIterator();
+	tryHasJDTAnnotationError(final Optional<IEditorPart> editor) {
+		final Optional<IAnnotationModel> model =
+			EditorContext.getAnnotationModel(editor);
+		if (!model.isPresent()) return false;
+		final Iterator<Annotation> iterator = model.get().getAnnotationIterator();
 		while (iterator.hasNext())
 			if (EditorContext.isJdtError(iterator)) return true;
 		return false;
@@ -141,10 +173,11 @@ public enum EditorContext {
 	}
 
 	public static void
-	syncFile(final IEditorPart editor) {
+	syncFile(final Optional<IEditorPart> editor) {
 		try {
-			EditorContext.getFile(editor).refreshLocal(IResource.DEPTH_INFINITE,
-				null);
+			final Optional<IFile> file = EditorContext.getFile(editor);
+			if (!file.isPresent()) return;
+			file.get().refreshLocal(IResource.DEPTH_INFINITE, null);
 		}
 		catch (final Exception e) {
 			EditorContext.LOGGER.log(Level.WARNING, e.getMessage());
@@ -152,29 +185,44 @@ public enum EditorContext {
 	}
 
 	public static boolean
-	isNotAJavaEditor(final IEditorPart part) {
+	isNotAJavaEditor(final Optional<IEditorPart> part) {
 		return !EditorContext.isAJavaEditor(part);
 	}
 
 	public static boolean
-	isAJavaEditor(final IEditorPart part) {
+	isAJavaEditor(final Optional<IEditorPart> part) {
 		try {
-			return JavaCore.isJavaLikeFileName(EditorContext.getFile(part).getName());
+			if (!part.isPresent()) return false;
+			final Optional<IFile> file = EditorContext.getFile(part);
+			if (!file.isPresent()) return false;
+			return JavaCore.isJavaLikeFileName(file.get().getName());
 		}
 		catch (final Exception e) {
 			return false;
 		}
 	}
 
-	public static IFile
-	getFile(final IEditorPart editor) throws Exception {
-		return ((FileEditorInput) editor.getEditorInput()).getFile();
+	public static Optional<IFile>
+	getFile(final Optional<IEditorPart> editor) {
+		if (!editor.isPresent()) return Optional.absent();
+		final IEditorInput input = editor.get().getEditorInput();
+		if (!(input instanceof IFileEditorInput)) return Optional.absent();
+		return Optional.fromNullable(((FileEditorInput) input).getFile());
 	}
 
-	public static IDocument
-	getDocument(final IEditorPart editor) {
-		return ((ITextEditor) editor).getDocumentProvider()
-			.getDocument(((ITextEditor) editor).getEditorInput());
+	public static Optional<IDocument>
+	getDocument(final Optional<IEditorPart> editor) {
+		if (!editor.isPresent()) return Optional.absent();
+		final Optional<IDocumentProvider> provider =
+			EditorContext.getDocumentProvider(editor);
+		if (!provider.isPresent()) return Optional.absent();
+		return Optional.fromNullable(provider.get()
+			.getDocument(((ITextEditor) editor.get()).getEditorInput()));
+	}
+
+	private static Optional<IDocumentProvider>
+	getDocumentProvider(final Optional<IEditorPart> editor) {
+		return Optional.fromNullable(((ITextEditor) editor.get()).getDocumentProvider());
 	}
 
 	public static void
@@ -196,7 +244,7 @@ public enum EditorContext {
 	}
 
 	public static boolean
-	isInEditMode(final IEditorPart editor) {
+	isInEditMode(final Optional<IEditorPart> editor) {
 		try {
 			return EditorContext.hasSelection(editor)
 				|| EditorContext.isInLinkMode(editor);
@@ -207,27 +255,33 @@ public enum EditorContext {
 	}
 
 	public static boolean
-	hasSelection(final IEditorPart editor) {
-		return (EditorContext.getBuffer(editor).getSelectionCount() > 0)
+	hasSelection(final Optional<IEditorPart> editor) {
+		if (!editor.isPresent()) return false;
+		final Optional<StyledText> buffer = EditorContext.getBuffer(editor);
+		if (!buffer.isPresent()) return false;
+		return (buffer.get().getSelectionCount() > 0)
 			|| EditorContext.hasBlockSelection(editor);
 	}
 
 	public static boolean
-	hasBlockSelection(final IEditorPart editor) {
-		return EditorContext.getBuffer(editor).getBlockSelection();
+	hasBlockSelection(final Optional<IEditorPart> editor) {
+		if (!editor.isPresent()) return false;
+		final Optional<StyledText> buffer = EditorContext.getBuffer(editor);
+		if (!buffer.isPresent()) return false;
+		return buffer.get().getBlockSelection();
 	}
 
 	public static boolean
-	isInLinkMode(final IEditorPart editor) {
+	isInLinkMode(final Optional<IEditorPart> editor) {
 		return EditorContext.hasLinkAnnotations(editor);
 	}
 
 	private static boolean
-	hasLinkAnnotations(final IEditorPart editor) {
-		final Iterator<Annotation> iterator =
-			EditorContext.getView(editor)
-				.getAnnotationModel()
-				.getAnnotationIterator();
+	hasLinkAnnotations(final Optional<IEditorPart> editor) {
+		final Optional<IAnnotationModel> model =
+			EditorContext.getAnnotationModel(editor);
+		if (!model.isPresent()) return false;
+		final Iterator<Annotation> iterator = model.get().getAnnotationIterator();
 		while (iterator.hasNext())
 			if (EditorContext.isLinkModeAnnotation(iterator)) return true;
 		return false;

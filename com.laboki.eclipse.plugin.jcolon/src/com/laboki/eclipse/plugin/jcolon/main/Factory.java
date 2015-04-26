@@ -7,6 +7,7 @@ import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IWorkbenchPart;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
@@ -16,7 +17,7 @@ public enum Factory implements Instance {
 
 	private static final Map<IEditorPart, Instance> SERVICES_MAP =
 		Maps.newHashMap();
-	private static final IPartService PART_SERVICE =
+	private static final Optional<IPartService> PART_SERVICE =
 		EditorContext.getPartService();
 	private static final PartListener PART_LISTENER = new PartListener();
 
@@ -87,7 +88,7 @@ public enum Factory implements Instance {
 	private static boolean
 	isValidPart(final IWorkbenchPart part) {
 		if (Factory.isNotEditorPart(part)) return false;
-		if (EditorContext.isNotAJavaEditor((IEditorPart) part)) return false;
+		if (EditorContext.isNotAJavaEditor(Optional.fromNullable((IEditorPart) part))) return false;
 		return true;
 	}
 
@@ -128,15 +129,18 @@ public enum Factory implements Instance {
 	@Override
 	public Instance
 	start() {
-		Factory.enableAutomaticInserterFor(Factory.PART_SERVICE.getActivePart());
-		Factory.PART_SERVICE.addPartListener(Factory.PART_LISTENER);
+		if (!Factory.PART_SERVICE.isPresent()) return this;
+		Factory.enableAutomaticInserterFor(Factory.PART_SERVICE.get()
+			.getActivePart());
+		Factory.PART_SERVICE.get().addPartListener(Factory.PART_LISTENER);
 		return this;
 	}
 
 	@Override
 	public Instance
 	stop() {
-		Factory.PART_SERVICE.removePartListener(Factory.PART_LISTENER);
+		if (!Factory.PART_SERVICE.isPresent()) return this;
+		Factory.PART_SERVICE.get().removePartListener(Factory.PART_LISTENER);
 		Factory.stopAllInserterServices();
 		return this;
 	}

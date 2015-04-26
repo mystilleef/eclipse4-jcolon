@@ -2,6 +2,7 @@ package com.laboki.eclipse.plugin.jcolon.main;
 
 import org.eclipse.ui.IEditorPart;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
@@ -13,7 +14,7 @@ import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 final class ErrorChecker extends EventBusInstance {
 
-	protected final IEditorPart editor = EditorContext.getEditor();
+	protected final Optional<IEditorPart> editor = EditorContext.getEditor();
 	protected boolean completionAssistantIsActive;
 
 	public ErrorChecker() {

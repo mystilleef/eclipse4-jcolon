@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
+import com.google.common.base.Optional;
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
@@ -20,8 +21,9 @@ final class Inserter extends EventBusInstance {
 		Logger.getLogger(Inserter.class.getName());
 	private static final String SEMICOLON = ";";
 	protected final Problem problem = new Problem();
-	protected final IEditorPart editor = EditorContext.getEditor();
-	protected final IDocument document = EditorContext.getDocument(this.editor);
+	protected final Optional<IEditorPart> editor = EditorContext.getEditor();
+	protected final Optional<IDocument> document =
+		EditorContext.getDocument(this.editor);
 	protected boolean completionAssistantIsActive;
 
 	public Inserter() {
@@ -60,7 +62,8 @@ final class Inserter extends EventBusInstance {
 			private void
 			tryToInsertSemiColon(final int location) throws Exception {
 				if (this.cannotInsertSemiColon(location)) return;
-				Inserter.this.document.replace(location, 0, Inserter.SEMICOLON);
+				if (!Inserter.this.document.isPresent()) return;
+				Inserter.this.document.get().replace(location, 0, Inserter.SEMICOLON);
 			}
 
 			private boolean
@@ -73,13 +76,15 @@ final class Inserter extends EventBusInstance {
 			private boolean
 			semiColonIsAlreadyInserted(final int location) throws Exception {
 				if (this.isEndOfDocument(location)) return false;
-				return String.valueOf(Inserter.this.document.getChar(location))
+				if (!Inserter.this.document.isPresent()) return false;
+				return String.valueOf(Inserter.this.document.get().getChar(location))
 					.equals(Inserter.SEMICOLON);
 			}
 
 			private boolean
 			isEndOfDocument(final int location) {
-				return Inserter.this.document.getLength() == location;
+				if (!Inserter.this.document.isPresent()) return false;
+				return Inserter.this.document.get().getLength() == location;
 			}
 
 			private boolean

@@ -8,6 +8,7 @@ import org.eclipse.jface.text.contentassist.ICompletionListener;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.source.ContentAssistantFacade;
+import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.ui.IEditorPart;
 
 import com.google.common.base.Optional;
@@ -23,9 +24,7 @@ public final class CompletionListener extends EventBusInstance
 	implements
 		ICompletionListener {
 
-	private static final Logger LOGGER =
-		Logger.getLogger(CompletionListener.class.getName());
-	private final IEditorPart editor = EditorContext.getEditor();
+	private final Optional<IEditorPart> editor = EditorContext.getEditor();
 	private final Optional<ContentAssistantFacade> contentAssistant =
 		this.getContentAssistant();
 	private final Optional<IQuickAssistAssistant> quickAssistant =
@@ -68,18 +67,8 @@ public final class CompletionListener extends EventBusInstance
 	@Override
 	public Instance
 	start() {
-		this.tryToAdd();
+		this.add();
 		return super.start();
-	}
-
-	private void
-	tryToAdd() {
-		try {
-			this.add();
-		}
-		catch (final Exception e) {
-			CompletionListener.LOGGER.log(Level.WARNING, e.getMessage());
-		}
 	}
 
 	private void
@@ -93,18 +82,8 @@ public final class CompletionListener extends EventBusInstance
 	@Override
 	public Instance
 	stop() {
-		this.tryToRemove();
+		this.remove();
 		return super.stop();
-	}
-
-	private void
-	tryToRemove() {
-		try {
-			this.remove();
-		}
-		catch (final Exception e) {
-			CompletionListener.LOGGER.log(Level.WARNING, e.getMessage());
-		}
 	}
 
 	private void
@@ -117,13 +96,15 @@ public final class CompletionListener extends EventBusInstance
 
 	private Optional<ContentAssistantFacade>
 	getContentAssistant() {
-		return Optional.fromNullable(EditorContext.getView(this.editor)
-			.getContentAssistantFacade());
+		final Optional<SourceViewer> view = EditorContext.getView(this.editor);
+		if (!view.isPresent()) return Optional.absent();
+		return Optional.fromNullable(view.get().getContentAssistantFacade());
 	}
 
 	private Optional<IQuickAssistAssistant>
 	getQuickAssistant() {
-		return Optional.fromNullable(EditorContext.getView(this.editor)
-			.getQuickAssistAssistant());
+		final Optional<SourceViewer> view = EditorContext.getView(this.editor);
+		if (!view.isPresent()) return Optional.absent();
+		return Optional.fromNullable(view.get().getQuickAssistAssistant());
 	}
 }

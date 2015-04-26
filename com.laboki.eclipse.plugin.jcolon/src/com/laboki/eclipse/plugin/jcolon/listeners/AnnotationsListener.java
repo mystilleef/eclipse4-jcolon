@@ -2,6 +2,7 @@ package com.laboki.eclipse.plugin.jcolon.listeners;
 
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModelListener;
+import org.eclipse.ui.IEditorPart;
 
 import com.google.common.base.Optional;
 import com.laboki.eclipse.plugin.jcolon.listeners.abstraction.BaseListener;
@@ -12,7 +13,7 @@ public final class AnnotationsListener extends BaseListener
 		IAnnotationModelListener {
 
 	private final Optional<IAnnotationModel> annotationModel =
-		Optional.fromNullable(AnnotationsListener.getAnnotationModel());
+		AnnotationsListener.getAnnotationModel();
 
 	public AnnotationsListener() {
 		super();
@@ -38,13 +39,10 @@ public final class AnnotationsListener extends BaseListener
 		this.annotationModel.get().removeAnnotationModelListener(this);
 	}
 
-	private static IAnnotationModel
+	private static Optional<IAnnotationModel>
 	getAnnotationModel() {
-		try {
-			return EditorContext.getAnnotationModel();
-		}
-		catch (final Exception e) {
-			return null;
-		}
+		final Optional<IEditorPart> editor = EditorContext.getEditor();
+		if (!editor.isPresent()) return Optional.absent();
+		return EditorContext.getAnnotationModel(editor);
 	}
 }

@@ -3,6 +3,7 @@ package com.laboki.eclipse.plugin.jcolon.main;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.compiler.IProblem;
@@ -10,6 +11,8 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.ui.IEditorPart;
+
+import com.google.common.base.Optional;
 
 final class Problem {
 
@@ -20,22 +23,20 @@ final class Problem {
 			IProblem.ParsingErrorInsertToCompleteScope,
 			IProblem.ParsingErrorInsertTokenAfter,
 			IProblem.ParsingErrorInsertTokenBefore);
-	private final IEditorPart editor = EditorContext.getEditor();
-	private final ICompilationUnit compilationUnit = this.getCompilationUnit();
+	private final Optional<IEditorPart> editor = EditorContext.getEditor();
+	private final Optional<ICompilationUnit> compilationUnit =
+		this.getCompilationUnit();
 
 	public int
 	location() throws Exception {
 		return this.getSemiColonProblem().getSourceEnd() + 1;
 	}
 
-	private ICompilationUnit
+	private Optional<ICompilationUnit>
 	getCompilationUnit() {
-		try {
-			return JavaCore.createCompilationUnitFrom(EditorContext.getFile(this.editor));
-		}
-		catch (final Exception e) {
-			return null;
-		}
+		final Optional<IFile> file = EditorContext.getFile(this.editor);
+		if (!file.isPresent()) return Optional.absent();
+		return Optional.fromNullable(JavaCore.createCompilationUnitFrom(file.get()));
 	}
 
 	public boolean
@@ -53,19 +54,17 @@ final class Problem {
 
 	private IProblem[]
 	getCompilerProblems() {
-		try {
-			return this.createCompilationUnitNode().getProblems();
-		}
-		catch (final Exception e) {
-			return new IProblem[0];
-		}
+		final Optional<CompilationUnit> node = this.createCompilationUnitNode();
+		if (!node.isPresent()) return new IProblem[0];
+		return node.get().getProblems();
 	}
 
-	private CompilationUnit
+	private Optional<CompilationUnit>
 	createCompilationUnitNode() {
 		final ASTParser parser = ASTParser.newParser(AST.JLS8);
-		parser.setSource(this.compilationUnit);
-		return (CompilationUnit) parser.createAST(null);
+		if (!this.compilationUnit.isPresent()) return Optional.absent();
+		parser.setSource(this.compilationUnit.get());
+		return Optional.fromNullable((CompilationUnit) parser.createAST(null));
 	}
 
 	private static boolean

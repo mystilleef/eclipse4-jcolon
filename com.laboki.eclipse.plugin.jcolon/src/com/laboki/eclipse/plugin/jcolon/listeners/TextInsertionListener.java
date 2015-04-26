@@ -13,7 +13,7 @@ public final class TextInsertionListener extends BaseListener
 		VerifyListener {
 
 	private final Optional<StyledText> buffer =
-		Optional.fromNullable(EditorContext.getBuffer(EditorContext.getEditor()));
+		EditorContext.getBuffer(EditorContext.getEditor());
 
 	public TextInsertionListener() {
 		super();
