@@ -2,11 +2,8 @@ package com.laboki.eclipse.plugin.jcolon.main;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.JavaCore;
@@ -50,8 +47,6 @@ public enum EditorContext {
 	public static final IJobManager JOB_MANAGER = Job.getJobManager();
 	public static final int SHORT_DELAY = 60;
 	public static final int LONG_DELAY_TIME = 1000;
-	private static final Logger LOGGER =
-		Logger.getLogger(EditorContext.class.getName());
 	private static final String LINK_SLAVE =
 		"org.eclipse.ui.internal.workbench.texteditor.link.slave";
 	private static final String LINK_MASTER =
@@ -132,7 +127,6 @@ public enum EditorContext {
 
 	public static Optional<IAnnotationModel>
 	getAnnotationModel(final Optional<IEditorPart> editor) {
-		if (!editor.isPresent()) return Optional.absent();
 		final Optional<SourceViewer> view = EditorContext.getView(editor);
 		if (!view.isPresent()) return Optional.absent();
 		return Optional.fromNullable(view.get().getAnnotationModel());
@@ -145,17 +139,6 @@ public enum EditorContext {
 
 	private static boolean
 	hasJDTAnnotationError(final Optional<IEditorPart> editor) {
-		try {
-			return EditorContext.tryHasJDTAnnotationError(editor);
-		}
-		catch (final Exception e) {
-			EditorContext.LOGGER.log(Level.WARNING, e.getMessage());
-		}
-		return false;
-	}
-
-	private static boolean
-	tryHasJDTAnnotationError(final Optional<IEditorPart> editor) {
 		final Optional<IAnnotationModel> model =
 			EditorContext.getAnnotationModel(editor);
 		if (!model.isPresent()) return false;
@@ -172,18 +155,6 @@ public enum EditorContext {
 			.equals(EditorContext.JDT_ANNOTATION_ERROR);
 	}
 
-	public static void
-	syncFile(final Optional<IEditorPart> editor) {
-		try {
-			final Optional<IFile> file = EditorContext.getFile(editor);
-			if (!file.isPresent()) return;
-			file.get().refreshLocal(IResource.DEPTH_INFINITE, null);
-		}
-		catch (final Exception e) {
-			EditorContext.LOGGER.log(Level.WARNING, e.getMessage());
-		}
-	}
-
 	public static boolean
 	isNotAJavaEditor(final Optional<IEditorPart> part) {
 		return !EditorContext.isAJavaEditor(part);
@@ -191,15 +162,10 @@ public enum EditorContext {
 
 	public static boolean
 	isAJavaEditor(final Optional<IEditorPart> part) {
-		try {
-			if (!part.isPresent()) return false;
-			final Optional<IFile> file = EditorContext.getFile(part);
-			if (!file.isPresent()) return false;
-			return JavaCore.isJavaLikeFileName(file.get().getName());
-		}
-		catch (final Exception e) {
-			return false;
-		}
+		if (!part.isPresent()) return false;
+		final Optional<IFile> file = EditorContext.getFile(part);
+		if (!file.isPresent()) return false;
+		return JavaCore.isJavaLikeFileName(file.get().getName());
 	}
 
 	public static Optional<IFile>
@@ -245,13 +211,8 @@ public enum EditorContext {
 
 	public static boolean
 	isInEditMode(final Optional<IEditorPart> editor) {
-		try {
-			return EditorContext.hasSelection(editor)
-				|| EditorContext.isInLinkMode(editor);
-		}
-		catch (final Exception e) {
-			return true;
-		}
+		return EditorContext.hasSelection(editor)
+			|| EditorContext.isInLinkMode(editor);
 	}
 
 	public static boolean
