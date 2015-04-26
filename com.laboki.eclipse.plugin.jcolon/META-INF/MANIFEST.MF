@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.laboki.eclipse.plugin.jcolon;singleton:=true
-Bundle-Version: 20150418
+Bundle-Version: 20150426
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ClassPath: .,
  guava-14.0.1.jar
@@ -11,8 +11,7 @@ Require-Bundle: org.eclipse.ui;bundle-version="3.104.0",
  org.eclipse.core.resources;bundle-version="3.8.1",
  org.eclipse.ui.ide;bundle-version="3.8.2",
  org.eclipse.jface.text;bundle-version="3.8.2",
- org.eclipse.core.runtime;bundle-version="3.8.0",
- org.eclipse.ui.console;bundle-version="3.5.300"
+ org.eclipse.core.runtime;bundle-version="3.8.0"
 Export-Package: com.google.common.annotations,
  com.google.common.base;uses:="new com.google.common.base",
  com.google.common.base.internal;x-internal:=true,
@@ -54,18 +53,14 @@ Export-Package: com.google.common.annotations,
    com.laboki.eclipse.plugin.jcolon.listeners.abstraction",
  com.laboki.eclipse.plugin.jcolon.listeners.abstraction;uses:="com.laboki.eclipse.plugin.jcolon.instance",
  com.laboki.eclipse.plugin.jcolon.main;
-  uses:="com.laboki.eclipse.plugin.jcolon.task,
-   org.eclipse.jface.text.source,
-   org.eclipse.jface.text,
-   org.eclipse.swt.widgets,
-   com.laboki.eclipse.plugin.jcolon.events,
-   com.laboki.eclipse.plugin.jcolon.instance,
+  uses:="com.laboki.eclipse.plugin.jcolon.instance,
+   com.laboki.eclipse.plugin.jcolon.task,
    org.eclipse.core.runtime.jobs,
    org.eclipse.ui,
-   org.eclipse.ui.console,
-   org.eclipse.swt.custom,
+   com.google.common.base,
+   org.eclipse.swt.widgets,
    com.google.common.eventbus,
-   org.eclipse.core.resources",
+   com.laboki.eclipse.plugin.jcolon.events",
  com.laboki.eclipse.plugin.jcolon.task;uses:="com.laboki.eclipse.plugin.jcolon.instance,org.eclipse.core.runtime.jobs,org.eclipse.core.runtime"
 Plugin-Class: com.laboki.eclipse.plugin.jcolon.Activator
 Bundle-ActivationPolicy: lazy
