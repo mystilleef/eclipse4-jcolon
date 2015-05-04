@@ -26,10 +26,6 @@ final class Inserter extends EventBusInstance {
 		EditorContext.getDocument(this.editor);
 	protected boolean completionAssistantIsActive;
 
-	public Inserter() {
-		super();
-	}
-
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
@@ -61,8 +57,8 @@ final class Inserter extends EventBusInstance {
 
 			private void
 			tryToInsertSemiColon(final int location) throws Exception {
-				if (this.cannotInsertSemiColon(location)) return;
 				if (!Inserter.this.document.isPresent()) return;
+				if (this.cannotInsertSemiColon(location)) return;
 				Inserter.this.document.get().replace(location, 0, Inserter.SEMICOLON);
 			}
 
