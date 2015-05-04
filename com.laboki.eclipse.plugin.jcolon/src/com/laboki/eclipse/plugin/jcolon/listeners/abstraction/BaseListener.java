@@ -1,5 +1,8 @@
 package com.laboki.eclipse.plugin.jcolon.listeners.abstraction;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.laboki.eclipse.plugin.jcolon.instance.EventBusInstance;
 import com.laboki.eclipse.plugin.jcolon.instance.Instance;
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
@@ -14,6 +17,8 @@ public abstract class BaseListener extends EventBusInstance
 	private static final int ONE_SECOND = 1000;
 	public static final String FAMILY = "ABSTRACT_LISTENER_FAMILY";
 	private static final TaskMutexRule RULE = new TaskMutexRule();
+	private static final Logger LOGGER =
+		Logger.getLogger(BaseListener.class.getName());
 
 	public BaseListener() {
 		super();
@@ -22,7 +27,12 @@ public abstract class BaseListener extends EventBusInstance
 	@Override
 	public final Instance
 	start() {
-		this.add();
+		try {
+			this.add();
+		}
+		catch (final Exception e) {
+			BaseListener.LOGGER.log(Level.FINEST, e.getMessage(), e);
+		}
 		return super.start();
 	}
 
@@ -33,7 +43,12 @@ public abstract class BaseListener extends EventBusInstance
 	@Override
 	public final Instance
 	stop() {
-		this.remove();
+		try {
+			this.remove();
+		}
+		catch (final Exception e) {
+			BaseListener.LOGGER.log(Level.FINEST, e.getMessage(), e);
+		}
 		return super.stop();
 	}
 
