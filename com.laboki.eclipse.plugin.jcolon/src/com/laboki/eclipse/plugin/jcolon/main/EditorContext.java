@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.DefaultMarkerAnnotationAccess;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -58,10 +59,10 @@ public enum EditorContext {
 	private static final String JDT_ANNOTATION_ERROR =
 		"org.eclipse.jdt.ui.error";
 	private static final List<String> LINK_ANNOTATIONS =
-		Lists.newArrayList(EditorContext.LINK_EXIT,
-			EditorContext.LINK_TARGET,
-			EditorContext.LINK_MASTER,
-			EditorContext.LINK_SLAVE);
+		Lists
+			.newArrayList(EditorContext.LINK_EXIT, EditorContext.LINK_TARGET, EditorContext.LINK_MASTER, EditorContext.LINK_SLAVE);
+	private static final DefaultMarkerAnnotationAccess ANNOTATION_ACCESS =
+		new DefaultMarkerAnnotationAccess();
 
 	public static Display
 	getDisplay() {
@@ -70,7 +71,8 @@ public enum EditorContext {
 
 	public static Optional<Shell>
 	getShell() {
-		return Optional.fromNullable(EditorContext.WORKBENCH.getModalDialogShellProvider()
+		return Optional.fromNullable(EditorContext.WORKBENCH
+			.getModalDialogShellProvider()
 			.getShell());
 	}
 
@@ -86,7 +88,8 @@ public enum EditorContext {
 
 	private static Optional<IWorkbenchWindow>
 	getActiveWorkbenchWindow() {
-		return Optional.fromNullable(EditorContext.WORKBENCH.getActiveWorkbenchWindow());
+		return Optional.fromNullable(EditorContext.WORKBENCH
+			.getActiveWorkbenchWindow());
 	}
 
 	private static Optional<IWorkbenchPage>
@@ -100,28 +103,32 @@ public enum EditorContext {
 		final Optional<IWorkbenchWindow> window =
 			EditorContext.getActiveWorkbenchWindow();
 		if (!window.isPresent()) return Optional.absent();
-		return Optional.fromNullable((IPartService) window.get()
+		return Optional.fromNullable((IPartService) window
+			.get()
 			.getService(IPartService.class));
 	}
 
 	public static Optional<Control>
 	getControl(final Optional<IEditorPart> editor) {
 		if (!editor.isPresent()) return Optional.absent();
-		return Optional.fromNullable((Control) editor.get()
+		return Optional.fromNullable((Control) editor
+			.get()
 			.getAdapter(Control.class));
 	}
 
 	public static Optional<StyledText>
 	getBuffer(final Optional<IEditorPart> editor) {
 		if (!editor.isPresent()) return Optional.absent();
-		return Optional.fromNullable((StyledText) editor.get()
+		return Optional.fromNullable((StyledText) editor
+			.get()
 			.getAdapter(Control.class));
 	}
 
 	public static Optional<SourceViewer>
 	getView(final Optional<IEditorPart> editor) {
 		if (!editor.isPresent()) return Optional.absent();
-		return Optional.fromNullable((SourceViewer) editor.get()
+		return Optional.fromNullable((SourceViewer) editor
+			.get()
 			.getAdapter(ITextOperationTarget.class));
 	}
 
@@ -150,9 +157,10 @@ public enum EditorContext {
 
 	private static boolean
 	isJdtError(final Iterator<Annotation> iterator) {
-		return iterator.next()
-			.getType()
-			.equals(EditorContext.JDT_ANNOTATION_ERROR);
+		final Annotation annotation = iterator.next();
+		if (annotation.isMarkedDeleted()) return false;
+		return EditorContext.ANNOTATION_ACCESS
+			.isSubtype(annotation.getType(), EditorContext.JDT_ANNOTATION_ERROR);
 	}
 
 	public static boolean
@@ -182,20 +190,21 @@ public enum EditorContext {
 		final Optional<IDocumentProvider> provider =
 			EditorContext.getDocumentProvider(editor);
 		if (!provider.isPresent()) return Optional.absent();
-		return Optional.fromNullable(provider.get()
+		return Optional.fromNullable(provider
+			.get()
 			.getDocument(((ITextEditor) editor.get()).getEditorInput()));
 	}
 
 	private static Optional<IDocumentProvider>
 	getDocumentProvider(final Optional<IEditorPart> editor) {
-		return Optional.fromNullable(((ITextEditor) editor.get()).getDocumentProvider());
+		return Optional.fromNullable(((ITextEditor) editor.get())
+			.getDocumentProvider());
 	}
 
 	public static void
 	cancelAllJobs() {
-		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKER_FAMILY,
-			BaseListener.FAMILY,
-			Scheduler.FAMILY);
+		EditorContext
+			.cancelJobsBelongingTo(EditorContext.ERROR_CHECKER_FAMILY, BaseListener.FAMILY, Scheduler.FAMILY);
 	}
 
 	public static void
