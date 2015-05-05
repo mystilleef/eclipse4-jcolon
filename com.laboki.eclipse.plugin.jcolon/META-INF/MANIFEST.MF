@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: com.laboki.eclipse.plugin.jcolon;singleton:=true
-Bundle-Version: 20150504
+Bundle-Version: 20150505
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ClassPath: .,
  lib/guava-18.0.jar
