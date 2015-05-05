@@ -19,10 +19,6 @@ final class ErrorLocator extends EventBusInstance {
 	protected final Problem problem = new Problem();
 	protected boolean completionAssistantIsActive;
 
-	public ErrorLocator() {
-		super();
-	}
-
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
@@ -88,7 +84,7 @@ final class ErrorLocator extends EventBusInstance {
 			}
 		}.setRule(EditorContext.ERROR_CHECKER_RULE)
 			.setFamily(EditorContext.ERROR_CHECKER_FAMILY)
-			.setDelay(EditorContext.SHORT_DELAY)
+			.setDelay(125)
 			.start();
 	}
 

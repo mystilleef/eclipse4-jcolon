@@ -18,10 +18,6 @@ public final class Scheduler extends EventBusInstance {
 	static final TaskMutexRule RULE = new TaskMutexRule();
 	protected boolean completionAssistantIsActive;
 
-	public Scheduler() {
-		super();
-	}
-
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
@@ -43,9 +39,8 @@ public final class Scheduler extends EventBusInstance {
 			}
 		}.setRule(EditorContext.ERROR_CHECKER_RULE)
 			.setFamily(Scheduler.FAMILY)
-			.setDelay(EditorContext.SHORT_DELAY)
+			.setDelay(125)
 			.start();
-		// .setRule(Scheduler.RULE)
 	}
 
 	@Subscribe

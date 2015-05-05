@@ -17,10 +17,6 @@ final class ErrorChecker extends EventBusInstance {
 	protected final Optional<IEditorPart> editor = EditorContext.getEditor();
 	protected boolean completionAssistantIsActive;
 
-	public ErrorChecker() {
-		super();
-	}
-
 	@Subscribe
 	@AllowConcurrentEvents
 	public void
@@ -61,7 +57,7 @@ final class ErrorChecker extends EventBusInstance {
 			}
 		}.setRule(EditorContext.ERROR_CHECKER_RULE)
 			.setFamily(EditorContext.ERROR_CHECKER_FAMILY)
-			.setDelay(EditorContext.SHORT_DELAY)
+			.setDelay(125)
 			.start();
 	}
 
