@@ -41,10 +41,11 @@ public final class Scheduler extends EventBusInstance {
 				EditorContext.cancelErrorCheckingJobs();
 				EventBus.post(new CheckErrorEvent());
 			}
-		}.setRule(Scheduler.RULE)
+		}.setRule(EditorContext.ERROR_CHECKER_RULE)
 			.setFamily(Scheduler.FAMILY)
 			.setDelay(EditorContext.SHORT_DELAY)
 			.start();
+		// .setRule(Scheduler.RULE)
 	}
 
 	@Subscribe
