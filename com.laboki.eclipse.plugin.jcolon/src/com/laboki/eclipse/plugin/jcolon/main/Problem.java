@@ -18,11 +18,10 @@ final class Problem {
 
 	private static final String SEMICOLON = ";";
 	private static final List<Integer> PROBLEM_IDS =
-		Arrays.asList(IProblem.ParsingErrorInsertToComplete,
-			IProblem.ParsingErrorInsertToCompletePhrase,
-			IProblem.ParsingErrorInsertToCompleteScope,
-			IProblem.ParsingErrorInsertTokenAfter,
-			IProblem.ParsingErrorInsertTokenBefore);
+		Arrays.asList(IProblem.ParsingErrorInsertToComplete, IProblem.ParsingErrorInsertTokenAfter);
+	// IProblem.ParsingErrorInsertToCompletePhrase,
+	// IProblem.ParsingErrorInsertToCompleteScope,
+	// IProblem.ParsingErrorInsertTokenBefore);
 	private final Optional<IEditorPart> editor = EditorContext.getEditor();
 	private final Optional<ICompilationUnit> compilationUnit =
 		this.getCompilationUnit();
