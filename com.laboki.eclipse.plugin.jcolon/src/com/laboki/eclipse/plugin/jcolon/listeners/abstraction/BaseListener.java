@@ -20,10 +20,6 @@ public abstract class BaseListener extends EventBusInstance
 	private static final Logger LOGGER =
 		Logger.getLogger(BaseListener.class.getName());
 
-	public BaseListener() {
-		super();
-	}
-
 	@Override
 	public final Instance
 	start() {
@@ -37,8 +33,8 @@ public abstract class BaseListener extends EventBusInstance
 	}
 
 	@Override
-	public void
-	add() {}
+	public abstract void
+	add();
 
 	@Override
 	public final Instance
@@ -53,13 +49,20 @@ public abstract class BaseListener extends EventBusInstance
 	}
 
 	@Override
-	public void
-	remove() {}
+	public abstract void
+	remove();
 
 	protected final static void
 	scheduleErrorChecking() {
-		EditorContext.cancelAllJobs();
-		BaseListener.scheduleTask();
+		new Task() {
+
+			@Override
+			public void
+			execute() {
+				EditorContext.cancelAllJobs();
+				BaseListener.scheduleTask();
+			}
+		}.setRule(BaseListener.RULE).start();
 	}
 
 	protected static void
