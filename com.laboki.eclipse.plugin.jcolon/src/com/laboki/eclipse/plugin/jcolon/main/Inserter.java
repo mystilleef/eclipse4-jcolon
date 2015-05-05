@@ -17,13 +17,13 @@ import com.laboki.eclipse.plugin.jcolon.task.AsyncTask;
 
 final class Inserter extends EventBusInstance {
 
-	protected static final Logger LOGGER =
-		Logger.getLogger(Inserter.class.getName());
+	protected static final Logger LOGGER = Logger.getLogger(Inserter.class
+		.getName());
 	private static final String SEMICOLON = ";";
 	protected final Problem problem = new Problem();
 	protected final Optional<IEditorPart> editor = EditorContext.getEditor();
-	protected final Optional<IDocument> document =
-		EditorContext.getDocument(this.editor);
+	protected final Optional<IDocument> document = EditorContext
+		.getDocument(this.editor);
 	protected boolean completionAssistantIsActive;
 
 	@Subscribe
@@ -73,7 +73,8 @@ final class Inserter extends EventBusInstance {
 			semiColonIsAlreadyInserted(final int location) throws Exception {
 				if (this.isEndOfDocument(location)) return false;
 				if (!Inserter.this.document.isPresent()) return false;
-				return String.valueOf(Inserter.this.document.get().getChar(location))
+				return String
+					.valueOf(Inserter.this.document.get().getChar(location))
 					.equals(Inserter.SEMICOLON);
 			}
 
