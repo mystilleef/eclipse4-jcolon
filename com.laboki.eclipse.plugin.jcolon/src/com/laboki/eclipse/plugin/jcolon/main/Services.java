@@ -42,13 +42,14 @@ public final class Services implements Instance {
 	@Override
 	public Instance
 	stop() {
+		EditorContext.cancelAllJobs();
+		EditorContext.cancelEventTasks();
 		this.stopServices();
 		return this;
 	}
 
 	private void
 	stopServices() {
-		EditorContext.cancelAllJobs();
 		for (final Instance instance : ImmutableList.copyOf(this.instances))
 			this.stopService(instance);
 	}
