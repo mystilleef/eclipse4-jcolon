@@ -7,7 +7,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorPart;
 
 import com.google.common.base.Optional;
-import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
@@ -27,7 +26,6 @@ final class Inserter extends EventBusInstance {
 	protected boolean completionAssistantIsActive;
 
 	@Subscribe
-	@AllowConcurrentEvents
 	public void
 	eventHandler(final SemiColonErrorLocationEvent event) {
 		new AsyncTask() {

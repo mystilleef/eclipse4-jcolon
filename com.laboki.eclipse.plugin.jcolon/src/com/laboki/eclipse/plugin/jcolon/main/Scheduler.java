@@ -1,6 +1,5 @@
 package com.laboki.eclipse.plugin.jcolon.main;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
@@ -19,7 +18,6 @@ public final class Scheduler extends EventBusInstance {
 	protected boolean completionAssistantIsActive;
 
 	@Subscribe
-	@AllowConcurrentEvents
 	public void
 	eventHandler(final ScheduleCheckErrorEvent event) {
 		new Task() {

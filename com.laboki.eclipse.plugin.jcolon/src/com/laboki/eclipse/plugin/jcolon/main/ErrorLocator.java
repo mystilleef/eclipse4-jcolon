@@ -3,7 +3,6 @@ package com.laboki.eclipse.plugin.jcolon.main;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionEndedEvent;
 import com.laboki.eclipse.plugin.jcolon.events.AssistSessionStartedEvent;
@@ -20,7 +19,6 @@ final class ErrorLocator extends EventBusInstance {
 	protected boolean completionAssistantIsActive;
 
 	@Subscribe
-	@AllowConcurrentEvents
 	public void
 	eventHandler(final LocateSemiColonErrorEvent event) {
 		this.locateSemiColonError();
