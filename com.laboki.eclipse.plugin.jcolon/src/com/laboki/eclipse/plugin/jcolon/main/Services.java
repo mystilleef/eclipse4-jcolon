@@ -44,6 +44,7 @@ public final class Services implements Instance {
 	stop() {
 		Services.cancelTasks();
 		this.stopServices();
+		this.instances.clear();
 		return this;
 	}
 
