@@ -10,7 +10,7 @@ import com.laboki.eclipse.plugin.jcolon.task.Task;
 public enum EventBus {
 	INSTANCE;
 
-	public static final String FAMILY = "JColon Event Bus Task Family";
+	public static final String FAMILY = "JColonEventBusTaskFamily";
 	protected static final AsyncEventBus BUS =
 		new AsyncEventBus(Executors.newCachedThreadPool());
 

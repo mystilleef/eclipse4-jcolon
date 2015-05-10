@@ -42,10 +42,16 @@ public final class Services implements Instance {
 	@Override
 	public Instance
 	stop() {
-		EditorContext.cancelAllJobs();
-		EditorContext.cancelEventTasks();
+		Services.cancelTasks();
 		this.stopServices();
 		return this;
+	}
+
+	private static void
+	cancelTasks() {
+		EditorContext.cancelAllJobs();
+		EditorContext.cancelEventTasks();
+		EditorContext.cancelPluginTasks();
 	}
 
 	private void

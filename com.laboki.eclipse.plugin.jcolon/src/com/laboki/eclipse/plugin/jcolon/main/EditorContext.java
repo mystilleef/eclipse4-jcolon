@@ -202,6 +202,11 @@ public enum EditorContext {
 	}
 
 	public static void
+	cancelPluginTasks() {
+		EditorContext.cancelJobsBelongingTo(BaseTask.FAMILY);
+	}
+
+	public static void
 	cancelErrorCheckingJobs() {
 		EditorContext.cancelJobsBelongingTo(EditorContext.ERROR_CHECKER_FAMILY);
 	}
