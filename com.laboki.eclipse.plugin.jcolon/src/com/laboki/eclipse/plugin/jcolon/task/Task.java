@@ -1,6 +1,6 @@
 package com.laboki.eclipse.plugin.jcolon.task;
 
-public abstract class Task extends BaseTask implements ExecuteTask {
+public abstract class Task extends BaseTask {
 
 	public Task() {}
 
