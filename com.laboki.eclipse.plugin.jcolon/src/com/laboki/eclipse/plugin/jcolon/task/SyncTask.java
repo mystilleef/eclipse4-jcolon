@@ -2,7 +2,7 @@ package com.laboki.eclipse.plugin.jcolon.task;
 
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 
-public abstract class SyncTask extends BaseTask implements ExecuteTask {
+public abstract class SyncTask extends Task {
 
 	public SyncTask() {}
 
@@ -18,8 +18,4 @@ public abstract class SyncTask extends BaseTask implements ExecuteTask {
 			}
 		};
 	}
-
-	@Override
-	public abstract void
-	execute();
 }

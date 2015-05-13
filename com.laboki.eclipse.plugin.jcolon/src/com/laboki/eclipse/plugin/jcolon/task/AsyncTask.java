@@ -2,7 +2,7 @@ package com.laboki.eclipse.plugin.jcolon.task;
 
 import com.laboki.eclipse.plugin.jcolon.main.EditorContext;
 
-public abstract class AsyncTask extends BaseTask implements ExecuteTask {
+public abstract class AsyncTask extends Task {
 
 	public AsyncTask() {}
 
@@ -18,8 +18,4 @@ public abstract class AsyncTask extends BaseTask implements ExecuteTask {
 			}
 		};
 	}
-
-	@Override
-	public abstract void
-	execute();
 }
